@@ -151,9 +151,9 @@ def index():
     )
 
 ledger_codes = {
-    "تقسيط": "A",
-    "RM": "B",
-    "ديون نقدية": "C"
+    "A": "تقسيط",
+    "B": "RM",
+    "C": "ديون نقدية"
 }
 @app.route("/add_customer", methods=["GET", "POST"])
 def add_customer():
