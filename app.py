@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.secret_key = "saif"  # ممكن أي قيمة طويلة ومعقدة
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://bakkour_system_db_user:71Ahw6kVaDekMK51pPi9m6RSZ08wYq4x@dpg-d4llva9r0fns73fdlt4g-a.frankfurt-postgres.render.com/bakkour_system_db"
 app.config['SECRET_KEY'] = 'supersecretkey'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
