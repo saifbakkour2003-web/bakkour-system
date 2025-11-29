@@ -21,14 +21,14 @@
                 <button type="submit" class="btn-delete">حذف الزبون</button>
             </form>
             <a class="btn" href="{{ url_for('print_invoice', id=customer.id) }}">طباعة الفاتورة</a>
-            {% if customer.ledger != "ديون نقدية" %}
+            {% if customer.ledger != "C" %}
             <a class="btn" href="{{ url_for('installments_invoice', id=customer.id) }}">طباعة فاتورة التقسيط</a>
 {% endif %}
 
         </div>
     </header>
 
-    {% if customer.ledger != "ديون نقدية" %}
+    {% if customer.ledger != "C" %}
     <!-- ======= منتجات التقسيط ======= -->
     <h3>منتجات التقسيط</h3>
     <a href="{{ url_for('add_installment_product', id=customer.id) }}" class="btn">إضافة منتج تقسيط</a>
