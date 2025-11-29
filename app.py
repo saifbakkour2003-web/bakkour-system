@@ -125,7 +125,7 @@ class GeneralCashPayment(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    ledgers = ['تقسيط', 'RM', 'ديون نقدية']
+    ledgers = ['A', 'B', 'C']
     selected_ledger = request.args.get("ledger", "")
     query = request.args.get("query", "")
 
@@ -300,7 +300,7 @@ def add_installment_product(id):
     # نتحقق إذا الزبون موجود
     customer = Customer.query.get_or_404(id)
     # ❗ منع دفاتر النقد فقط
-    if customer.ledger == "ديون نقدية":
+    if customer.ledger == "C":
         return "هذا الدفتر لا يحتوي على أقساط", 403
 
     if request.method == "POST":
@@ -351,7 +351,7 @@ def add_installment_product(id):
 def delete_installment_product(id):
     product = InstallmentProduct.query.get_or_404(id)
     customer = product.customer
-    if customer.ledger == "ديون نقدية":
+    if customer.ledger == "C":
         return "هذا الدفتر لا يحتوي على أقساط", 403
     cid = product.customer_id
     db.session.delete(product)
@@ -366,7 +366,7 @@ def delete_installment_product(id):
 def add_installment_payment(id):
     product = InstallmentProduct.query.get_or_404(id)
     customer = product.customer
-    if customer.ledger == "ديون نقدية":
+    if customer.ledger == "C":
         return "هذا الدفتر لا يحتوي على أقساط", 403
 
     if request.method == "POST":
@@ -414,7 +414,7 @@ def add_installment_payment(id):
 def delete_installment_payment(id):
     payment = InstallmentPayment.query.get_or_404(id)
     customer = payment.product.customer
-    if customer.ledger == "ديون نقدية":
+    if customer.ledger == "C":
         return "هذا الدفتر لا يحتوي على أقساط", 403
     cid = payment.product.customer_id
     db.session.delete(payment)
