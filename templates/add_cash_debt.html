@@ -1,0 +1,27 @@
+<!-- templates/add_cash_debt.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>إضافة دين نقدي</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h2>إضافة دين نقدي للزبون</h2>
+    <form method="POST">
+        <label>اسم الدين:</label>
+        <input type="text" name="name" required>
+
+        <label>السعر:</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>تاريخ الإضافة:</label>
+        <input type="date" name="date_added" value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}" required>
+
+        <button type="submit" class="btn">إضافة الدين</button>
+    </form>
+    <a href="{{ url_for('customer_page', id=customer_id) }}" class="btn">الرجوع للزبون</a>
+</div>
+</body>
+</html>

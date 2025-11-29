@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}موقعي{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- الهيدر — يتحرك -->
+    <header class="main-header">
+        <h1>موقعي</h1>
+    </header>
+
+    <!-- الناف — ثابت -->
+    <nav class="main-nav">
+        <a href="{{ url_for('index') }}">الصفحة الرئيسية</a>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

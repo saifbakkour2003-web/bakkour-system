@@ -1,0 +1,334 @@
+/* =========================
+Reset & Base
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f5; /* فضي فاتح */
+    color: #2c2c2c;
+    direction: rtl;
+    line-height: 1.4; /* ↓ تم تقليل المسافات بين السطور */
+    font-size: 15px; /* ↓ خط أهدى */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* =========================
+Header – شكل جميل + يتحرك
+========================= */
+.site-header {
+    text-align: center;
+    padding: 15px 10px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2f2f2f, #555555);
+    color: #fdf6e3;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* عنوان الموقع */
+.site-header h1 {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+/* =========================
+Nav داخل الهيدر – شكل لطيف
+========================= */
+.site-nav {
+    margin-top: 5px;
+}
+
+.site-nav a {
+    text-decoration: none;
+    color: #fff;
+    background: #bfa64f;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin: 0 4px;
+    transition: 0.2s;
+}
+
+.site-nav a:hover {
+    background: #a48a3e;
+}
+
+/* =========================
+Header (يتحرك مع الصفحة)
+========================= */
+.main-header {
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 12px 10px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2f2f2f, #555555);
+    color: #fdf6e3;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+    position: relative;  /* يتحرك طبيعي */
+}
+
+/* =========================
+Nav (ثابت فوق)
+========================= */
+.main-nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2f2f2f, #555555);
+    text-align: center;
+    padding: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #fff;
+    background: #bfa64f;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin: 0 5px;
+    font-size: 14px;
+}
+
+.main-nav a:hover {
+    background: #a48a3e;
+}
+
+
+/* =========================
+Tabs
+========================= */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.tab {
+    padding: 10px 20px;
+    margin: 0 5px;
+    background: #dcdcdc;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.tab.active {
+    background: #bfa64f;
+    color: #fff;
+}
+
+.tab-content {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* =========================
+Buttons
+========================= */
+.btn, .add-btn, .print-btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #bfa64f;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 5px 0;
+    font-size: 14px; /* ↓ خط أصغر */
+}
+
+.btn:hover, .add-btn:hover, .print-btn:hover {
+    background: #a48a3e;
+}
+
+.btn-delete {
+    padding: 5px 12px;
+    background: #c34f4f;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.btn-delete:hover {
+    background: #a33f3f;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.actions .btn,
+.actions .btn-delete {
+    margin-left: 5px;
+}
+
+/* =========================
+Forms
+========================= */
+form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+form button {
+    margin-top: 15px;
+}
+
+/* =========================
+Tables
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 14px; /* ↓ خط أصغر للطاولات */
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th {
+    background: #bfa64f;
+    color: #fff;
+    padding: 8px; /* ↓ padding أضيق */
+}
+
+td {
+    padding: 8px;
+    text-align: center;
+    background-color: #e8e8e8;
+}
+
+/* دفاتر القسط */
+.payments-table td {
+    background-color: #dcdcdc;
+}
+
+.payments-table:nth-of-type(odd) td {
+    background-color: #e3e3e3;
+}
+
+.payments-table:nth-of-type(even) td {
+    background-color: #f0f0f0;
+}
+
+/* =========================
+Ledgers / Cards
+========================= */
+.ledger-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    margin: 25px 0;
+}
+
+.ledger-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    width: 100%;
+    background: #bfa64f;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.ledger-card:hover {
+    transform: scale(1.05);
+    background: #a48a3e;
+}
+
+/* =========================
+Flash messages
+========================= */
+.flashes {
+    list-style: none;
+    padding: 0;
+}
+.flashes li.success {
+    color: green;
+}
+.flashes li.error {
+    color: red;
+}
+
+
+/* =======================================================
+🔥 PRINT OPTIMIZED FOR A5 (80% SCALE)
+   ======================================================= */
+@media print {
+
+    body {
+        background: #fff !important;
+        font-size: 12px !important; /* ↓ خط الطباعة */
+        line-height: 1.2 !important; /* ↓ تباعد السطور */
+    }
+
+    .btn, .add-btn, .print-btn, nav, header {
+        display: none !important;
+    }
+
+    .invoice,
+    .product-box,
+    table {
+        page-break-inside: avoid !important;
+    }
+
+    table td, table th {
+        padding: 4px !important;
+    }
+
+    @page {
+        size: A5 portrait;
+        margin: 5mm; /* ↓ يمنع القص */
+    }
+}

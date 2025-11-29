@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>إضافة دفعة - {{ customer.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>إضافة دفعة للزبون: {{ customer.name }}</h1>
+    <form method="POST">
+        <label>المبلغ:</label>
+        <input type="number" step="0.01" name="amount" required>
+
+        <label>اختر نوع الدفع:</label>
+        <select name="source_type" id="source_type" required onchange="updateSourceOptions()">
+            <option value="">اختر النوع</option>
+            <option value="installment">منتج تقسيط</option>
+            <option value="cash_debt">دين نقدي (المجموع الكلي)</option>
+        </select>
+
+        <label>المصدر:</label>
+        <select name="source_id" id="source_id" required>
+            <option value="">اختر المصدر</option>
+        </select>
+
+        <button type="submit" class="btn">حفظ الدفعة</button>
+    </form>
+
+    <a href="{{ url_for('customer_page', id=customer.id) }}" class="btn">رجوع لصفحة الزبون</a>
+</div>
+
+<script>
+    const installments = {{ open_installments|tojson }};
+    const cashDebtsTotalId = -1; // رقم وهمي للمجموع الكلي
+
+    function updateSourceOptions() {
+        const type = document.getElementById("source_type").value;
+        const select = document.getElementById("source_id");
+        select.innerHTML = '';
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'اختر المصدر';
+        select.appendChild(defaultOption);
+
+        if(type === "installment") {
+            installments.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${p.name} (القسط الشهري: ${p.monthly_installment})`;
+                select.appendChild(option);
+            });
+        } else if(type === "cash_debt") {
+            const option = document.createElement('option');
+            option.value = cashDebtsTotalId; 
+            option.textContent = 'المجموع الكلي للديون النقدية';
+            select.appendChild(option);
+        }
+    }
+</script>
+
+</body>
+</html>

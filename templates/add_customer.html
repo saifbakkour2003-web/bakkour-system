@@ -1,0 +1,25 @@
+<!--templates/add_customer.html-->
+{% extends "layout.html" %}
+{% block content %}
+<h2>إضافة زبون جديد</h2>
+<form method="POST">
+    <label>اسم الزبون:</label>
+    <input type="text" name="name" required>
+
+    <label>الهاتف:</label>
+    <input type="text" name="phone">
+
+    <label>ملاحظات:</label>
+    <textarea name="notes"></textarea>
+
+    <label>نوع الدفتر:</label>
+    <select name="ledger" required>
+        <option value="تقسيط">تقسيط</option>
+        <option value="ديون نقدية">ديون نقدية</option>
+        <option value="R-M">R-M</option>
+    </select>
+
+    <button type="submit" class="btn">إضافة</button>
+</form>
+
+{% endblock %}

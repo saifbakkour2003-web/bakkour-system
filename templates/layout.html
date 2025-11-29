@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام إدارة الزبائن</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- الهيدر الرئيسي (يتحرك مع الصفحة) -->
+    <header class="site-header">
+        <h1>نظام إدارة الزبائن</h1>
+        <nav class="site-nav">
+            <a href="{{ url_for('index') }}">الرئيسية</a>
+            <a href="{{ url_for('add_customer') }}">إضافة زبون</a>
+        </nav>
+    </header>
+
+    <!-- المحتوى -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

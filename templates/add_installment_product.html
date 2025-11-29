@@ -1,0 +1,34 @@
+<!-- templates/add_installment_product.html -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul class="flashes">
+            {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+
+{% extends "layout.html" %}
+{% block content %}
+<h2>إضافة منتج تقسيط للزبون ID: {{ customer_id }}</h2>
+<form method="POST">
+    <label>اسم المنتج:</label>
+    <input type="text" name="name" required>
+
+    <label>السعر الإجمالي:</label>
+    <input type="number" step="0.01" name="total_price" required>
+
+    <label>السلفة:</label>
+    <input type="number" step="0.01" name="initial_payment" value="0.0">
+
+    <label>القسط الشهري:</label>
+    <input type="number" step="0.01" name="monthly_installment" required>
+
+    <label>تاريخ إضافة المنتج:</label>
+    <input type="date" name="date_added" required>
+
+    <button type="submit">إضافة المنتج</button>
+</form>
+{% endblock %}

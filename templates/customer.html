@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    {% extends "base.html" %}
+    <title>صفحة الزبون - {{ customer.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% block content %}
+<div class="container">
+    <!-- ======= Header ======= -->
+    <header class="main-header">
+        <h1>الصفحة الرئيسية للزبون: {{ customer.name }} (ID: {{ customer.custom_id }})</h1>
+        <p>الهاتف: {{ customer.phone }} | الملاحظات: {{ customer.notes }}</p>
+        <div class="actions">
+            <a href="{{ url_for('edit_customer', id=customer.id) }}" class="btn">تعديل معلومات الزبون</a>
+            <form action="{{ url_for('delete_customer', id=customer.id) }}" method="POST"
+                onsubmit="return confirm('متأكد بدك تحذف الزبون وكل سجلاته؟ 😢');"
+                style="display:inline-block;">
+                <button type="submit" class="btn-delete">حذف الزبون</button>
+            </form>
+            <a class="btn" href="{{ url_for('print_invoice', id=customer.id) }}">طباعة الفاتورة</a>
+            {% if customer.ledger != "ديون نقدية" %}
+            <a class="btn" href="{{ url_for('installments_invoice', id=customer.id) }}">طباعة فاتورة التقسيط</a>
+{% endif %}
+
+        </div>
+    </header>
+
+    {% if customer.ledger != "ديون نقدية" %}
+    <!-- ======= منتجات التقسيط ======= -->
+    <h3>منتجات التقسيط</h3>
+    <a href="{{ url_for('add_installment_product', id=customer.id) }}" class="btn">إضافة منتج تقسيط</a>
+    <table>
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>السعر الكلي</th>
+                <th>القسط الشهري</th>
+                <th>تاريخ الإضافة</th>
+                <th>مدفوع/لم يُدفع</th>
+                <th>الخيارات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in installment_products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.total_price }} $</td>
+                <td>{{ product.monthly_installment }} $</td>
+                <td>{{ product.date_added.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    {% if product.paid_off %}
+                    <span style="color: green; font-weight: bold;">مدفوع</span>
+
+                        <!-- زر الفاتورة -->
+                        <a href="{{ url_for('close_installment_invoice', id=product.id) }}"
+                            class="btn"
+                            style="padding: 3px 8px; font-size: 12px; margin-right: 5px;">
+                            طباعة الإغلاق
+                        </a>
+
+                    {% else %}
+                        <span style="color: red; font-weight: bold;">لم يُدفع</span>
+                    {% endif %}
+
+
+                </td>
+                <td>
+                    <form action="{{ url_for('delete_installment_product', id=product.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn-delete">حذف</button>
+                    </form>
+                    <a href="{{ url_for('add_installment_payment', id=product.id) }}" class="btn">إضافة دفعة</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <strong>السلفة: {{ product.initial_payment }} $</strong>
+                    <table class="payments-table">
+                        <thead>
+                            <tr>
+                                <th>المبلغ</th>
+                                <th>تاريخ الدفع</th>
+                                <th>المتبقي بعد الدفعة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in installment_details %}
+                                {% if item.product.id == product.id %}
+                                    {% for p in item.payments %}
+                                        <tr>
+                                            <td>
+                                                {{ p.amount }} $
+                                                {% if loop.first and p.amount == product.initial_payment %}
+                                                    <span style="color:#007bff; font-size:12px;">(سلفة)</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ p.date.strftime('%Y-%m-%d') }}</td>
+                                            <td>{{ p.remaining }} $</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- ======= الديون النقدية الموحدة ======= -->
+    <h3>الديون النقدية الموحدة</h3>
+
+    <!-- زر إضافة دين نقدي جديد -->
+    <a href="{{ url_for('add_cash_debt', id=customer.id) }}" class="btn">إضافة دين نقدي</a>
+
+    <p><strong>المجموع الكلي للديون النقدية:</strong> {{ total_cash_debt }} $</p>
+
+    <!-- زر إضافة دفعة عامة إذا في مبلغ مستحق -->
+    {% if total_cash_debt > 0 %}
+        <a href="{{ url_for('add_general_cash_payment', id=customer.id) }}" class="btn">
+            إضافة دفعة عامة
+        </a>
+    {% endif %}
+
+    <!-- عرض كل الديون والدفعات -->
+    {% set remaining = total_cash_debt %}
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>السعر</th>
+                <th>تاريخ الإضافة</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for debt in cash_debts %}
+            <tr>
+                <td>{{ debt.name }}</td>
+                <td>{{ debt.price }} $</td>
+                <td>{{ debt.date_added.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+            {% for payment in customer.general_cash_payments %}
+            <tr>
+                <td style="color:green;">دفعة عامة</td>
+                <td class="amount">{{ payment.amount }}$</td>
+                <td class="date">{{ payment.date_paid.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+    <p><strong>الصافي النهائي:</strong> {{ remaining_cash }} $</p>
+
+</div>
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الزبون</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>معلومات الزبون</h1>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="installments">منتجات التقسيط</button>
+            <button class="tab" data-tab="cash">الديون النقدية</button>
+        </div>
+
+        <!-- Installment products -->
+        <div id="installments" class="tab-content active">
+            <h2>المنتجات بالتقسيط</h2>
+            <button class="add-btn">+ إضافة منتج</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>المنتج</th>
+                        <th>السعر الإجمالي</th>
+                        <th>القسط الشهري</th>
+                        <th>المتبقي</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- تملى من Flask -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cash debts -->
+        <div id="cash" class="tab-content">
+            <h2>الديون النقدية</h2>
+            <button class="add-btn">+ إضافة دين نقدي</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>المنتج</th>
+                        <th>السعر</th>
+                        <th>التاريخ</th>
+                        <th>إجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- تملى من Flask -->
+                </tbody>
+            </table>
+        </div>
+
+        <br>
+        <a href="/invoice/{{ client.id }}" class="print-btn">طباعة الفاتورة</a>
+    </div>
+
+    <script src="/static/js/client.js"></script>
+</body>
+</html>

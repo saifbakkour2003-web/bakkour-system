@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>فاتورة إغلاق القسط - {{ product.name }}</title>
+
+<style>
+body {
+    font-family: Tahoma, Arial;
+    direction: rtl;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 11px; /* أصغر */
+}
+
+.invoice {
+    width: 148mm;
+    min-height: 210mm;
+    padding: 8mm; /* أصغر */
+    margin: auto;
+    background: white;
+    position: relative;
+}
+
+h2, h3 {
+    text-align: center;
+    margin: 3px 0; /* أصغر */
+}
+
+p {
+    margin: 2px 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 5px; /* أصغر */
+}
+
+.table th, .table td {
+    border: 1px solid #444;
+    padding: 3px;  /* أصغر */
+    text-align: center;
+    font-size: 10px;
+}
+
+.table th {
+    background: #e6e6e6;
+}
+
+.watermark {
+        position: absolute;
+        border-radius: 50%;
+        top: 40%;
+        left: 50%;
+        width: 140px;              /* ↓↓↓ */
+        opacity: 0.50;
+        transform: translate(-50%, -50%);
+    }
+
+/* الختم والتوقيع */
+.footer-box {
+    margin-top: 10px;  /* أقل */
+    display: flex;
+    justify-content: space-between;
+}
+
+.sign-box, .stamp-box {
+    width: 47%;
+    height: 65px;  /* أصغر */
+    border: 1px dashed #666;
+    padding: 5px;
+    text-align: center;
+    font-size: 10px;
+}
+
+/* للطباعة */
+@media print {
+    @page {
+        size: A5 portrait;
+        margin: 4mm;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="invoice">
+
+<img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark">
+
+<h2>معرض بكّور</h2>
+<h3>فاتورة إغلاق القسط</h3>
+
+<p><strong>الزبون:</strong> {{ customer.name }}</p>
+<p><strong>الهاتف:</strong> {{ customer.phone }}</p>
+
+<p><strong>المنتج:</strong> {{ product.name }}</p>
+<p><strong>السعر الكلي:</strong> {{ product.total_price }} $</p>
+<p><strong>تاريخ الشراء:</strong> {{ product.date_added.strftime('%Y-%m-%d') }}</p>
+
+<hr style="margin: 4px 0;">
+
+<h3 style="margin:4px 0;">تفاصيل الدفعات</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>المبلغ</th>
+            <th>التاريخ</th>
+            <th>المتبقي</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in payments %}
+        <tr>
+            <td>
+                {{ p.amount }} $
+                {% if loop.index == 1 and product.initial_payment == p.amount %}
+                    <span style="color:#007bff; font-size:11px;">(سلفة)</span>
+                {% endif %}
+            </td>
+            <td>{{ p.date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ p.remaining }} $</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 style="text-align:center; color:green; margin-top:6px; font-size:13px;">
+    ✓ تم سداد كامل الأقساط
+</h3>
+
+<div class="footer-box">
+
+    <div class="sign-box">
+        توقيع الزبون<br><br>
+    </div>
+
+    <div class="stamp-box">
+        ختم المعرض<br><br>
+    </div>
+
+</div>
+
+</div>
+
+<script>
+    window.print();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>الفهارس</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <header class="main-header">
+        <h1>اختر الدفتر</h1>
+    </header>
+
+    <div class="ledger-container">
+        {% for ledger in ledgers %}
+            <a href="{{ url_for('index', ledger=ledger) }}" class="ledger-card">{{ ledger }}</a>
+        {% endfor %}
+    </div>
+
+    {% if selected_ledger %}
+        <h3>الزبائن في دفتر {{ selected_ledger }}</h3>
+        <form method="get">
+            <input type="hidden" name="ledger" value="{{ selected_ledger }}">
+            <input type="text" name="query" placeholder="ابحث باسم أو رقم الزبون" value="{{ query }}">
+            <button type="submit">بحث</button>
+        </form>
+
+        <a href="{{ url_for('add_customer') }}" class="btn">إضافة زبون جديد</a>
+
+        <table>
+            <thead>
+            <tr>
+                <th>الرقم</th>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>الملاحظات</th>
+                <th>عرض الصفحة</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.custom_id }}</td>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.notes }}</td>
+                    <td><a href="{{ url_for('customer_page', id=customer.id) }}" class="btn">فتح</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+</body>
+</html>

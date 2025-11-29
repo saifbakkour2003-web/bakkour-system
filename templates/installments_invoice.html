@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>فاتورة التقسيط - {{ customer.name }}</title>
+
+    <style>
+    /* ======== COMPACT A5 SPECIAL EDITION 😎🔥 ======== */
+    body {
+        font-family: Tahoma, Arial, sans-serif;
+        direction: rtl;
+        background: #fff;
+        margin: 0;
+        padding: 0;
+        font-size: 12px;           /* أصغر */
+        line-height: 1.2;          /* سطور متقاربة */
+    }
+
+    .invoice {
+        width: 148mm;
+        min-height: 210mm;
+        background: white;
+        margin: auto;
+        padding: 6mm;              /* ↓↓ أقل */
+        box-sizing: border-box;
+    }
+
+    h2, h3, h4 {
+        margin: 2px 0;
+        font-size: 16px;           /* ↓ أصغر شوي */
+    }
+
+    p {
+        margin: 1px 0;
+        font-size: 12px;
+    }
+
+    /* ====== PRODUCT BOX ====== */
+    .product-box {
+        border: 1px solid #777;
+        padding: 5px;              /* ↓↓↓ */
+        border-radius: 6px;
+        margin-bottom: 10px;       /* ↓↓ بدل 20 */
+        background: #fafafa;
+    }
+
+    .product-box h3 {
+        font-size: 14px;           /* ↓ */
+        margin-bottom: 3px;
+    }
+
+    /* ====== TABLE ====== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 5px;           /* ↓ */
+        font-size: 11px;           /* ↓↓↓ */
+    }
+
+    th, td {
+        border: 1px solid #444;
+        padding: 3px;              /* ↓↓↓ */
+        line-height: 1.1;          /* ↓↓↓ */
+    }
+
+    th {
+        background: #e4e4e4;
+        font-size: 11px;
+    }
+
+    /* watermark أصغر */
+    .watermark {
+        position: absolute;
+        border-radius: 50%;
+        top: 40%;
+        left: 50%;
+        width: 140px;              /* ↓↓↓ */
+        opacity: 0.50;
+        transform: translate(-50%, -50%);
+    }
+
+    /* طباعة */
+    @media print {
+        @page {
+            size: A5 portrait;
+            margin: 4mm;           /* ↓↓↓ */
+        }
+
+        body {
+            font-size: 11px !important;
+            line-height: 1.1 !important;
+        }
+
+        .invoice {
+            padding: 5mm !important;
+        }
+
+        .product-box {
+            margin-bottom: 8px !important;
+        }
+
+        table th, table td {
+            padding: 2px !important;
+        }
+    }
+
+    </style>
+</head>
+
+<body>
+
+<div class="invoice">
+
+    <!-- العلامة المائية -->
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark">
+
+    <h2>معرض بكّور</h2>
+    <h3>فاتورة تقسيط</h3>
+
+    <p><strong>الزبون:</strong> {{ customer.name }}</p>
+    <p><strong>ID:</strong> {{ customer.custom_id }}</p>
+
+    <hr>
+
+    <!-- ======= منتجات التقسيط غير المسددة ======= -->
+    {% for product in products %}
+        <div class="product-box">
+
+            <h3>المنتج: {{ product.name }}</h3>
+            <p><strong>السعر الكلي:</strong> {{ product.total_price }} $</p>
+            <p><strong>السلفة:</strong> {{ product.initial_payment }} $</p>
+            <p><strong>تاريخ الإضافة:</strong> {{ product.date_added.strftime('%Y-%m-%d') }}</p>
+
+            <h4>الدفعات</h4>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>المبلغ</th>
+                        <th>التاريخ</th>
+                        <th>المتبقي</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% set remaining = product.total_price - product.initial_payment %}
+
+                    {% if product.initial_payment > 0 %}
+                        <tr>
+                            <td>{{ product.initial_payment }} $ <small style="color:blue">(سلفة)</small></td>
+                            <td>{{ product.date_added.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ remaining }} $</td>
+                        </tr>
+                    {% endif %}
+
+                    {% for p in product.payments|sort(attribute='date_paid') %}
+                        {% set remaining = remaining - p.amount %}
+                        <tr>
+                            <td>
+                                {{ p.amount }} $
+                                {% if loop.index == 1 and product.initial_payment == p.amount %}
+                                    <span style="color:#007bff; font-size:11px;">(سلفة)</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ p.date_paid.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ remaining if remaining > 0 else 0 }} $</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p><strong>المتبقي النهائي:</strong> {{ remaining if remaining > 0 else 0 }} $</p>
+
+        </div>
+    {% endfor %}
+
+</div>
+
+<script>
+    window.print();
+</script>
+
+</body>
+</html>

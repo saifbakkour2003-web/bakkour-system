@@ -1,0 +1,14 @@
+<!-- templates/edit_customer.html -->
+{% extends "layout.html" %}
+{% block content %}
+<h2>تعديل بيانات الزبون: {{ customer.name }}</h2>
+<form method="POST">
+    <label>اسم الزبون:</label>
+    <input type="text" name="name" value="{{ customer.name }}" required>
+    
+    <label>ملاحظات:</label>
+    <textarea name="notes">{{ customer.notes }}</textarea>
+    
+    <button type="submit">حفظ التعديلات</button>
+</form>
+{% endblock %}
