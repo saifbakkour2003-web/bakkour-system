@@ -27,7 +27,7 @@ class Customer(db.Model):
     name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), default='')
     notes = db.Column(db.Text, default='')
-    ledger = db.Column(db.String(50), default='تقسيط')
+    ledger = db.Column(db.String(50), default='A')
 
     # العلاقات القديمة موجودة
     installment_products = db.relationship(
@@ -162,7 +162,7 @@ def add_customer():
         name = request.form.get("name", "").strip()
         phone = request.form.get("phone", "").strip()
         notes = request.form.get("notes", "").strip()
-        ledger = request.form.get("ledger", "تقسيط").strip()
+        ledger = request.form.get("ledger", "A").strip()
 
         if not name:
             return "الاسم مطلوب", 400
