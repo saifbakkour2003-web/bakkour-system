@@ -125,7 +125,7 @@ class GeneralCashPayment(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    ledgers = ['تقسيط', 'R-M', 'ديون نقدية']
+    ledgers = ['تقسيط', 'RM', 'ديون نقدية']
     selected_ledger = request.args.get("ledger", "")
     query = request.args.get("query", "")
 
@@ -152,7 +152,7 @@ def index():
 
 ledger_codes = {
     "تقسيط": "A",
-    "R-M": "B",
+    "RM": "B",
     "ديون نقدية": "C"
 }
 @app.route("/add_customer", methods=["GET", "POST"])
