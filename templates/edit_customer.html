@@ -5,6 +5,9 @@
 <form method="POST">
     <label>اسم الزبون:</label>
     <input type="text" name="name" value="{{ customer.name }}" required>
+
+    <label>الهاتف:</label>
+    <input type="text" name="phone">
     
     <label>ملاحظات:</label>
     <textarea name="notes">{{ customer.notes }}</textarea>
