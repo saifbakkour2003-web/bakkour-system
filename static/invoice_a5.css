@@ -1,0 +1,34 @@
+/* static/invoice_a5.css */
+@media print{
+  @page{
+    size: A5 portrait;
+    margin: 4mm;
+  }
+}
+
+.invoice-a5{
+  width: 148mm;
+  min-height: 210mm;
+  padding: 6mm;
+  margin: auto;
+  box-sizing: border-box;
+  background: #fff;
+  position: relative;
+}
+
+.invoice-a5.compact{
+  font-size: 11px;
+  line-height: 1.2;
+  padding: 6mm;
+}
+
+.invoice-a5 .table th,
+.invoice-a5 .table td{
+  padding: 3px;
+  font-size: 10px;
+}
+
+.invoice-a5 .watermark{
+  width: 140px;
+  opacity: 0.08; /* أخف بالطباعة */
+}

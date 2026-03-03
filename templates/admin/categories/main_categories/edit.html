@@ -1,0 +1,46 @@
+{% extends "layout_new.html" %}
+{% block title %}{{ _('تعديل تصنيف رئيسي') }}{% endblock %}
+
+
+{% block content %}
+<h2 class="mb-4">✏️ {{ _('تعديل تصنيف رئيسي') }}</h2>
+
+<form method="POST"
+      class="card p-4 shadow-sm"
+      style="max-width: 400px;">
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('اسم التصنيف') }}</label>
+        <input type="text"
+               name="name"
+               class="form-control"
+               value="{{ category.name }}"
+               required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">{{ _('اسم التصنيف (تركي)') }}</label>
+        <input type="text"
+                name="name_tr"
+                class="form-control"
+                value="{{ category.name_tr or '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Code Prefix</label>
+        <input type="text"
+               name="code_prefix"
+               class="form-control"
+               value="{{ category.code_prefix }}"
+               style="text-transform: uppercase;"
+               maxlength="5"
+               required>
+    </div>
+
+    <button class="btn btn-primary w-100">
+        💾 {{ _('حفظ التعديلات') }}
+    </button>
+</form>
+{% endblock %}
+
+
+

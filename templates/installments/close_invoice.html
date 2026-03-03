@@ -1,0 +1,73 @@
+
+<!-- templates/installments/close_invoice.html -->
+<!DOCTYPE html>
+<html lang="{{ _('ar') }}" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ _('فاتورة إغلاق القسط -') }} {{ product.name }}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='invoice_a5.css') }}">
+</head>
+
+<body>
+  <div class="invoice invoice-a5">
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
+
+    <h2>{{ _('معرض بكّور') }}</h2>
+    <h3>{{ _('فاتورة إغلاق القسط') }}</h3>
+
+    <p><strong>{{ _('الزبون:') }}</strong> {{ pick_lang(customer.name, customer.name_tr) }}</p>
+    <p><strong>{{ _('الهاتف:') }}</strong> {{ customer.phone }}</p>
+
+    <p><strong>{{ _('المنتج:') }}</strong>{{ pick_lang(product.name, product.name_tr) }}</p>
+    <p><strong>{{ _('السعر الكلي:') }}</strong> {{ product.total_price }} $</p>
+    <p><strong>{{ _('تاريخ الشراء:') }}</strong> {{ product.date_added.strftime('%Y-%m-%d') }}</p>
+
+    <hr style="margin: 6px 0;">
+
+    <h3 style="margin:4px 0;">{{ _('تفاصيل الدفعات') }}</h3>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ _('المبلغ') }}</th>
+          <th>{{ _('التاريخ') }}</th>
+          <th>{{ _('المتبقي') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in payments %}
+        <tr>
+        <td>
+          {{ p.amount }} $
+          {% if p.is_initial %}
+            <span class="text-primary">({{ _('سلفة') }})</span>
+          {% endif %}
+        </td>
+          <td>{{ p.date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ p.remaining }} $</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3 style="text-align:center; color:green; margin-top:8px; font-size:13px;">
+      ✓ {{ _('تم سداد كامل الأقساط') }}
+    </h3>
+
+    <div class="invoice-footer">
+      <div class="invoice-box">
+        {{ _('توقيع الزبون') }}<br><br>
+      </div>
+      <div class="invoice-box">
+        {{ _('ختم المعرض') }}<br><br>
+      </div>
+    </div>
+
+  </div>
+
+  <script>window.print();</script>
+</body>
+</html>

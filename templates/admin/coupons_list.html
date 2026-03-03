@@ -1,0 +1,93 @@
+<!-- templates/admin/coupons_list.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('الكوبونات') }}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">{{ _('الكوبونات') }}</h2>
+  <a class="btn btn-primary" href="/admin/coupons/new">+ {{ _('إضافة كوبون') }}</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>{{ _('الكود') }}</th>
+          <th>{{ _('الخصم') }}</th>
+          <th>{{ _('الاستخدام') }}</th>
+          <th>{{ _('الوقت') }}</th>
+          <th>{{ _('الحالة') }}</th>
+          <th>{{ _('المستلمين') }}</th>
+          <th>{{ _('خيارات') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for c in coupons %}
+          <tr>
+            <td>{{ c.id }}</td>
+
+            <td>
+              <div class="fw-bold">{{ c.code }}</div>
+              {% if c.title %}<div class="text-muted small">{{ c.title }}</div>{% endif %}
+            </td>
+
+            <td>{{ "%.2f"|format(c.discount_amount or 0) }}</td>
+
+            <td>
+              {% if c.usage_limit is not none %}
+                {{ c.usage_count }} / {{ c.usage_limit }}
+              {% else %}
+                {{ c.usage_count }} / ∞
+              {% endif %}
+
+              {% if c.auto_claim %}
+                <span class="badge bg-info text-dark ms-2">{{ _('Auto') }}</span>
+              {% endif %}
+            </td>
+
+            <td class="text-nowrap">
+              {% if c.start_at %}{{ c.start_at }}{% else %}—{% endif %}
+              <div class="text-muted small">{% if c.end_at %}{{ c.end_at }}{% else %}—{% endif %}</div>
+            </td>
+
+            <td>
+              {% if c.is_active %}
+                <span class="badge bg-success">{{ _('فعال') }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ _('متوقف') }}</span>
+              {% endif %}
+            </td>
+
+            <td class="text-nowrap">
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{{ url_for('admin_coupons.coupon_claims', cid=c.id) }}">
+                👥 {{ _('عرض') }}
+              </a>
+            </td>
+
+            <td class="text-nowrap">
+              <a class="btn btn-sm btn-warning" href="/admin/coupons/{{ c.id }}/edit">{{ _('تعديل') }}</a>
+
+              <form method="post" action="/admin/coupons/{{ c.id }}/toggle" class="d-inline">
+                <button class="btn btn-sm btn-outline-dark" type="submit">
+                  {% if c.is_active %}{{ _('إيقاف') }}{% else %}{{ _('تفعيل') }}{% endif %}
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="8" class="text-center text-muted py-4">{{ _('لا يوجد كوبونات') }}</td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

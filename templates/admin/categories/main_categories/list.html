@@ -1,0 +1,59 @@
+
+{% extends "layout_new.html" %}
+{% block title %}{{ _('إدارة التصنيفات') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-end mb-3">
+    <h2 class="mb-0">{{ _('📁 التصنيفات الرئيسية') }}</h2>
+
+    <a href="{{ url_for('admin_main_categories.add_main_category') }}"
+       class="btn btn-success">
+      {{ _('+ إضافة تصنيف رئيسي') }}
+    </a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('#') }}</th>
+            <th>{{ _('الاسم') }}</th>
+            <th>{{ _('Code Prefix') }}</th>
+            <th class="col-actions">{{ _('إجراءات') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in categories %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ pick_lang(c.name, c.name_tr) }}</td>
+            <td class="fw-bold">{{ c.code_prefix }}</td>
+            <td class="col-actions">
+              <a href="{{ url_for('admin_main_categories.edit_main_category', category_id=c.id) }}"
+                 class="btn btn-sm btn-outline-primary">
+                {{ _('تعديل') }}
+              </a>
+
+              <form method="POST"
+                    action="{{ url_for('admin_main_categories.delete_main_category', category_id=c.id) }}"
+                    class="d-inline"
+                    onsubmit="return confirm('متأكد من الحذف؟');">
+                <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4" class="text-muted py-4">{{ _('لا يوجد تصنيفات') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

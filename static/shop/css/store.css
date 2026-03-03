@@ -1,0 +1,811 @@
+/* url(store.css) */
+
+/* Legacy / existing */
+.shop .topbar a { text-decoration: none; }
+.shop .brand { font-size: 1.1rem; }
+.shop .hero { background: #f8f9fa; }
+
+/* If body uses .storefront instead of .shop (safe fallback) */
+.storefront .topbar a { text-decoration: none; }
+.storefront .brand { font-size: 1.1rem; }
+.storefront .hero { background: #f8f9fa; }
+
+/* RTL/LTR tweaks */
+html[dir="rtl"] .shop .nav-link { margin-left: 0; margin-right: 0; }
+html[dir="rtl"] .storefront .nav-link { margin-left: 0; margin-right: 0; }
+
+.product-card img { height: 180px; object-fit: cover; }
+
+.variant-chip {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  font-size: 0.9rem;
+}
+.variant-chip.active {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+}
+
+/* ===== Karaca-ish header ===== */
+.bk-header { background: #fff; }
+.bk-icon-btn{
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 12px;
+  background: #fff;
+  padding: 0;
+}
+.bk-icon-btn i{ font-size: 22px; }
+
+.bk-brand-name{
+  font-weight: 700;
+  letter-spacing: .2px;
+  color: #111;
+}
+
+/* Search */
+.bk-search .input-group{
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+.bk-search-input{
+  border: 0 !important;
+  padding: .85rem .9rem;
+  box-shadow: none !important;
+}
+.bk-search-btn{
+  border: 0;
+  background: transparent;
+  padding: 0 1rem;
+}
+
+/* Quick links */
+.bk-quick-links{
+  display: flex;
+  gap: .6rem;
+  overflow-x: auto;
+  padding-bottom: .2rem;
+}
+.bk-quick-links::-webkit-scrollbar{ height: 0; }
+
+.bk-pill{
+  white-space: nowrap;
+  text-decoration: none;
+  padding: .55rem .9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  color: #222;
+  background: #fff;
+  font-size: .95rem;
+}
+.bk-pill.active{
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* Offcanvas menu */
+.bk-offcanvas .list-group-item{
+  padding: 1rem 1rem;
+  border-color: rgba(0,0,0,.08);
+}
+.bk-offcanvas .list-group-item i.bi-chevron-left{
+  opacity: .6;
+}
+
+/* ===== Account icon state ===== */
+.bk-account-btn.is-auth{
+  border-color: rgba(25, 135, 84, .35); /* bootstrap green-ish */
+}
+.bk-account-btn.is-auth i{
+  color: #198754; /* أخضر */
+}
+
+/* ===== Hero Slider ===== */
+.bk-hero { margin-top: 0.5rem; }
+.bk-hero-slide{
+  position: relative;
+  height: 420px;
+  background: #111;
+}
+.bk-hero-media{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.bk-hero-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(1px) brightness(.75);
+  transform: scale(1.02);
+}
+.bk-hero-overlay{
+  position:absolute; inset:0;
+  display:flex; align-items:flex-end; justify-content:center;
+  padding: 2rem 1.25rem;
+  background: linear-gradient(to top, rgba(0,0,0,.70), rgba(0,0,0,.08));
+}
+.bk-hero-kicker{
+  color: rgba(255,255,255,.85);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-size: .85rem;
+  margin-bottom: .35rem;
+}
+.bk-hero-title{
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+.bk-hero-counter{
+  position:absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0,0,0,.45);
+  color:#fff;
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  font-size: .85rem;
+}
+/* RTL: counter on the left like native RTL UIs */
+html[dir="rtl"] .bk-hero-counter{
+  right: auto;
+  left: 14px;
+}
+
+/* Pills */
+.bk-pills{
+  display:flex;
+  gap:.75rem;
+  overflow-x:auto;
+  padding: .5rem 0;
+}
+.bk-pills::-webkit-scrollbar{ height:0; }
+.bk-cat-pill{
+  white-space:nowrap;
+  text-decoration:none;
+  border:1px solid rgba(0,0,0,.12);
+  border-radius: 16px;
+  padding: .9rem 1.1rem;
+  background:#fff;
+  color:#111;
+  min-width: 140px;
+  text-align:center;
+  font-weight:600;
+}
+
+/* Product cards */
+.bk-product-card{ border-radius: 18px; overflow:hidden; }
+.bk-product-img-wrap{
+  aspect-ratio: 1 / 1;
+  background: #f6f6f6;
+}
+.bk-product-img{
+  width:100%; height:100%;
+  object-fit: cover;
+}
+.bk-product-name{
+  font-weight: 700;
+  font-size: .95rem;
+  line-height: 1.3;
+  min-height: 2.6em;
+}
+.bk-product-price{
+  font-weight: 800;
+  font-size: 1rem;
+}
+.bk-product-login-hint{
+  font-size: .9rem;
+  color: rgba(0,0,0,.65);
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+}
+
+/* ===== Upcoming (horizontal scroller) ===== */
+.bk-horizontal{
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.bk-horizontal::-webkit-scrollbar{ height: 0; }
+
+.bk-h-item{
+  flex: 0 0 72%;
+}
+@media (min-width: 768px){
+  .bk-h-item{ flex-basis: 40%; }
+}
+@media (min-width: 1200px){
+  .bk-h-item{ flex-basis: 28%; }
+}
+
+.bk-upcoming-meta{
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  color: rgba(0,0,0,.6);
+  font-size: .9rem;
+}
+
+/* ===== Products page ===== */
+.bk-hover{
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.bk-hover:hover{
+  transform: translateY(-2px);
+}
+
+.bk-badge{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,.78);
+  color: #fff;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  font-size: .8rem;
+}
+
+.bk-product-img-wrap{
+  position: relative;
+}
+.bk-product-brand{
+  line-height: 1.2;
+  opacity: .85;
+}
+
+/* ===== Product Detail Page ===== */
+.bk-divider{
+  height: 1px;
+  background: rgba(0,0,0,.08);
+}
+
+.bk-gallery-main{
+  aspect-ratio: 1 / 1;
+  background: #f6f6f6;
+}
+.bk-gallery-main img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bk-gallery-thumbs{
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  overflow-x: auto;
+}
+.bk-gallery-thumbs::-webkit-scrollbar{ height:0; }
+
+.bk-thumb{
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 14px;
+  padding: 0;
+  background: #fff;
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.bk-thumb img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bk-thumb.active{
+  box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+  border-color: rgba(13,110,253,.45);
+}
+
+.bk-price-box{
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.10);
+  border-radius: 16px;
+  padding: 14px 16px;
+  position: relative;
+}
+.bk-main-price{
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.bk-discount-badge{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,.78);
+  color: #fff;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  font-size: .8rem;
+}
+html[dir="rtl"] .bk-discount-badge{
+  left: auto;
+  right: 10px;
+}
+
+/* Sham Cash image */
+.bk-sham-img {
+  max-width: 160px;
+  border: 1px solid #eee;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  background: #fff;
+
+}
+
+/* ===== Daily products slider ===== */
+.bk-daily-slider{
+  display:flex;
+  gap: 14px;
+  overflow-x:auto;
+  padding-bottom: .5rem;
+}
+.bk-daily-slider::-webkit-scrollbar{ height:0; }
+
+.bk-daily-card{
+  min-width: 260px;
+  max-width: 260px;
+  display:block;
+}
+
+.bk-daily-img-wrap{
+  aspect-ratio: 4 / 3;
+  background:#f6f6f6;
+}
+.bk-daily-img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+}
+
+/* ===== Wide promo banner ===== */
+.bk-wide-banner{
+  display:block;
+  border-radius: 18px;
+  overflow:hidden;
+  box-shadow: 0 .5rem 1.2rem rgba(0,0,0,.08);
+}
+
+.bk-wide-banner-img{
+  width:100%;
+  height: 320px;;
+  display:block;
+  object-fit: cover;
+}
+
+/* موبايل: نخليه أقل ارتفاع لو الصورة طويلة */
+@media (max-width: 576px){
+  .bk-wide-banner-img{
+    max-height: 160px;
+    object-fit: cover;
+  }
+}
+
+/* ===== Discount badge ===== */
+.bk-discount-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#dc3545;
+  color:#fff;
+  font-size:.75rem;
+  font-weight:600;
+  padding:4px 8px;
+  border-radius:8px;
+}
+
+/* ===== Weekly Karaca Style ===== */
+
+.bk-weekly-wrapper{
+  display:flex;
+  gap:20px;
+  overflow:hidden;
+}
+
+/* الكرت الذهبي */
+.bk-weekly-hero{
+  min-width:260px;
+  max-width:260px;
+  border-radius:20px;
+  background: linear-gradient(180deg, #d8b67a, #b99155);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  color:#fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.bk-weekly-title{
+  font-size:1.4rem;
+  font-weight:700;
+  line-height:1.3;
+  margin-bottom:15px;
+}
+
+.bk-weekly-btn{
+  background:#fff;
+  color:#000;
+  padding:8px 16px;
+  border-radius:8px;
+  font-size:.85rem;
+  font-weight:600;
+  text-decoration:none;
+}
+
+/* المنتجات */
+.bk-weekly-products{
+  display:flex;
+  gap:15px;
+  overflow-x:auto;
+}
+
+.bk-weekly-products::-webkit-scrollbar{
+  height:0;
+}
+
+.bk-weekly-card{
+  min-width:220px;
+  max-width:220px;
+  background: linear-gradient(180deg, #f6e8cf, #edd3a4);
+  border-radius:18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.05);
+  overflow:hidden;
+}
+
+.bk-weekly-img-wrap{
+  aspect-ratio: 4/3;
+  background:#f6f6f6;
+}
+
+.bk-weekly-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.bk-weekly-name{
+  font-size:.9rem;
+  font-weight:600;
+  min-height:40px;
+}
+
+.bk-weekly-discount{
+  background:#dc3545;
+  color:#fff;
+  font-size:.75rem;
+  font-weight:600;
+  padding:4px 8px;
+  border-radius:6px;
+  display:inline-block;
+  margin-top:6px;
+}
+
+/* موبايل */
+@media (max-width:768px){
+  .bk-weekly-wrapper{
+    flex-direction:column;
+  }
+
+  .bk-weekly-hero{
+    max-width:100%;
+    min-width:100%;
+  }
+}
+
+/* ===== Offers page ===== */
+.bk-offer-card{
+  background: linear-gradient(180deg, #fff9ec, #f8f1e2);
+}
+
+.bk-offer-img-wrap{
+  aspect-ratio: 4 / 3;
+  background:#f6f6f6;
+}
+.bk-offer-img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+
+.bk-offer-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#dc3545;
+  color:#fff;
+  font-size:.75rem;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:10px;
+}
+
+.bk-countdown{
+  font-size:.85rem;
+  display:flex;
+  gap:.4rem;
+  align-items:center;
+}
+.bk-countdown-label{
+  color: rgba(0,0,0,.65);
+}
+.bk-countdown-time{
+  font-weight:800;
+}
+.bk-countdown.is-ended .bk-countdown-time{
+  color:#dc3545;
+}
+
+
+/* ===== Special Offers 70/30 ===== */
+.bk-so-card { border-radius: 18px; }
+
+.bk-so-media{
+  position: relative;
+  background: #f6f0e8; /* لون دافي */
+  min-height: 240px;
+}
+
+.bk-so-imgs{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 260px;
+  background: linear-gradient(135deg, #f6f0e8, #efe5d6);
+}
+.bk-so-imgs img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 14px;
+  background: #f6f0e8;
+}
+.bk-so-benefit{
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  background: rgba(255,255,255,.70); /* أفتح من الخلفية */
+  backdrop-filter: blur(6px);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.bk-so-mini{
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(0,0,0,.10);
+}
+
+@media (min-width: 992px){
+  .bk-so-media{ min-height: 260px; }
+  .bk-so-imgs, .bk-so-imgs img{ height: 260px; }
+}
+.bk-so-link{
+  display:block;
+  text-decoration:none;
+  color:#111;
+  font-weight:800;
+  padding:.25rem 0;
+}
+.bk-so-link:hover{
+  text-decoration:underline;
+}
+
+/* =========================
+   Special Offers - Karaca Banner Card
+   ========================= */
+
+.bk-so-list{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+}
+
+.bk-so-grid-home{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 992px){
+  .bk-so-grid-home{ grid-template-columns: 1fr; }
+}
+
+/* Card */
+.bk-so-card{
+  display:flex;
+  border-radius: 18px;
+  overflow:hidden;
+  background: linear-gradient(180deg, #fff8ea 0%, #f6ead6 100%);
+  box-shadow: 0 .6rem 1.3rem rgba(0,0,0,.06);
+}
+
+/* 70/30 split */
+.bk-so-media{ flex: 0 0 70%; padding: 10px; }
+.bk-so-info { flex: 0 0 30%; padding: 14px; display:flex; flex-direction:column; justify-content:space-between; }
+
+/* Banner images area */
+.bk-so-banner{
+  position: relative;
+  border-radius: 16px;
+  overflow:hidden;
+  min-height: 190px;
+  background: rgba(0,0,0,.06);
+}
+
+/* Two images inside banner */
+.bk-so-banner-grid{
+  position:absolute;
+  inset:0;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.bk-so-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter: contrast(1.02) saturate(1.02);
+}
+
+.bk-so-img.a{ border-inline-end: 1px solid rgba(255,255,255,.35); }
+
+/* Small benefit rectangle under banner */
+.bk-so-benefit{
+  margin-top: 10px;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,.60); /* أفتح */
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+.bk-so-benefit .label{
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.bk-so-benefit .sub{
+  font-size: .9rem;
+  color: rgba(0,0,0,.70);
+}
+
+/* Gift row */
+.bk-so-gift{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.bk-so-gift img{
+  width:44px; height:44px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgba(0,0,0,.06);
+}
+
+/* Info area */
+.bk-so-title{ font-weight: 900; font-size: 1rem; }
+.bk-so-lines{ font-size: .92rem; color: rgba(0,0,0,.65); margin-top: 6px; }
+.bk-so-lines div{ line-height: 1.5; }
+
+/* Countdown */
+.bk-so-countdown{
+  margin-top: 10px;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  font-size:.9rem;
+}
+.bk-so-countdown .t{
+  font-weight: 900;
+}
+.bk-so-countdown.is-ended .t{
+  color:#dc3545;
+}
+
+/* Badge */
+.bk-so-badge{
+  font-size: .78rem;
+  padding: .3rem .6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.7);
+  color:#111;
+}
+
+/* Mobile */
+@media (max-width: 768px){
+  .bk-so-card{ flex-direction:column; }
+  .bk-so-media, .bk-so-info{ flex: 0 0 auto; }
+  .bk-so-banner{ min-height: 160px; }
+}
+
+/* ===== About page ===== */
+.bk-about-hero{
+  background: linear-gradient(180deg, #fff8ea 0%, #f6ead6 100%);
+}
+.bk-about-kicker{
+  letter-spacing: .14em;
+  color: rgba(0,0,0,.6);
+}
+.bk-about-logo-wrap{
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0,0,0,.06);
+  padding: 10px;
+}
+.bk-about-logo-img{
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 14px;
+}
+.bk-about-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding: .55rem .8rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(0,0,0,.06);
+  font-weight: 700;
+  font-size: .92rem;
+}
+.bk-about-cta{
+  background: #f6f0e8;
+}
+
+/* ===== Contact page ===== */
+.bk-contact-hero{
+  background: linear-gradient(180deg, #fff8ea 0%, #f6ead6 100%);
+}
+.bk-contact-kicker{
+  letter-spacing: .14em;
+  color: rgba(0,0,0,.6);
+}
+.bk-contact-logo-wrap{
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0,0,0,.06);
+  padding: 10px;
+}
+.bk-contact-logo-img{
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 14px;
+}
+.bk-contact-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding: .55rem .8rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(0,0,0,.06);
+  font-weight: 700;
+  font-size: .92rem;
+}
+.bk-contact-info{ display:flex; flex-direction:column; gap:12px; }
+.bk-contact-row{
+  display:flex; align-items:flex-start; gap:10px;
+}
+.bk-contact-row i{ font-size: 20px; opacity:.75; margin-top:2px; }

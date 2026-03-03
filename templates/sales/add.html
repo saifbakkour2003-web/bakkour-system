@@ -1,0 +1,44 @@
+<!-- templates/sales/add.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('تسجيل بيع') }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">💰 {{ _('تسجيل بيع') }}</h2>
+
+<form method="POST" class="card p-4 shadow-sm" style="max-width:500px;">
+
+    <p><strong>{{ _('المنتج:') }}</strong> {{ product.name }}</p>
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('نوع البيع') }}</label>
+        <select name="sale_type" class="form-select" required>
+            <option value="cash">{{ _('نقدي') }}</option>
+            <option value="debt">{{ _('دين') }}</option>
+            <option value="installment">{{ _('تقسيط') }}</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('سعر البيع') }}</label>
+        <input type="number" step="0.01"
+               name="sell_price"
+               class="form-control"
+               value="{{ product.base_cash_price }}"
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('الزبون (اختياري)') }}</label>
+        <select name="customer_id" class="form-select">
+            <option value="">{{ _('— بدون —') }}</option>
+            {% for c in customers %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button class="btn btn-success w-100">
+        💾 {{ _('تسجيل البيع') }}
+    </button>
+</form>
+{% endblock %}

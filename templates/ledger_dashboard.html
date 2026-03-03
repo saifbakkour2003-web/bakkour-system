@@ -1,0 +1,93 @@
+{% extends "layout_new.html" %}
+{% block title %}{{ _('لوحة التحكم -') }} {{ ledger_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+    <div>
+      <h2 class="mb-1">{{ _('لوحة التحكم -') }} {{ ledger_name }}</h2>
+      <p class="text-muted mb-0">{{ _('رمز الدفتر:') }} {{ ledger_code }}</p>
+    </div>
+
+    <a href="/ledger/{{ ledger_code }}/customers/add" class="btn btn-success">
+      {{ _('+ إضافة زبون جديد') }}
+    </a>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 border-primary">
+        <h6 class="text-muted">{{ _('عدد العملاء في الدفتر') }}</h6>
+        <h3 class="mb-0">{{ customers_count }}</h3>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 border-warning">
+        <h6 class="text-muted">{{ _('مجموع التقسيط') }}</h6>
+        {% if ledger_code in ["A", "B"] %}
+          <h3 class="mb-0">{{ total_installments }} $</h3>
+        {% else %}
+          <h4 class="text-muted mb-0">{{ _('لا يوجد') }}</h4>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 border-danger">
+        <h6 class="text-muted">{{ _('الديون النقدية') }}</h6>
+        <h3 class="mb-0">{{ total_cash_debts }} $</h3>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm p-3 border-success">
+        <h6 class="text-muted">{{ _('أرباح هذا الشهر') }}</h6>
+        <h3 class="mb-0">{{ monthly_profit }} $</h3>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+    <h4 class="mb-0">{{ _('زبائن هذا الدفتر') }}</h4>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('الرقم') }}</th>
+            <th>{{ _('الاسم') }}</th>
+            <th>{{ _('الهاتف') }}</th>
+            <th>{{ _('ملاحظات') }}</th>
+            <th class="col-actions">{{ _('خيارات') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for customer in customers %}
+          <tr>
+            <td>{{ customer.custom_id }}</td>
+            <td>{{ pick_lang(customer.name, customer.name_tr) }}</td>
+            <td>{{ customer.phone }}</td>
+            <td class="text-muted">{{ customer.notes }}</td>
+            <td class="text-nowrap">
+              <a href="/customer/{{ customer.id }}" class="btn btn-primary btn-sm">{{ _('عرض') }}</a>
+              <a href="{{ url_for('customers.edit_customer', id=customer.id) }}" class="btn btn-warning btn-sm">{{ _('تعديل') }}</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-muted py-4 text-center">{{ _('لا يوجد زبائن') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

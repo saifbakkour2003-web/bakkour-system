@@ -1,96 +1,181 @@
-body {
-    direction: rtl;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #fff;
-    margin: 0;
-    padding: 0;
+/* static/invoice.css */
+
+/* ============ Base ============ */
+body{
+  direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #fff;
+  margin: 0;
+  padding: 0;
 }
 
-/* حاوية الفاتورة */
-.invoice {
-    position: relative;        /* مهم للعلامة المائية */
-    width: 50%;                /* نص صفحة */
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #444;
-    border-radius: 10px;
-    background: #fff;
-    box-sizing: border-box;
+@media print{
+  *{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body{ margin: 0 !important; background: #fff !important; }
 }
 
-/* شعار أعلى الفاتورة */
-.header-logo {
-    background-image: url('/static/images/logo.jpg');
-    width: 90px;
-    height: 90px;
-    margin: 0 auto 8px auto;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+/* ============ Shared Invoice Layout ============ */
+.invoice{
+  position: relative;
+  background: #fff;
+  box-sizing: border-box;
 }
 
-/* علامة مائية في الخلف */
-.watermark {
-    background-image: url('/static/images/logo.jpg');
+/* A4 default (للفاتورة العامة/العادية) */
+.invoice.invoice-a4{
+  width: 148mm;
+  min-height: 210mm;
+  padding: 15mm;
+  margin: auto;
+}
+
+/* If you still have old half-page invoice style, keep it as optional */
+.invoice.invoice-half{
+  width: 50%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #444;
+  border-radius: 10px;
+}
+
+/* Titles & text */
+.invoice h2, .invoice h3, .invoice h4{
+  text-align: center;
+  margin: 3px 0;
+}
+
+.invoice p{
+  margin: 2px 0;
+}
+
+/* Tables */
+.table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+
+.table th, .table td{
+  border: 1px solid #444;
+  padding: 5px;
+  text-align: center;
+}
+
+.table th{
+  background: #e6e6e6;
+}
+
+/* Watermark image (works with <img class="watermark" ...>) */
+.watermark{
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  width: 280px;
+  opacity: 0.07;
+}
+
+/* Product box (installment invoice list) */
+.product-box{
+  border: 1px solid #777;
+  padding: 6px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  background: #fafafa;
+}
+
+/* Summary box (general invoice) */
+.summary{
+  margin-top: 12px;
+  border: 1px solid #000;
+  padding: 8px;
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  padding: 2px 0;
+}
+
+.summary-row.big{
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ============ Print helpers (SAFE) ============ */
+
+/* 1) Barcode print: اطبع فقط barcode area */
+@media print{
+  body:has(#barcode-print-area) *{ visibility: hidden; }
+  body:has(#barcode-print-area) #barcode-print-area,
+  body:has(#barcode-print-area) #barcode-print-area *{ visibility: visible; }
+
+  body:has(#barcode-print-area) #barcode-print-area{
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 260px;
-    height: 260px;
-    transform: translate(-50%, -50%);
-    opacity: 0.25;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 50%; /* يخليها دائرية */
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* نصوص */
-h2, h3, h4 {
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-/* الجداول */
-table {
+    top: 0;
+    left: 0;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
+  }
 }
 
-table, th, td {
-    border: 1px solid #666;
+/* 2) Quick Invoice print: اطبع فقط invoiceArea */
+@media print{
+  body:has(#invoiceArea) *{ visibility: hidden; }
+  body:has(#invoiceArea) #invoiceArea,
+  body:has(#invoiceArea) #invoiceArea *{ visibility: visible; }
+
+  body:has(#invoiceArea) #invoiceArea{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
 }
 
-th, td {
-    padding: 6px;
-    text-align: center;
+
+.invoice-logo{
+  width: 90px;
+  height: 90px;
+  display: block;
+  margin: 0 auto 8px auto;
+  object-fit: contain;
 }
 
-.product-block {
-    margin-bottom: 18px;
-    padding-bottom: 10px;
+
+.invoice-footer{
+  margin-top: 10px;
+  display:flex;
+  justify-content:space-between;
+  gap: 10px;
 }
 
-/* نص صفحة A4 */
-@page {
-    size: A4 portrait;
-    margin: 0;
+.invoice-box{
+  width: 47%;
+  height: 65px;
+  border: 1px dashed #666;
+  padding: 5px;
+  text-align: center;
+  font-size: 10px;
 }
 
-@media print {
-    body {
-        margin: 0;
-    }
-    .invoice {
-        width: 50%; /* نص صفحة */
-        margin-right: auto;
-        margin-left: auto;
-        padding: 20px;
-    }
-    .watermark { opacity: 0.04; }
-    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.product-title{
+  font-size: 14px;
+  margin: 2px 0 3px 0;
+  text-align: start; /* لو بتحب */
+}
+
+.section-title{
+  margin: 4px 0;
+  font-size: 13px;
+  text-align: start;
+}
+
+.text-primary{
+  color: #0d6efd;
 }

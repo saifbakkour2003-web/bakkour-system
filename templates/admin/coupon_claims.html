@@ -1,0 +1,76 @@
+<!-- templates/admin/coupon_claims.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('مستلمو الكوبون') }}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+  <div>
+    <h2 class="mb-0">{{ _('مستلمو الكوبون') }}</h2>
+    <div class="text-muted">
+      <span class="fw-bold">{{ c.code }}</span>
+      {% if c.title %} — {{ c.title }}{% endif %}
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" href="/admin/coupons/">← {{ _('رجوع') }}</a>
+
+    <form method="post" action="{{ url_for('admin_coupons.reset_coupon_claims', cid=c.id) }}"
+          onsubmit="return confirm('متأكد؟ رح ينمسح مين أخد الكوبون وينصفر عداده');">
+      <button class="btn btn-outline-danger">🧹 {{ _('تصفير المستلمين') }}</button>
+    </form>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>{{ _('المستخدم') }}</th>
+          <th>{{ _('الإيميل') }}</th>
+          <th>{{ _('الهاتف') }}</th>
+          <th>{{ _('أخذه بتاريخ') }}</th>
+          <th>{{ _('الحالة') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for uc in claims %}
+          <tr>
+            <td>{{ uc.id }}</td>
+            <td class="fw-semibold">
+              {{ (uc.user.first_name or '') }} {{ (uc.user.last_name or '') }}
+            </td>
+            <td>{{ uc.user.email }}</td>
+            <td>{{ uc.user.phone or '—' }}</td>
+            <td class="text-nowrap">
+              {{ uc.claimed_at.strftime('%Y-%m-%d %H:%M') if uc.claimed_at else '—' }}
+            </td>
+            <td>
+              {% if uc.used_at %}
+                <span class="badge bg-success">{{ _('مستخدم') }}</span>
+                <div class="text-muted small">
+                  {{ uc.used_at.strftime('%Y-%m-%d %H:%M') if uc.used_at else '' }}
+                </div>
+              {% else %}
+                <span class="badge bg-primary">{{ _('غير مستخدم') }}</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              {{ _('لا يوجد مستلمون لهذا الكوبون بعد.') }}
+            </td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

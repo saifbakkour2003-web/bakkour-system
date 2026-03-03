@@ -1,0 +1,89 @@
+<!-- templates/shop/admin_users.html -->
+{% extends "shop/layout.html" %}
+{% block title %}{{ _('موافقة حسابات المشترين') }}{% endblock %}
+
+{% block content %}
+  <h1 class="h4 fw-bold mb-3">🧰 {{ _('موافقة حسابات المشترين') }}</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="card rounded-4">
+        <div class="card-body">
+          <div class="fw-semibold mb-2">{{ _('طلبات جديدة') }}</div>
+
+          {% if pending %}
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th>{{ _('البريد الإلكتروني') }}</th>
+                    <th>{{ _('الاسم') }}</th>
+                    <th>{{ _('الهاتف') }}</th>
+                    <th class="text-end">{{ _('إجراءات') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for u in pending %}
+                    <tr>
+                      <td>{{ u.email }}</td>
+                      <td>{{ u.full_name or '-' }}</td>
+                      <td>{{ u.phone or '-' }}</td>
+                      <td class="text-end">
+                        <form method="post" action="/shop/admin/users/{{ u.id }}/approve" class="d-inline">
+                          <button class="btn btn-sm btn-success">✅ {{ _('تفعيل') }}</button>
+                        </form>
+                        <form method="post" action="/shop/admin/users/{{ u.id }}/block" class="d-inline">
+                          <button class="btn btn-sm btn-outline-danger">⛔ {{ _('حظر') }}</button>
+                        </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-muted small">{{ _('لا يوجد طلبات حالياً') }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card rounded-4">
+        <div class="card-body">
+          <div class="fw-semibold mb-2">{{ _('مفعّل') }}</div>
+          {% if active %}
+            <ul class="small m-0">
+              {% for u in active %}
+                <li>{{ u.email }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="text-muted small">{{ _('لا يوجد') }}</div>
+          {% endif %}
+
+          <hr>
+
+          <div class="fw-semibold mb-2">{{ _('محظور') }}</div>
+          {% if blocked %}
+            <ul class="small m-0">
+              {% for u in blocked %}
+                <li>{{ u.email }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="text-muted small">{{ _('لا يوجد') }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

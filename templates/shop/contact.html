@@ -1,0 +1,163 @@
+{% extends "shop/layout.html" %}
+{% block title %}{{ _('تواصل معنا') }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="p-4 p-lg-5 bk-contact-hero">
+      <div class="row align-items-center g-4">
+        <div class="col-12 col-lg-7">
+          <div class="text-uppercase small bk-contact-kicker">{{ _('معرض بكّور') }}</div>
+          <h1 class="display-6 fw-bold mb-2">{{ _('تواصل معنا') }}</h1>
+          <p class="text-muted mb-0" style="max-width: 55ch;">
+            {{ _('استفسار عن منتج؟ حجز عرض؟ أو بدك مساعدة بموضوع التقسيط؟ اكتب لنا، أو روح مباشرة على واتساب.') }}
+          </p>
+
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-success rounded-3 px-4" target="_blank"
+               href="{{ WHATSAPP_LINK if WHATSAPP_LINK is defined else '#' }}">
+              <i class="bi bi-whatsapp"></i> {{ _('واتساب مباشر') }}
+            </a>
+            <a class="btn btn-outline-dark rounded-3 px-4" href="/shop/products">
+              <i class="bi bi-bag"></i> {{ _('تصفّح المنتجات') }}
+            </a>
+          </div>
+
+          <div class="mt-4 d-flex flex-wrap gap-3">
+            <div class="bk-contact-pill">
+              <i class="bi bi-clock"></i>
+              <span>{{ _('رد سريع خلال الدوام') }}</span>
+            </div>
+            <div class="bk-contact-pill">
+              <i class="bi bi-shield-check"></i>
+              <span>{{ _('تأكيد وتفاصيل واضحة') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-5">
+          <div class="bk-contact-logo-wrap">
+            <img src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+                 alt="Bakkour" class="bk-contact-logo-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-3">
+    {# ===== Info ===== #}
+    <div class="col-12 col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
+        <div class="fw-bold mb-2">{{ _('معلومات التواصل') }}</div>
+
+        <div class="bk-contact-info">
+          <div class="bk-contact-row">
+            <i class="bi bi-whatsapp"></i>
+            <div>
+              <div class="fw-semibold">{{ _('واتساب') }}</div>
+              <div class="text-muted small">{{ _('راسلنا للحجز والاستفسار') }}</div>
+            </div>
+          </div>
+
+          <div class="bk-contact-row">
+            <i class="bi bi-geo-alt"></i>
+            <div>
+              <div class="fw-semibold">{{ _('العنوان') }}</div>
+              <div class="text-muted small">{{ _('حلب/اعزاز الحارة الشرقية شارع امروء القيس جانب بنك الدم') }}</div>
+            </div>
+          </div>
+
+          <div class="bk-contact-row">
+            <i class="bi bi-clock"></i>
+            <div>
+                <div class="fw-semibold">{{ _('ساعات العمل') }}</div>
+                <div class="text-muted small">{{ _('السبت: 08.00 - 22.00') }}</div>
+                <div class="text-muted small">{{ _('الاحد: 08.00 - 22.00') }}</div>
+                <div class="text-muted small">{{ _('الاثنين: 08.00 - 22.00') }}</div>
+                <div class="text-muted small">{{ _('الثلاثاء: 08.00 - 22.00') }}</div>
+                <div class="text-muted small">{{ _('الاربعاء: 08.00 - 22.00') }}</div>
+                <div class="text-muted small">{{ _('الخميس: 08.00 - 22.00') }}</div>
+                <div class="text-muted small">{{ _('الجمعة: بعد الصلاة - 20.00') }}</div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <a class="btn btn-success w-100 rounded-3" target="_blank"
+             href="{{ WHATSAPP_LINK if WHATSAPP_LINK is defined else '#' }}">
+            <i class="bi bi-whatsapp"></i> {{ _('فتح واتساب') }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {# ===== Form ===== #}
+    <div class="col-12 col-lg-8">
+      <div class="card border-0 shadow-sm rounded-4 p-3 p-lg-4">
+        <div class="fw-bold mb-2">{{ _('أرسل رسالة') }}</div>
+        <div class="text-muted small mb-3">{{ _('اكتب التفاصيل، ونحن بنتواصل معك.') }}</div>
+
+        <form method="post" action="/shop/contact" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">{{ _('الاسم') }}</label>
+            <input type="text" name="name" class="form-control" placeholder="{{ _('اسمك') }}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">{{ _('رقم الهاتف') }}</label>
+            <input type="text" name="phone" class="form-control" placeholder="{{ _('رقم للتواصل') }}">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">{{ _('الرسالة') }}</label>
+            <textarea name="message" rows="5" class="form-control"
+                      placeholder="{{ _('مثال: بدي أحجز عرض، أو استفسار عن منتج كوده...') }}" required></textarea>
+          </div>
+
+          <div class="col-12 d-flex gap-2 flex-wrap">
+            <button class="btn btn-dark rounded-3 px-4">
+              <i class="bi bi-send"></i> {{ _('إرسال') }}
+            </button>
+
+            {# زر واتساب يفتح رسالة جاهزة من الفورم (بدون JS ثقيل) #}
+            <button type="button" class="btn btn-outline-success rounded-3 px-4"
+                    onclick="bkOpenWhatsApp()">
+              <i class="bi bi-whatsapp"></i> {{ _('إرسال عبر واتساب') }}
+            </button>
+          </div>
+        </form>
+
+        <script>
+          function bkOpenWhatsApp(){
+            const wa = "{{ WHATSAPP_LINK if WHATSAPP_LINK is defined else '' }}";
+            if(!wa){ alert("WHATSAPP_LINK غير مضبوط"); return; }
+
+            const name = (document.querySelector('[name="name"]').value || "").trim();
+            const phone = (document.querySelector('[name="phone"]').value || "").trim();
+            const msg = (document.querySelector('[name="message"]').value || "").trim();
+
+            if(!msg){ alert("اكتب رسالتك أولاً"); return; }
+
+            const text =
+              "مرحباً 👋\n" +
+              (name ? ("الاسم: " + name + "\n") : "") +
+              (phone ? ("الهاتف: " + phone + "\n") : "") +
+              "الرسالة:\n" + msg;
+
+            // WHATSAPP_LINK عندك غالباً wa.me/... ؟text=
+            const url = wa.includes("?text=")
+              ? wa.split("?text=")[0] + "?text=" + encodeURIComponent(text)
+              : wa + (wa.includes("?") ? "&" : "?") + "text=" + encodeURIComponent(text);
+
+            window.open(url, "_blank");
+          }
+        </script>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

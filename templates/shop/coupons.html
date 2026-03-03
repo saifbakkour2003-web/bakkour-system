@@ -1,0 +1,97 @@
+{% extends "shop/layout.html" %}
+{% block title %}{{ _("الكوبونات") }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 fw-bold m-0">🎟️ {{ _("الكوبونات") }}</h2>
+    <a class="btn btn-outline-dark btn-sm" href="/shop/my">{{ _("حسابي") }}</a>
+  </div>
+
+  <div class="row g-3">
+
+    <div class="col-12 col-lg-6">
+      <div class="card rounded-4 p-3">
+        <div class="fw-bold mb-2">{{ _("كوبوناتي") }}</div>
+
+        {% for uc in my %}
+          {% set c = uc.coupon %}
+          <div class="border rounded-4 p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <div class="fw-bold">{{ c.code }}</div>
+                {% if c.title %}<div class="text-muted small">{{ c.title }}</div>{% endif %}
+                <div class="small text-muted mt-1">{{ _("خصم ثابت") }}: {{ "%.2f"|format(c.discount_amount or 0) }}</div>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button"
+                        data-copy="{{ c.code }}">{{ _("نسخ") }}</button>
+
+                <a class="btn btn-success btn-sm" target="_blank"
+                   href="https://wa.me/{{ WHATSAPP_PHONE_E164|replace('+','') if WHATSAPP_PHONE_E164 else '' }}?text={{ ('مرحباً، أريد استخدام كود كوبون: ' ~ c.code)|urlencode }}">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="text-muted small">{{ _("لا يوجد كوبونات لديك بعد.") }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card rounded-4 p-3">
+        <div class="fw-bold mb-2">{{ _("كوبونات متاحة حالياً") }}</div>
+
+        {% for c in active %}
+          <div class="border rounded-4 p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+              <div>
+                <div class="fw-bold">{{ c.code }}</div>
+                {% if c.title %}<div class="text-muted small">{{ c.title }}</div>{% endif %}
+                <div class="small text-muted mt-1">{{ _("خصم ثابت") }}: {{ "%.2f"|format(c.discount_amount or 0) }}</div>
+
+                {% if c.usage_limit is not none %}
+                  <div class="small text-muted">{{ _("باقي") }}: {{ c.remaining }}</div>
+                {% endif %}
+              </div>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" type="button"
+                        data-copy="{{ c.code }}">{{ _("نسخ") }}</button>
+                <a class="btn btn-success btn-sm" target="_blank"
+                   href="https://wa.me/{{ WHATSAPP_PHONE_E164|replace('+','') if WHATSAPP_PHONE_E164 else '' }}?text={{ ('مرحباً، أريد استخدام كود كوبون: ' ~ c.code)|urlencode }}">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="text-muted small">{{ _("لا يوجد كوبونات حالياً.") }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll("[data-copy]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const code = btn.getAttribute("data-copy");
+      try{
+        await navigator.clipboard.writeText(code);
+        btn.textContent = "✅";
+        setTimeout(()=> btn.textContent="نسخ", 900);
+      }catch(e){
+        alert("ما قدرت أنسخ 😅 انسخه يدوي: " + code);
+      }
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "layout_new.html" %}
+{% block title %}{{ _('تعديل تصنيف فرعي') }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">✏️ {{ _('تعديل تصنيف فرعي') }}</h2>
+
+<form method="POST"
+      class="card p-4 shadow-sm"
+      style="max-width: 450px;">
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('اسم التصنيف الفرعي') }}</label>
+        <input type="text"
+               name="name"
+               class="form-control"
+               value="{{ sub.name }}"
+               required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">{{ _('اسم التصنيف الفرعي (تركي)') }}</label>
+        <input type="text"
+                name="name_tr"
+                class="form-control"
+                value="{{ sub.name_tr or '' }}">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('Code Prefix') }}</label>
+        <input type="text"
+               name="code_prefix"
+               class="form-control"
+               value="{{ sub.code_prefix }}"
+               style="text-transform: uppercase;"
+               maxlength="5"
+               required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">{{ _('التصنيف الرئيسي') }}</label>
+        <select name="main_category_id"
+                class="form-select"
+                required>
+            {% for c in main_categories %}
+            <option value="{{ c.id }}"
+                {% if c.id == sub.main_category_id %}selected{% endif %}>
+                {{ pick_lang(c.name, c.name_tr) }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button class="btn btn-primary w-100">
+        💾 {{ _('حفظ التعديلات') }}
+    </button>
+</form>
+{% endblock %}

@@ -1,0 +1,70 @@
+<!-- templates/admin/categories/properties/values.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('إدارة قيم الخاصية') }}{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{{ _('إدارة القيم:') }} {{ pick_lang(prop.name, prop.name_tr) }}</h2>
+
+{% if not readonly %}
+  <div class="card p-3 mb-3" style="max-width:520px;">
+    <form method="POST" class="d-flex gap-2 flex-column">
+
+      <input
+        name="value"
+        class="form-control"
+        placeholder="{{ _('القيمة (عربي)') }}"
+        required>
+
+      <input
+        name="value_tr"
+        class="form-control"
+        placeholder="{{ _('القيمة (تركي)') }}">
+
+      <button class="btn btn-primary">
+        {{ _('إضافة') }}
+      </button>
+
+    </form>
+  </div>
+{% else %}
+
+  <div class="alert alert-info" style="max-width:520px;">
+    {{ _('هذه الخاصية ليست من نوع') }}
+    <strong>select</strong>.
+    {{ _('لا يمكن إضافة/حذف قيم لها.') }}
+    <br>
+    {{ _('إذا بدك قيم جاهزة، غيّر نوع الخاصية إلى') }}
+    <strong>select</strong>.
+  </div>
+{% endif %}
+
+<div class="card" style="max-width:520px;">
+  <div class="card-header">{{ _('القيم الحالية') }}</div>
+  <div class="card-body p-0">
+    {% if values %}
+    <ul class="list-group list-group-flush">
+      {% for v in values %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ pick_lang(v.value, v.value_tr) }}</span>
+
+        {% if not readonly %}
+          <form method="POST"
+                action="{{ url_for('admin_properties.delete_value', value_id=v.id) }}"
+                onsubmit="return confirm('متأكد من الحذف؟');">
+            <button class="btn btn-sm btn-danger">{{ _('حذف') }}</button>
+          </form>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <div class="p-3 text-muted">{{ _('لا توجد قيم بعد.') }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<a class="btn btn-link mt-3"
+   href="{{ url_for('admin_properties.list_properties', dept=dept) }}">
+  {{ _('رجوع') }}
+</a>
+{% endblock %}

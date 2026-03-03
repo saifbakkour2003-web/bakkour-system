@@ -1,0 +1,25 @@
+<!-- templates/payments/edit_cash_debt.html -->
+{% extends "layout_new.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ _('تعديل الدين النقدي') }}</h2>
+
+<form method="POST" class="card p-3 shadow-sm" style="max-width:400px;">
+
+    <label>{{ _('اسم الدين:') }}</label>
+    <input type="text" name="name" value="{{ debt.name }}" class="form-control" required>
+
+    <label class="mt-2">{{ _('السعر:') }}</label>
+    <input type="number" name="price" step="0.01" value="{{ debt.price }}" class="form-control" required>
+
+    <label class="mt-2">{{ _('تاريخ الإضافة:') }}</label>
+    <input type="date" name="date_added"
+            value="{{ debt.date_added.strftime('%Y-%m-%d') }}"
+            class="form-control" required>
+
+    <button class="btn btn-primary mt-3">{{ _('حفظ التعديلات') }}</button>
+
+</form>
+
+{% endblock %}

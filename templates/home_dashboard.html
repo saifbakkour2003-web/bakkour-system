@@ -1,0 +1,75 @@
+{% extends "layout_new.html" %}
+
+{% block title %}{{ _('Dashboard') }}{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ _('لوحة التحكم الرئيسية') }}</h2>
+
+<div class="row g-4">
+
+    <!-- عدد العملاء -->
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-primary">
+            <h6 class="text-muted">{{ _('عدد الزبائن') }}</h6>
+            <h3>{{ total_customers }}</h3>
+        </div>
+    </div>
+
+    <!-- مجموع التقسيط (دفتر A + B فقط) -->
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-warning">
+            <h6 class="text-muted">{{ _('مجموع التقسيط (A + B)') }}</h6>
+            <h3>{{ total_installments }} $</h3>
+        </div>
+    </div>
+
+    <!-- مجموع الديون النقدية (كل الدفاتر) -->
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3 border-danger">
+            <h6 class="text-muted">{{ _('الديون النقدية (A + B + C)') }}</h6>
+            <h3>{{ total_cash_debts }} $</h3>
+        </div>
+    </div>
+
+</div>
+
+<hr class="my-4">
+
+<h4 class="mb-3">{{ _('الدفاتر الثلاثة') }}</h4>
+
+<table class="table table-striped table-hover shadow-sm">
+    <thead class="table-light">
+        <tr>
+            <th>{{ _('الدفتر') }}</th>
+            <th>{{ _('عدد الزبائن') }}</th>
+            <th>{{ _('مجموع الديون') }}</th>
+            <th>{{ _('فتح') }}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>{{ _('دفتر التقسيط (A)') }}</td>
+            <td>{{ A_customers }}</td>
+            <td>{{ A_total }} $</td>
+            <td><a href="/ledger/A" class="btn btn-primary btn-sm">{{ _('فتح') }}</a></td>
+        </tr>
+
+        <tr>
+            <td>{{ _('دفتر R-M (B)') }}</td>
+            <td>{{ B_customers }}</td>
+            <td>{{ B_total }} $</td>
+            <td><a href="/ledger/B" class="btn btn-primary btn-sm">{{ _('فتح') }}</a></td>
+        </tr>
+
+        <tr>
+            <td>{{ _('دفتر الديون النقدية (C)') }}</td>
+            <td>{{ C_customers }}</td>
+            <td>{{ C_total }} $</td>
+            <td><a href="/ledger/C" class="btn btn-primary btn-sm">{{ _('فتح') }}</a></td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}

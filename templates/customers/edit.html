@@ -1,0 +1,72 @@
+{% extends "layout_new.html" %}
+
+{% block title %}{{ _('تعديل بيانات الزبون') }}{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ _('تعديل بيانات الزبون:') }} {{ pick_lang(customer.name, customer.name_tr) }}</h2>
+
+<div class="card shadow-sm p-4">
+
+    <form method="POST">
+
+        <!-- الاسم -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('اسم الزبون') }}</label>
+            <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">{{ _('اسم الزبون (تركي)') }}</label>
+            <input type="text"
+                name="name_tr"
+                class="form-control"
+                value="{{ customer.name_tr or '' }}">
+        </div>
+
+        <!-- الهاتف -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('رقم الهاتف') }}</label>
+            <input type="text" name="phone" class="form-control" value="{{ customer.phone }}">
+        </div>
+
+        <!-- ملاحظات -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('ملاحظات') }}</label>
+            <textarea name="notes" class="form-control" rows="3">{{ customer.notes }}</textarea>
+        </div>
+
+        <!-- دفتر الزبون -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('الدفتر') }}</label>
+            <select name="ledger" class="form-select">
+
+                <!-- دفتر الزبون الحالي -->
+                <option selected>{{ customer.ledger }}</option>
+
+                {% if customer.ledger != "ديون نقدية" %}
+                    <!-- يمكن التحويل بين A ↔ B فقط -->
+                    <option value="تقسيط">{{ _('تقسيط') }}</option>
+                    <option value="R-M">{{ _('R-M') }}</option>
+                {% endif %}
+
+                {% if customer.ledger == "ديون نقدية" %}
+                    <option value="ديون نقدية">{{ _('ديون نقدية') }}</option>
+                {% endif %}
+
+            </select>
+        </div>
+
+        <!-- زر الحفظ -->
+        <button type="submit" class="btn btn-primary">{{ _('حفظ التعديلات') }}</button>
+
+        <!-- العودة -->
+        <a href="/customer/{{ customer.id }}" class="btn btn-secondary ms-2">
+            {{ _('إلغاء') }}
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

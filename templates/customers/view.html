@@ -1,0 +1,325 @@
+<!-- templates/customers/view.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ customer.name }} - {{ _('صفحة الزبون') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- ================= Header ================= -->
+  <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+    <div>
+      <h2 class="mb-1">
+        {{ _('الزبون:') }} {{ pick_lang(customer.name, customer.name_tr) }}
+        <span class="text-muted">({{ _('ID:') }} {{ customer.custom_id }})</span>
+      </h2>
+      <div class="text-muted">
+        <span class="me-2"><strong>{{ _('الهاتف:') }}</strong> {{ customer.phone }}</span>
+        <span><strong>{{ _('ملاحظات:') }}</strong> {{ customer.notes }}</span>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{{ url_for('customers.edit_customer', id=customer.id) }}" class="btn btn-warning">
+        {{ _('تعديل المعلومات') }}
+      </a>
+
+      <a href="{{ url_for('invoices.invoice_auto', id=customer.id) }}" class="btn btn-outline-secondary">
+        {{ _('عرض الفاتورة') }}
+      </a>
+
+      {% if customer.ledger in ["ديون نقدية", "ديون", "نقدي", "cash", "cash_debts"] %}
+        <a href="{{ url_for('invoices.print_cash_invoice', id=customer.id) }}"
+           class="btn btn-secondary"
+           target="_blank" rel="noopener">
+          {{ _('طباعة') }}
+        </a>
+      {% else %}
+        <a href="{{ url_for('invoices.print_mixed_invoice', id=customer.id) }}"
+           class="btn btn-secondary"
+           target="_blank" rel="noopener">
+          {{ _('طباعة') }}
+        </a>
+      {% endif %}
+
+      <form action="{{ url_for('customers.delete_customer', id=customer.id) }}"
+            method="POST"
+            class="d-inline"
+            onsubmit="return confirm('متأكد بدك تحذف الزبون وكل سجلاته؟')">
+        <button type="submit" class="btn btn-danger">{{ _('حذف الزبون') }}</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= Installments ================= -->
+  {% if customer.ledger != "ديون نقدية" %}
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3 mb-2">
+      <h3 class="mb-0">{{ _('منتجات التقسيط') }}</h3>
+
+      <a href="{{ url_for('installments.add_installment_product', id=customer.id) }}"
+        class="btn btn-success">
+        {{ _('+ إضافة تقسيط (كود واحد أو أكثر)') }}
+      </a>
+    </div>
+
+    {% if installment_products %}
+      <div class="card shadow-sm mb-4">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>{{ _('العقد / المنتج') }}</th>
+                <th>{{ _('السعر الكلي') }}</th>
+                <th>{{ _('السلفة') }}</th>
+                <th>{{ _('القسط الشهري') }}</th>
+                <th>{{ _('تاريخ الإضافة') }}</th>
+                <th>{{ _('الحالة') }}</th>
+                <th class="col-actions">{{ _('خيارات') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for item in installment_details %}
+                {% set contract = item.product %}
+                <tr>
+                  <td>{{ pick_lang(contract.name, contract.name_tr) }}</td>
+                  <td>{{ contract.total_price }} $</td>
+                  <td>{{ contract.initial_payment }} $</td>
+                  <td>{{ contract.monthly_installment }} $</td>
+                  <td class="text-nowrap">{{ contract.date_added.strftime('%Y-%m-%d') }}</td>
+                  <td>
+                    {% if contract.paid_off %}
+                      <span class="badge bg-success">{{ _('مسدد بالكامل') }}</span>
+                    {% else %}
+                      <span class="badge bg-danger">{{ _('غير مسدد') }}</span>
+                    {% endif %}
+                  </td>
+                  <td class="col-actions">
+                    <div class="actions-group">
+                      <a href="{{ url_for('installments.add_installment_payment', id=contract.id) }}"
+                        class="btn btn-primary btn-sm">
+                        {{ _('إضافة دفعة') }}
+                      </a>
+
+                      <!-- ✅ زر المواصفات -->
+                      <button type="button"
+                              class="btn btn-info btn-sm"
+                              data-bs-toggle="modal"
+                              data-bs-target="#itemsModal{{ contract.id }}">
+                        {{ _('مواصفات') }}
+                      </button>
+
+                      <form action="{{ url_for('installments.delete_installment_product', id=contract.id) }}"
+                            method="POST"
+                            class="d-inline"
+                            onsubmit="return confirm('هل تريد حذف هذا العقد؟')">
+                        <button type="submit" class="btn btn-danger btn-sm">{{ _('حذف') }}</button>
+                      </form>
+
+                      {% if contract.paid_off %}
+                        <a href="{{ url_for('installments.close_installment_invoice', id=contract.id) }}"
+                          class="btn btn-outline-secondary btn-sm">
+                          {{ _('فاتورة الإغلاق') }}
+                        </a>
+                      {% endif %}
+                    </div>
+
+                    <!-- ✅ Modal المواصفات -->
+                    <div class="modal fade" id="itemsModal{{ contract.id }}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+
+                          <div class="modal-header">
+                            <h5 class="modal-title">
+                              {{ _('مواصفات منتجات العقد') }}: {{ pick_lang(contract.name, contract.name_tr) }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+
+                          <div class="modal-body">
+                            {% if contract.items %}
+                              <div class="table-responsive">
+                                <table class="table table-sm align-middle">
+                                  <thead class="table-light">
+                                    <tr>
+                                      <th>{{ _('الكود') }}</th>
+                                      <th>{{ _('الاسم') }}</th>
+                                      <th>{{ _('الكمية') }}</th>
+                                      <th>{{ _('المواصفات') }}</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for it in contract.items %}
+                                      <tr>
+                                        <td class="text-nowrap">{{ it.product.code if it.product else '—' }}</td>
+                                        <td>{{ pick_lang(it.name, it.name_tr) if it.name_tr is defined else it.name }}</td>
+                                        <td class="text-nowrap">{{ it.qty }}</td>
+                                        <td>
+                                          {% if it.product and it.product.properties %}
+                                            <ul class="mb-0 ps-3">
+                                              {% for pp in it.product.properties %}
+                                                <li>
+                                                  <strong>{{ pick_lang(pp.property.name, pp.property.name_tr) if pp.property else _('خاصية') }}:</strong>
+                                                  {{ pick_lang(pp.value, pp.value_tr) if pp.value_tr is defined else pp.value }}
+                                                </li>
+                                              {% endfor %}
+                                            </ul>
+                                          {% else %}
+                                            <span class="text-muted">{{ _('لا يوجد مواصفات') }}</span>
+                                          {% endif %}
+                                        </td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+                            {% else %}
+                              <div class="text-muted">{{ _('لا يوجد منتجات مرتبطة بهذا العقد') }}</div>
+                            {% endif %}
+                          </div>
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                              {{ _('إغلاق') }}
+                            </button>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Payments -->
+                <tr class="table-light">
+                  <td colspan="7">
+                    <div class="fw-bold mb-2">{{ _('الدفعات:') }}</div>
+                    <div class="table-responsive">
+                      <table class="table table-sm table-bordered mb-0 text-center align-middle">
+                        <thead class="table-light">
+                          <tr>
+                            <th>{{ _('المبلغ') }}</th>
+                            <th>{{ _('التاريخ') }}</th>
+                            <th>{{ _('المتبقي') }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for p in item.payments %}
+                            <tr>
+                              <td>{{ p.amount }} $</td>
+                              <td class="text-nowrap">{{ p.date.strftime('%Y-%m-%d') }}</td>
+                              <td>{{ p.remaining }} $</td>
+                            </tr>
+                          {% else %}
+                            <tr>
+                              <td colspan="3" class="text-muted py-2">{{ _('لا يوجد دفعات') }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <div class="text-muted mb-4">{{ _('لا يوجد منتجات تقسيط لهذا الزبون.') }}</div>
+    {% endif %}
+  {% endif %}
+
+  <!-- ================= Cash Debts ================= -->
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3 mb-2">
+    <h3 class="mb-0">{{ _('الديون النقدية') }}</h3>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{{ url_for('payments.add_cash_debt', id=customer.id) }}" class="btn btn-success">
+        {{ _('+ إضافة دين نقدي') }}
+      </a>
+
+      {% if cash_remaining and cash_remaining > 0 %}
+        <a href="{{ url_for('payments.add_general_cash_payment', id=customer.id) }}" class="btn btn-primary">
+          {{ _('+ إضافة دفعة عامة') }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('الوصف') }}</th>
+            <th>{{ _('المبلغ') }}</th>
+            <th>{{ _('تاريخ الحركة') }}</th>
+            <th>{{ _('المتبقي') }}</th>
+            <th class="col-actions">{{ _('خيارات') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for r in cash_rows %}
+
+            {% if r.kind == 'debt' %}
+              <tr>
+                <td>{{ r.label }}</td>
+                <td class="text-nowrap">+ {{ "%.2f"|format(r.amount) }} $</td>
+                <td class="text-nowrap">{{ r.date.strftime('%Y-%m-%d') if r.date else '' }}</td>
+                <td class="text-nowrap">{{ "%.2f"|format(r.remaining) }} $</td>
+                <td class="col-actions">
+                  <div class="actions-group">
+                    <a href="{{ url_for('payments.edit_cash_debt', id=r.obj.id) }}"
+                      class="btn btn-warning btn-sm">{{ _('تعديل') }}</a>
+                    <form action="{{ url_for('payments.delete_cash_debt', id=r.obj.id) }}"
+                          method="POST"
+                          class="d-inline"
+                          onsubmit="return confirm('هل تريد حذف هذا الدين؟')">
+                      <button type="submit" class="btn btn-danger btn-sm">{{ _('حذف') }}</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+
+            {% else %}
+              <tr class="table-success">
+                <td>{{ r.label }}</td>
+                <td class="text-nowrap">- {{ "%.2f"|format(r.amount) }} $</td>
+                <td class="text-nowrap">{{ r.date.strftime('%Y-%m-%d') if r.date else '' }}</td>
+                <td class="text-nowrap">{{ "%.2f"|format(r.remaining) }} $</td>
+                <td class="col-actions">
+                  <div class="actions-group">
+                    <a href="{{ url_for('payments.edit_general_payment', id=r.obj.id) }}"
+                      class="btn btn-warning btn-sm">{{ _('تعديل') }}</a>
+                    <form action="{{ url_for('payments.delete_general_payment', id=r.obj.id) }}"
+                          method="POST"
+                          class="d-inline">
+                      <button type="submit" class="btn btn-danger btn-sm">{{ _('حذف') }}</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+
+          {% endfor %}
+
+          {% if (cash_rows|length == 0) %}
+            <tr>
+              <td colspan="5" class="text-muted py-4 text-center">
+                {{ _('لا يوجد ديون أو دفعات ضمن هذا الزبون') }}
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="text-end text-muted mt-1">
+    <strong>{{ _('المتبقي الحالي:') }}</strong>
+    {{ "%.2f"|format(cash_remaining or 0) }} $
+  </div>
+</div>
+{% endblock %}

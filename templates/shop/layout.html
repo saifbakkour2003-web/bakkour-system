@@ -1,0 +1,198 @@
+<!-- templates/shop/layout.html -->
+<!doctype html>
+<html lang="{{ get_locale() }}" dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}{{ _('المعرض') }}{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='shop/css/store.css') }}">
+  {% block head %}{% endblock %}
+</head>
+  <script src="{{ url_for('static', filename='shop/js/store.js') }}"></script>
+
+<body class="storefront">
+
+  {# ========= TOP HEADER (Karaca-ish) ========= #}
+  <header class="bk-header bg-white border-bottom sticky-top">
+    <div class="container py-2">
+
+      <div class="d-flex align-items-center justify-content-between gap-2">
+
+        <!-- Hamburger -->
+        <button class="btn bk-icon-btn" type="button"
+                data-bs-toggle="offcanvas" data-bs-target="#bkSidebar"
+                aria-controls="bkSidebar" aria-label="{{ _('القائمة') }}">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <!-- Brand -->
+        <a href="/shop" class="bk-brand text-decoration-none d-flex align-items-center gap-2">
+          <img src="{{ url_for('static', filename='shop/img/logo.jpg') }}" alt="{{ _('معرض بكّور') }}" height="26">
+          <span class="bk-brand-name">{{ _('معرض بكّور') }}</span>
+        </a>
+
+        <!-- Right Icons -->
+        <div class="d-flex align-items-center gap-1">
+
+          <!-- Language -->
+          <div class="dropdown">
+            <button class="btn bk-icon-btn" data-bs-toggle="dropdown" aria-label="{{ _('اللغة') }}">
+              <i class="bi bi-translate"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/set-lang/ar">{{ _('العربية') }}</a></li>
+              <li><a class="dropdown-item" href="/set-lang/tr">{{ _('التركية') }}</a></li>
+            </ul>
+          </div>
+
+          <!-- Account -->
+          <a class="btn bk-icon-btn bk-account-btn {% if is_shop_logged_in %}is-auth{% endif %}"
+             href="{% if is_shop_logged_in %}/shop/my{% else %}/shop/login{% endif %}"
+             aria-label="{% if is_shop_logged_in %}{{ _('حسابي') }}{% else %}{{ _('تسجيل الدخول') }}{% endif %}">
+            <i class="bi bi-person"></i>
+          </a>
+
+          {# اختياري لاحقاً:
+          <a class="btn bk-icon-btn" href="/shop/cart" aria-label="{{ _('السلة') }}"><i class="bi bi-bag"></i></a>
+          #}
+
+        </div>
+      </div>
+
+      <!-- Search -->
+      <form class="bk-search mt-2" action="/shop/products" method="get">
+        <div class="input-group">
+          <input type="text" class="form-control bk-search-input"
+                 name="q" placeholder="{{ _('ابحث عن أي شيء…') }}" aria-label="{{ _('بحث') }}">
+          <button class="btn bk-search-btn" type="submit" aria-label="{{ _('بحث') }}">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+      </form>
+
+      <!-- Quick links -->
+      <!-- <div class="bk-quick-links mt-2">
+        <a class="bk-pill active" href="/shop/featured">{{ _('الأكثر تميزًا') }}</a>
+        <a class="bk-pill" href="/shop/offers">{{ _('العروض') }}</a>
+        <a class="bk-pill" href="/shop/ramadan">{{ _('رمضان') }}</a>
+      </div> -->
+
+    </div>
+  </header>
+
+  {# ========= OFFCANVAS SIDEBAR ========= #}
+  <div class="offcanvas offcanvas-start bk-offcanvas" tabindex="-1" id="bkSidebar" aria-labelledby="bkSidebarLabel">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title" id="bkSidebarLabel">{{ _('القائمة') }}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{{ _('إغلاق') }}"></button>
+    </div>
+
+    <div class="offcanvas-body p-0">
+
+      <!-- Auth buttons -->
+      <div class="p-3 border-bottom">
+        {% if is_shop_logged_in %}
+          <a href="/shop/my" class="btn btn-dark w-100">{{ _('حسابي') }}</a>
+          <a href="/shop/logout" class="btn btn-outline-secondary w-100 mt-2">{{ _('تسجيل الخروج') }}</a>
+        {% else %}
+          <div class="d-flex gap-2">
+            <a href="/shop/login" class="btn btn-outline-dark flex-fill">{{ _('تسجيل الدخول') }}</a>
+            <a href="/shop/register" class="btn btn-dark flex-fill">{{ _('إنشاء حساب') }}</a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Language inside menu (optional but useful) -->
+      <div class="p-3 border-bottom">
+        <div class="small text-muted mb-2">{{ _('اللغة') }}</div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-outline-secondary flex-fill" href="/set-lang/ar">{{ _('العربية') }}</a>
+          <a class="btn btn-outline-secondary flex-fill" href="/set-lang/tr">{{ _('التركية') }}</a>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="list-group list-group-flush bk-menu">
+        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop">
+          <span class="d-flex align-items-center gap-2"><i class="bi bi-house"></i><span>{{ _('الرئيسية') }}</span></span>
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/products">
+          <span class="d-flex align-items-center gap-2"><i class="bi bi-grid"></i><span>{{ _('المنتجات') }}</span></span>
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/offers">
+          <span class="d-flex align-items-center gap-2"><i class="bi bi-tag"></i><span>{{ _('العروض') }}</span></span>
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/about">
+          <span class="d-flex align-items-center gap-2"><i class="bi bi-info-circle"></i><span>{{ _('من نحن') }}</span></span>
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/contact">
+          <span class="d-flex align-items-center gap-2"><i class="bi bi-telephone"></i><span>{{ _('تواصل معنا') }}</span></span>
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+        {% if is_shop_logged_in %}
+          <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/my">
+            <span class="d-flex align-items-center gap-2"><i class="bi bi-person"></i><span>{{ _('حسابي') }}</span></span>
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        {% endif %}
+      </nav>
+
+      <!-- <div class="p-3 border-top text-muted small">
+        {{ _('صفحات مساعدة') }}
+        <div class="mt-2">
+          <a class="text-decoration-none d-block py-1" href="/shop/order-tracking">{{ _('تتبع الطلب') }}</a>
+          <a class="text-decoration-none d-block py-1" href="/shop/help">{{ _('المساعدة') }}</a>
+        </div>
+      </div> -->
+
+    </div>
+  </div>
+
+  <main class="py-4">
+    <div class="container">
+
+      {# ✅ Flash messages (Shop) #}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mt-2">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show mb-2" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ _('إغلاق') }}"></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="border-top py-4">
+    <div class="container small d-flex flex-column flex-md-row justify-content-between gap-2">
+      <div>© {{ _('جميع الحقوق محفوظة') }}</div>
+      <div class="d-flex gap-3">
+        <!-- <a href="/shop/contact">{{ _('التواصل') }}</a>
+        <a href="/shop/contact">{{ _('الشكاوى') }}</a> -->
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='shop/js/store.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

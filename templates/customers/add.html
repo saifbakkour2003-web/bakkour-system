@@ -1,0 +1,51 @@
+{% extends "layout_new.html" %}
+
+{% block title %}{{ _('إضافة زبون جديد') }}{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ _('إضافة زبون جديد إلى دفتر') }} {{ ledger_name }}</h2>
+
+<div class="card shadow-sm p-4">
+
+    <form method="POST">
+
+        <!-- اسم الزبون -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('اسم الزبون') }}</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">{{ _('اسم الزبون (تركي)') }}</label>
+            <input type="text" name="name_tr" class="form-control">
+        </div>
+
+
+        <!-- الهاتف -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('رقم الهاتف (اختياري)') }}</label>
+            <input type="text" name="phone" class="form-control">
+        </div>
+
+        <!-- ملاحظات -->
+        <div class="mb-3">
+            <label class="form-label">{{ _('ملاحظات') }}</label>
+            <textarea name="notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <!-- زر الإضافة -->
+        <button type="submit" class="btn btn-success">
+            {{ _('إضافة الزبون') }}
+        </button>
+
+        <!-- العودة للدفتر -->
+        <a href="/ledger/{{ ledger_code }}/customers" class="btn btn-secondary ms-2">
+            {{ _('رجوع') }}
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

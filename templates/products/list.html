@@ -1,0 +1,256 @@
+<!-- templates/products/list.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('إدارة المنتجات') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <!-- ================= Header ================= -->
+  <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="mb-1">📦 {{ _('إدارة المنتجات -') }} {{ _(dept_label) }}</h2>
+      <div class="text-muted">{{ _('عدد النتائج:') }} {{ products|length }}</div>
+    </div>
+
+    {% if dept in ["electrical", "linens", "crystal"] %}
+      <a href="/products/{{ dept }}/add" class="btn btn-success">
+        ➕ {{ _('إضافة منتج') }}
+      </a>
+    {% else %}
+      <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+          ➕ {{ _('إضافة منتج') }}
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/products/electrical/add">⚡ {{ _('كهربائيات') }}</a></li>
+          <li><a class="dropdown-item" href="/products/linens/add">🧺 {{ _('بياضات') }}</a></li>
+          <li><a class="dropdown-item" href="/products/crystal/add">🍷 {{ _('بلوريات') }}</a></li>
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- ================= Table ================= -->
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle text-center">
+
+        <thead class="table-dark">
+          <tr>
+            <th>{{ _('#') }}</th>
+            <th>{{ _('Serial') }}</th>
+            <th>{{ _('الكود') }}</th>
+            <th class="text-start">{{ _('الاسم') }}</th>
+            <th>{{ _('القسم') }}</th>
+            <th>{{ _('التصنيف') }}</th>
+            <th>{{ _('الخصائص') }}</th>
+            <th>{{ _('الحالة') }}</th>
+            <th>{{ _('الكمية') }}</th>
+            <th>{{ _('السعر') }}</th>
+            <th>{{ _('باركود') }}</th>
+            <th class="col-actions">{{ _('إجراءات') }}</th>
+          </tr>
+        </thead>
+
+        {% if dept in ["electrical", "linens", "crystal"] %}
+        <thead class="table-light">
+          <tr>
+            <th colspan="12">
+              <form method="GET" class="d-flex align-items-center gap-2 flex-wrap">
+                <input type="hidden" name="dept" value="{{ dept }}">
+                <span class="fw-bold">{{ _('فلترة حسب التصنيف:') }}</span>
+
+                <select name="sub"
+                        class="form-select form-select-sm"
+                        style="max-width:240px"
+                        onchange="this.form.submit()">
+                  <option value="">{{ _('— الكل —') }}</option>
+                  {% for s in sub_categories %}
+                    <option value="{{ s.id }}" {% if selected_sub_id == s.id %}selected{% endif %}>
+                      {{ pick_lang(s.name, s.name_tr) }}
+                    </option>
+                  {% endfor %}
+                </select>
+
+                {% if selected_sub_id %}
+                  <a href="{{ url_for('products.products_list', dept=dept) }}"
+                     class="btn btn-sm btn-outline-secondary">
+                    {{ _('مسح') }}
+                  </a>
+                {% endif %}
+              </form>
+            </th>
+          </tr>
+        </thead>
+        {% endif %}
+
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td>
+              {{ loop.index }}
+              {% if p.is_discount_active %}
+                <span title="Ürün indirimde" style="color:#28a745;">★</span>
+              {% endif %}
+            </td>
+            <td class="fw-bold">{{ p.serial_no or "—" }}</td>
+            <td class="fw-bold text-primary">{{ p.code }}</td>
+            <td class="text-start">{{ pick_lang(p.name, p.name_tr) }}</td>
+
+            <td>
+              {% if p.department == "electrical" %}
+                <span class="dept-badge dept-electrical">⚡ {{ _('كهربائيات') }}</span>
+              {% elif p.department == "linens" %}
+                <span class="dept-badge dept-linens">🧺 {{ _('بياضات') }}</span>
+              {% elif p.department == "crystal" %}
+                <span class="dept-badge dept-crystal">🍷 {{ _('بلوريات') }}</span>
+              {% endif %}
+            </td>
+
+            <td>
+              <span class="badge bg-secondary">
+                {{ pick_lang(
+                    p.sub_category.main_category.name,
+                    p.sub_category.main_category.name_tr
+                ) }}
+              </span><br>
+
+              {% set shade = (p.sub_category.id % 3) + 1 %}
+              <span class="sub-badge sub-{{ p.department }}-{{ shade }}">
+                {{ pick_lang(
+                    p.sub_category.name,
+                    p.sub_category.name_tr
+                ) }}
+              </span>
+            </td>
+
+
+            <td class="text-muted">
+              {{ pick_lang(
+                  props_text_ar.get(p.id),
+                  props_text_tr.get(p.id)
+              ) or "—" }}
+            </td>
+
+            <td>
+              <form method="POST" action="{{ url_for('products.toggle_available', product_id=p.id) }}">
+                {% if p.is_available %}
+                  <button class="btn btn-sm btn-success">{{ _('متوفر') }}</button>
+                {% else %}
+                  <button class="btn btn-sm btn-danger">{{ _('غير متوفر') }}</button>
+                {% endif %}
+              </form>
+            </td>
+
+            <td>
+              <div class="d-flex justify-content-center gap-2">
+                <form method="POST" action="{{ url_for('products.stock_dec', product_id=p.id) }}">
+                  <button class="btn btn-sm btn-outline-secondary">{{ _('-') }}</button>
+                </form>
+
+                <span class="fw-bold" style="min-width:32px">{{ p.stock_qty }}</span>
+
+                <form method="POST" action="{{ url_for('products.stock_inc', product_id=p.id) }}">
+                  <button class="btn btn-sm btn-outline-secondary">{{ _('+') }}</button>
+                </form>
+              </div>
+            </td>
+
+            <td>{{ "%.2f"|format(p.base_cash_price) }} $</td>
+
+            <td>
+              {% if p.barcode_image %}
+                <div class="actions-group">
+                  <button class="btn btn-sm btn-outline-primary"
+                          data-bs-toggle="modal"
+                          data-bs-target="#barcodeModal{{ p.id }}">
+                    👁️
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-dark"
+                          data-image="{{ url_for('static', filename='barcodes/' + p.barcode_image) }}"
+                          data-value="{{ p.barcode_value }}"
+                          onclick="printBarcode(this)">
+                    🖨️
+                  </button>
+                </div>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+
+            <td class="col-actions">
+              <div class="actions-group">
+                <a href="{{ url_for('products.edit_product', product_id=p.id) }}"
+                   class="btn btn-sm btn-outline-primary">
+                  {{ _('تعديل') }}
+                </a>
+
+                <form method="POST"
+                      action="{{ url_for('products.delete_product', product_id=p.id) }}"
+                      class="d-inline"
+                      onsubmit="return confirm('متأكد من الحذف؟')">
+                  <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="12" class="text-muted py-4">{{ _('لا يوجد منتجات') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= Barcode Modals ================= -->
+  {% for p in products %}
+    {% if p.barcode_image %}
+    <div class="modal fade" id="barcodeModal{{ p.id }}" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-3">
+          <img src="{{ url_for('static', filename='barcodes/' + p.barcode_image) }}" style="max-width:200px">
+          <div class="fw-bold mt-2">{{ p.barcode_value }}</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  {% endfor %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+function printBarcode(btn){
+  const img = btn.dataset.image;
+  const val = btn.dataset.value;
+
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body{text-align:center;font-family:Arial;margin-top:20px}
+        img{max-width:200px}
+      </style>
+    </head>
+    <body>
+      <div id="barcode-print-area">
+        <img src="${img}">
+        <div style="font-weight:bold;margin-top:8px">${val}</div>
+      </div>
+      <script>
+        window.onload = function(){window.print();window.close();}
+      <\/script>
+    </body>
+    </html>
+  `);
+}
+</script>
+{% endblock %}

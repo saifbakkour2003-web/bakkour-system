@@ -1,0 +1,273 @@
+{% extends "layout_new.html" %}
+{% block title %}{{ _('فاتورة سريعة') }}{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h2 class="mb-0">🧾 {{ _('فاتورة سريعة (باركود)') }}</h2>
+
+    <button type="button" class="btn btn-dark js-action" data-act="print">
+      🖨️ {{ _('طباعة') }}
+    </button>
+  </div>
+
+  <!-- إدخال الباركود -->
+  <div class="card p-3 mb-3">
+    <label class="form-label fw-bold">
+      {{ _('امسح الباركود هون (Scan + Enter)') }}
+    </label>
+    <input
+      id="barcodeInput"
+      class="form-control form-control-lg"
+      placeholder="{{ _('Barcode...') }}"
+      autocomplete="off">
+    <div id="msg" class="text-muted mt-2"></div>
+  </div>
+
+  <!-- منطقة الفاتورة (هي اللي بتنطبع) -->
+  <div id="invoiceArea" class="card p-3 shadow-sm">
+
+    <div class="text-center mb-3">
+      <div class="fw-bold" style="font-size:18px;">Bakkour System</div>
+      <div class="text-muted">{{ _('Quick Invoice') }}</div>
+
+      <div class="text-muted" id="invDate"></div>
+      <div class="text-muted">
+        {{ _('رقم الفاتورة:') }} <span class="fw-bold" id="receiptNo">—</span>
+      </div>
+
+      <hr>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-sm align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('المنتج') }}</th>
+            <th>{{ _('السعر') }}</th>
+            <th>{{ _('الكمية') }}</th>
+            <th>{{ _('الإجمالي') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <tr id="emptyRow">
+            <td colspan="5" class="text-muted py-4">
+              {{ _('لم يتم إضافة أي منتج بعد') }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <div class="d-flex justify-content-end">
+      <div style="min-width:260px;">
+        <div class="d-flex justify-content-between">
+          <span class="fw-bold">{{ _('عدد القطع:') }}</span>
+          <span class="fw-bold" id="totalQty">0</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="fw-bold">{{ _('المجموع:') }}</span>
+          <span class="fw-bold" id="totalText">0.00</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>
+    const barcodeInput = document.getElementById("barcodeInput");
+    const msg = document.getElementById("msg");
+    const itemsBody = document.getElementById("itemsBody");
+    const totalText = document.getElementById("totalText");
+    const totalQty = document.getElementById("totalQty");
+    const emptyRow = document.getElementById("emptyRow");
+    const invDate = document.getElementById("invDate");
+    const receiptNo = document.getElementById("receiptNo");
+
+    // cart: Map(product_id -> {id, name, price, qty})
+    const cart = new Map();
+
+    function money(x) { return Number(x).toFixed(2); }
+
+    function setMessage(text, isError=false) {
+      msg.textContent = text;
+      msg.className = isError ? "text-danger mt-2" : "text-muted mt-2";
+    }
+
+    function render() {
+      itemsBody.innerHTML = "";
+      const items = Array.from(cart.values());
+
+      if (items.length === 0) {
+        itemsBody.appendChild(emptyRow);
+        totalText.textContent = money(0);
+        totalQty.textContent = "0";
+        return;
+      }
+
+      let total = 0;
+      let qtySum = 0;
+
+      for (const it of items) {
+        const rowTotal = it.qty * it.price;
+        total += rowTotal;
+        qtySum += it.qty;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="text-start">${it.name}</td>
+          <td>${money(it.price)}</td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center gap-2">
+              <button class="btn btn-sm btn-outline-secondary js-action" type="button" data-act="dec" data-id="${it.id}">-</button>
+              <span class="fw-bold">${it.qty}</span>
+              <button class="btn btn-sm btn-outline-secondary js-action" type="button" data-act="inc" data-id="${it.id}">+</button>
+            </div>
+          </td>
+          <td class="fw-bold">${money(rowTotal)}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-danger js-action" type="button" data-act="del" data-id="${it.id}">✖</button>
+          </td>
+        `;
+        itemsBody.appendChild(tr);
+      }
+
+      totalText.textContent = money(total);
+      totalQty.textContent = String(qtySum);
+    }
+
+    async function addByBarcode(code) {
+      setMessage("جاري جلب المنتج...");
+      try {
+        const res = await fetch(`/sales/api/product/by-barcode?code=${encodeURIComponent(code)}`);
+        const data = await res.json();
+
+        if (!data.ok) {
+          setMessage("❌ لم يتم العثور على المنتج", true);
+          return;
+        }
+
+        const p = data.product;
+
+        if (cart.has(p.id)) cart.get(p.id).qty += 1;
+        else cart.set(p.id, { id: p.id, name: p.name, price: p.price, qty: 1 });
+
+        setMessage(`✅ تمت إضافة: ${p.name}`);
+        render();
+
+      } catch (err) {
+        setMessage("❌ خطأ في الاتصال مع السيرفر", true);
+      }
+    }
+
+    barcodeInput.addEventListener("keydown", async (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+
+      const code = barcodeInput.value.trim();
+      barcodeInput.value = "";
+      if (!code) return;
+
+      await addByBarcode(code);
+    });
+
+    async function doPrintInvoice() {
+      if (cart.size === 0) {
+        setMessage("الفاتورة فاضية 😅", true);
+        return;
+      }
+
+      const items = Array.from(cart.values()).map(it => ({
+        product_id: it.id,
+        qty: it.qty,
+        sell_price: it.price
+      }));
+
+      setMessage("عم نسجّل الفاتورة...");
+
+      try {
+        const res = await fetch("/sales/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+          if (data.error === "insufficient_stock") {
+            setMessage(`❌ مخزون غير كافي: ${data.product_name} (متوفر ${data.stock_qty} / مطلوب ${data.requested})`, true);
+            return;
+          }
+          setMessage("فشل تسجيل الفاتورة ❌", true);
+          return;
+        }
+
+        // تعبئة الملخص داخل منطقة الطباعة
+        const s = data.summary || {};
+        receiptNo.textContent = s.receipt_no || "—";
+        invDate.textContent = new Date().toLocaleString();
+        totalText.textContent = money(s.total_amount ?? Number(totalText.textContent || 0));
+        totalQty.textContent = String(s.total_qty ?? totalQty.textContent);
+
+        setMessage(`✅ تم تسجيل ${data.created} عملية بيع — فاتورة ${receiptNo.textContent}`);
+
+        // اطبع بعد تحديث DOM
+        setTimeout(() => {
+          window.print();
+
+          // بعد الطباعة: صفّر الفاتورة
+          cart.clear();
+          receiptNo.textContent = "—";
+          render();
+          barcodeInput.focus();
+        }, 150);
+
+      } catch (e) {
+        setMessage("خطأ اتصال بالسيرفر ❌", true);
+      }
+    }
+
+    // ✅ Event Delegation لكل الأزرار (نفس النمط اللي اتفقنا عليه)
+    document.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".js-action");
+      if (!btn) return;
+
+      const act = btn.dataset.act;
+
+      if (act === "print") {
+        await doPrintInvoice();
+        return;
+      }
+
+      // باقي الأفعال تتطلب id
+      const id = Number(btn.dataset.id);
+      const item = cart.get(id);
+      if (!item) return;
+
+      if (act === "inc") item.qty += 1;
+      if (act === "dec") item.qty = Math.max(1, item.qty - 1);
+      if (act === "del") cart.delete(id);
+
+      render();
+      barcodeInput.focus();
+    });
+
+    // init
+    invDate.textContent = new Date().toLocaleString();
+    barcodeInput.focus();
+    setInterval(() => barcodeInput.focus(), 1500);
+    render();
+  </script>
+{% endblock %}

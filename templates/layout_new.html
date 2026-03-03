@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}" dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ _('لوحة التحكم') }}{% endblock %}</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  {% block head %}{% endblock %}
+</head>
+
+<body class="app-body">
+
+  <!-- Navbar -->
+<nav class="navbar navbar-light bg-white shadow-sm px-3 app-navbar">
+
+  <div class="d-flex align-items-center gap-2">
+    <button id="toggleSidebar" class="btn btn-outline-secondary" type="button" aria-label="Toggle sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <a href="/" class="btn btn-primary">{{ _('الرئيسية') }}</a>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <span class="navbar-brand m-0">{{ _('لوحة التحكم') }}</span>
+
+    {% if g.admin_user %}
+      <span class="text-muted small d-none d-md-inline">
+        👤 {{ g.admin_user.email }} — {{ _("أدمن") }}
+      </span>
+      <a href="/admin/logout" class="btn btn-outline-danger btn-sm">
+        <i class="bi bi-box-arrow-right"></i> {{ _("تسجيل الخروج") }}
+      </a>
+    {% endif %}
+
+    <div class="dropdown">
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+        {{ 'AR' if get_locale() == 'ar' else 'TR' }}
+      </button>
+
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+          <a class="dropdown-item {% if get_locale() == 'ar' %}active{% endif %}"
+             href="{{ url_for('i18n.set_lang', lang='ar') }}">
+            العربية
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item {% if get_locale() == 'tr' %}active{% endif %}"
+             href="{{ url_for('i18n.set_lang', lang='tr') }}">
+            Türkçe
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</nav>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="app-sidebar bg-white border-end position-fixed h-100 p-3">
+
+    <div class="sidebar-section-title text-muted mb-2">👤 {{ _('إدارة الحسابات') }}</div>
+    <nav class="nav flex-column gap-1">
+      <a href="/admin/users/pending" class="nav-link app-navlink">
+        <span class="sidebar-text">🧾 {{ _('طلبات الحسابات') }}</span>
+      </a>
+
+      <a href="/admin/users/manage" class="nav-link app-navlink">
+        <span class="sidebar-text">⚙️ {{ _('إدارة الحسابات') }}</span>
+      </a>
+    </nav>
+
+
+    <div class="sidebar-section-title text-muted mb-2">{{ _('📁 الدفاتر') }}</div>
+    <nav class="nav flex-column gap-1">
+      <a href="/ledger/A" class="nav-link app-navlink">
+        <i class="bi bi-journal app-navicon"></i>
+        <span class="sidebar-text">{{ _('دفتر التقسيط') }}</span>
+      </a>
+
+      <a href="/ledger/B" class="nav-link app-navlink">
+        <i class="bi bi-journal-text app-navicon"></i>
+        <span class="sidebar-text">{{ _('دفتر R-M') }}</span>
+      </a>
+
+      <a href="/ledger/C" class="nav-link app-navlink">
+        <i class="bi bi-receipt-cutoff app-navicon"></i>
+        <span class="sidebar-text">{{ _('دفتر الديون النقدية') }}</span>
+
+      </a>
+    </nav>
+
+      <a href="/sales/quick" class="nav-link app-navlink">
+        <i class="bi bi-receipt app-navicon"></i>
+        <span class="sidebar-text">{{ _('فاتورة نقدي (سريعة)') }}</span>
+      </a>
+
+    <hr class="my-3">
+
+    <div class="sidebar-section-title text-muted mb-2">{{ _('🧰 الإدارة') }}</div>
+
+
+    <nav class="nav flex-column gap-1">
+      <a href="{{ url_for('products.products_list') }}"
+         class="nav-link app-navlink"
+         data-key="products-root">
+        <i class="bi bi-box-seam app-navicon"></i>
+        <span class="sidebar-text">{{ _('إدارة المنتجات') }}</span>
+
+      </a>
+
+      <div class="app-subnav ps-2" data-key="products-subnav">
+        <a class="nav-link app-navlink app-navlink-sub"
+           href="{{ url_for('products.products_electrical') }}"
+           data-key="products-electrical">
+          <span class="sidebar-text">⚡ {{ _('كهربائيات') }}</span>
+        </a>
+        <a class="nav-link app-navlink app-navlink-sub"
+           href="{{ url_for('products.products_linens') }}"
+           data-key="products-linens">
+          <span class="sidebar-text">🧺 {{ _('بياضات') }}</span>
+        </a>
+        <a class="nav-link app-navlink app-navlink-sub"
+           href="{{ url_for('products.products_crystal') }}"
+           data-key="products-crystal">
+          <span class="sidebar-text">🍷 {{ _('بلوريات') }}</span>
+        </a>
+      </div>
+
+
+      <a class="nav-link app-navlink" href="/admin/special-offers">
+        <span class="sidebar-text">✨ {{ _('إدارة العروض الخاصة') }}</span>
+      </a>
+      <a class="nav-link app-navlink" href="/admin/coupons">
+        <span class="sidebar-text">✨ {{ _('إدارة الكوبونات') }}</span>
+      </a>
+
+      <a class="nav-link app-navlink" href="{{ url_for('admin_brands.brands_list') }}">
+        <i class="bi bi-tags app-navicon"></i>
+        <span class="sidebar-text">{{ _('إدارة الماركات') }}</span>
+      </a>
+
+      <a class="nav-link app-navlink" href="/admin/main-categories">
+        <i class="bi bi-diagram-3 app-navicon"></i>
+        <span class="sidebar-text">{{ _('إدارة التصنيفات') }}</span>
+      </a>
+
+      <a class="nav-link app-navlink" href="/admin/sub-categories">
+        <i class="bi bi-diagram-2 app-navicon"></i>
+        <span class="sidebar-text">{{ _('التصنيفات الفرعية') }}</span>
+      </a>
+
+      <a class="nav-link app-navlink" href="/admin/categories/properties">
+        <i class="bi bi-sliders app-navicon"></i>
+        <span class="sidebar-text">{{ _('الخصائص') }}</span>
+      </a>
+
+      <a class="nav-link app-navlink" href="{{ url_for('sales.profits_report') }}">
+        <i class="bi bi-cash-coin app-navicon"></i>
+        <span class="sidebar-text">{{ _('الأرباح') }}</span>
+      </a>
+
+      <a class="nav-link app-navlink" href="{{ url_for('export.export_excel') }}">
+        <i class="bi bi-file-earmark-excel app-navicon"></i>
+        <span class="sidebar-text">{{ _('تصدير Excel') }}</span>
+      </a>
+    </nav>
+  </aside>
+
+  <div class="app-backdrop" id="appBackdrop"></div>
+
+
+  <!-- Main Content -->
+  <main id="content" class="app-content p-4">
+    {# =========================
+      Flash Messages (Bootstrap)
+      ========================= #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container-fluid mb-3">
+          {% for category, message in messages %}
+            {% set bs = category %}
+            {% if category in ["error"] %}{% set bs = "danger" %}{% endif %}
+            {% if category in ["message"] %}{% set bs = "info" %}{% endif %}
+
+            <div class="alert alert-{{ bs }} alert-dismissible fade show shadow-sm mb-2" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const content = document.getElementById("content");
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const backdrop = document.getElementById("appBackdrop");
+
+    function isMobile() {
+      return window.matchMedia("(max-width: 991.98px)").matches;
+    }
+
+    // ===== Desktop: حفظ حالة الطيّ =====
+    function applyDesktopSavedState(){
+      if (isMobile()) return;
+      const saved = localStorage.getItem("sidebarCollapsed");
+      if (saved === "1") {
+        sidebar.classList.add("collapsed");
+        content.classList.add("expanded");
+      } else {
+        sidebar.classList.remove("collapsed");
+        content.classList.remove("expanded");
+      }
+    }
+
+    applyDesktopSavedState();
+
+    // ===== Toggle =====
+    function openMobileSidebar(){
+      document.body.classList.add("sidebar-open");
+    }
+    function closeMobileSidebar(){
+      document.body.classList.remove("sidebar-open");
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      if (isMobile()) {
+        // موبايل: overlay drawer
+        if (document.body.classList.contains("sidebar-open")) closeMobileSidebar();
+        else openMobileSidebar();
+        return;
+      }
+
+      // Desktop: collapse
+      sidebar.classList.toggle("collapsed");
+      content.classList.toggle("expanded");
+      localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed") ? "1" : "0");
+    });
+
+    // backdrop click closes on mobile
+    backdrop.addEventListener("click", () => {
+      if (isMobile()) closeMobileSidebar();
+    });
+
+    // ESC يغلق على الموبايل
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && isMobile()) closeMobileSidebar();
+    });
+
+    // لما نكبر/نصغر الشاشة: نرجع نطبّق الصح
+    window.addEventListener("resize", () => {
+      if (!isMobile()) {
+        closeMobileSidebar();
+        applyDesktopSavedState();
+      }
+    });
+
+    // Auto dismiss alerts (optional)
+    setTimeout(() => {
+      document.querySelectorAll(".alert").forEach((el) => {
+        const alert = bootstrap.Alert.getOrCreateInstance(el);
+        alert.close();
+      });
+    }, 3000);
+
+    // إغلاق السايدبار عند الضغط على أي رابط (موبايل فقط)
+    document.querySelectorAll("#sidebar a.nav-link").forEach((a) => {
+      a.addEventListener("click", () => {
+        if (isMobile()) closeMobileSidebar();
+      });
+    });
+
+
+    // =========================
+    // Sidebar Active Link
+    // =========================
+    (function () {
+      const path = window.location.pathname.replace(/\/+$/, "") || "/";
+      const qs = new URLSearchParams(window.location.search);
+
+      // 1) Active by exact/prefix for normal links
+      document.querySelectorAll("#sidebar a.nav-link").forEach((a) => {
+        const hrefRaw = (a.getAttribute("href") || "");
+        if (!hrefRaw || hrefRaw.startsWith("javascript:") || hrefRaw === "#") return;
+
+        const href = hrefRaw.replace(/\/+$/, "");
+        const isExact = href === path;
+        const isPrefix = href !== "/" && path.startsWith(href);
+
+        if (isExact || isPrefix) a.classList.add("active");
+      });
+
+      // 2) Special handling for products section (because dept is sometimes in querystring)
+      if (path.startsWith("/products")) {
+        const root = document.querySelector('[data-key="products-root"]');
+        if (root) root.classList.add("active");
+
+        // dept could be /products/electrical OR /products?dept=electrical
+        let dept = null;
+
+        // from /products/<dept>/...
+        const parts = path.split("/").filter(Boolean); // ["products", "electrical", ...]
+        if (parts.length >= 2 && ["electrical", "linens", "crystal"].includes(parts[1])) {
+          dept = parts[1];
+        }
+
+        // from querystring
+        if (!dept) {
+          const qd = (qs.get("dept") || "").toLowerCase();
+          if (["electrical", "linens", "crystal"].includes(qd)) dept = qd;
+        }
+
+        if (dept) {
+          const link = document.querySelector(`[data-key="products-${dept}"]`);
+          if (link) link.classList.add("active");
+        }
+      }
+    })();
+  </script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

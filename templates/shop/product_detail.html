@@ -1,0 +1,197 @@
+{% extends "shop/layout.html" %}
+{% block title %}{{ pick_lang(product.name, product.name_tr) }}{% endblock %}
+
+{% block content %}
+<div class="bk-product-page">
+
+  <nav class="small mb-3">
+    <a href="/shop/" class="text-decoration-none text-muted">{{ _('الرئيسية') }}</a>
+    <span class="text-muted">/</span>
+    <a href="/shop/products" class="text-decoration-none text-muted">{{ _('المنتجات') }}</a>
+    <span class="text-muted">/</span>
+    <span class="text-dark">{{ pick_lang(product.name, product.name_tr) }}</span>
+  </nav>
+
+  <div class="row g-4">
+
+{# ================== GALLERY ================== #}
+<div class="col-12 col-lg-6">
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="bk-gallery">
+
+      {# Helper: build a usable url for ProductImage.image_path #}
+      {% macro img_url(img) -%}
+        {%- if img and img.image_path -%}
+          {%- set p = img.image_path -%}
+          {# إذا مخزن مع static/ نشيله #}
+          {%- if p.startswith('static/') -%}
+            {{ url_for('static', filename=p[7:]) }}
+          {%- else -%}
+            {{ url_for('static', filename=p) }}
+          {%- endif -%}
+        {%- else -%}
+          {{ '' }}
+        {%- endif -%}
+      {%- endmacro %}
+
+      {# fallback: logo image #}
+      {% set fallback_img = url_for('static', filename='shop/img/logo.jpg') %}
+
+      {# Determine main image #}
+      {% if product.images and product.images|length > 0 and img_url(product.images[0]) %}
+        {% set main_img = img_url(product.images[0]) %}
+      {% else %}
+        {% set main_img = fallback_img %}
+      {% endif %}
+
+      {# Main image #}
+      <div class="bk-gallery-main">
+        <img id="bkMainImg" src="{{ main_img }}" alt="{{ pick_lang(product.name, product.name_tr) }}">
+      </div>
+
+      {# Thumbnails #}
+      <div class="bk-gallery-thumbs">
+        {% if product.images and product.images|length > 0 %}
+          {% for img in product.images %}
+            {% set u = img_url(img) %}
+            {% if u %}
+              <button type="button"
+                      class="bk-thumb {% if loop.first %}active{% endif %}"
+                      data-src="{{ u }}">
+                <img src="{{ u }}" alt="thumb">
+              </button>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <button type="button" class="bk-thumb active" data-src="{{ main_img }}">
+            <img src="{{ main_img }}" alt="thumb">
+          </button>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+      {# Variants chips #}
+      {% if variants and variants|length > 1 %}
+        <div class="mt-3">
+          <div class="small text-muted mb-2">{{ _('خيارات أخرى') }}</div>
+          <div class="d-flex flex-wrap gap-2">
+            {% for v in variants %}
+              <a class="variant-chip {% if v.id == product.id %}active{% endif %}"
+                 href="/shop/product/{{ v.id }}">
+                {{ pick_lang(v.name, v.name_tr) }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {# ================== INFO ================== #}
+    <div class="col-12 col-lg-6">
+      <div class="bk-product-info">
+
+        <h1 class="h4 fw-bold mb-1">{{ pick_lang(product.name, product.name_tr) }}</h1>
+
+        {% set brand_name = (product.brand_rel.name if product.brand_rel else product.brand) %}
+        {% if brand_name %}
+          <div class="text-muted">{{ _('الماركة') }}: <span class="fw-semibold">{{ brand_name }}</span></div>
+        {% endif %}
+
+        <!-- {% if product.code %}
+          <div class="text-muted small mt-1">{{ _('الكود') }}: {{ product.code }}</div>
+        {% endif %} -->
+
+        <div class="bk-divider my-3"></div>
+
+        {# Price area #}
+        {% if is_shop_logged_in %}
+          <div class="bk-price-box">
+            {% if product.is_discount_active %}
+              <div class="text-muted text-decoration-line-through">
+                {{ product.base_cash_price }} <span class="small">{{ _('$') }}</span>
+              </div>
+              <div class="bk-main-price">
+                {{ product.discount_price }} <span class="small text-muted">{{ _('$') }}</span>
+              </div>
+              <!-- <span class="bk-discount-badge">{{ _('خصم') }}</span> -->
+            {% else %}
+              <div class="bk-main-price">
+                {{ product.base_cash_price }} <span class="small text-muted">{{ _('$') }}</span>
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="alert alert-light border rounded-4">
+            <i class="bi bi-lock"></i>
+            {{ _('سجّل دخول لرؤية السعر') }}
+            <a href="/shop/login" class="text-decoration-none fw-semibold">{{ _('تسجيل الدخول') }}</a>
+          </div>
+        {% endif %}
+
+        {# Actions #}
+        <div class="d-grid gap-2 mt-3">
+          {% if whatsapp_product_link %}
+            <a class="btn btn-success py-2 rounded-3" href="{{ whatsapp_product_link }}" target="_blank">
+              <i class="bi bi-whatsapp"></i> {{ _('اسأل عبر واتساب') }}
+            </a>
+          {% endif %}
+          <a class="btn btn-outline-dark py-2 rounded-3" href="/shop/products">
+            <i class="bi bi-arrow-right"></i> {{ _('رجوع للمنتجات') }}
+          </a>
+        </div>
+
+        {# Description #}
+        {% set desc = pick_lang(product.description or '', product.description_tr or product.description or '') %}
+        {% if desc %}
+          <div class="bk-divider my-4"></div>
+          <h2 class="h6 fw-bold mb-2">{{ _('الوصف') }}</h2>
+          <div class="text-muted" style="white-space: pre-line;">{{ desc }}</div>
+        {% endif %}
+
+        {# Specs #}
+        {% if specs and specs|length > 0 %}
+          <div class="bk-divider my-4"></div>
+          <h2 class="h6 fw-bold mb-2">{{ _('المواصفات') }}</h2>
+          <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <tbody>
+                  {% for s in specs %}
+                    <tr>
+                      <td class="text-muted small" style="width: 38%;">{{ s.label }}</td>
+                      <td class="fw-semibold">{{ s.value }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  (function () {
+    const main = document.getElementById("bkMainImg");
+    const thumbs = document.querySelectorAll(".bk-thumb");
+    if (!main || !thumbs.length) return;
+
+    thumbs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        thumbs.forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        const src = btn.getAttribute("data-src");
+        if (src) main.setAttribute("src", src);
+      });
+    });
+  })();
+</script>
+{% endblock %}

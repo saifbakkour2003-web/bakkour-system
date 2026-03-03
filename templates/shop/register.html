@@ -1,0 +1,65 @@
+{% extends "shop/layout.html" %}
+{% block title %}{{ _('إنشاء حساب') }}{% endblock %}
+
+{% block content %}
+<div class="bk-auth-page">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-7 col-lg-5">
+
+      <div class="card bk-auth-card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5">
+
+          <h1 class="h5 fw-bold mb-3 text-center">{{ _('إنشاء حساب') }}</h1>
+
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for cat, msg in messages %}
+                <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <div class="alert alert-light border rounded-4 small">
+            ⏳ {{ _('بعد التسجيل، حسابك سيكون قيد المراجعة ولن تظهر الأسعار حتى يتم تفعيله.') }}
+          </div>
+
+          <form method="post" action="/shop/register" class="d-grid gap-3">
+
+            <input class="form-control bk-input" name="first_name" 
+                   placeholder="{{ _('الاسم') }}" required>
+
+            <input class="form-control bk-input" name="last_name" 
+                   placeholder="{{ _('النسبة') }}" required>
+
+            <input class="form-control bk-input" name="phone" 
+                   placeholder="{{ _('رقم الهاتف') }}" required>
+
+            <input class="form-control bk-input" name="email" type="email" 
+                   placeholder="{{ _('البريد الإلكتروني') }}" required>
+
+            <input class="form-control bk-input" name="address" 
+                   placeholder="{{ _('العنوان') }}">
+
+            <input class="form-control bk-input" name="password" type="password" 
+                   placeholder="{{ _('كلمة المرور') }}" required>
+
+            <input class="form-control bk-input" name="password2" type="password" 
+                   placeholder="{{ _('تأكيد كلمة المرور') }}" required>
+
+            <button class="btn btn-dark py-2 rounded-3">
+              {{ _('إنشاء الحساب') }}
+            </button>
+
+          </form>
+
+          <div class="small mt-3 text-center">
+            <a href="/shop/login">{{ _('رجوع لتسجيل الدخول') }}</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

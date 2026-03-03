@@ -1,0 +1,44 @@
+{% extends "layout_new.html" %}
+
+{% block title %}{{ _('زبائن دفتر') }} {{ ledger_name }}{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ _('زبائن دفتر') }} {{ ledger_name }}</h2>
+
+<!-- زر إضافة زبون -->
+<a href="/ledger/{{ ledger_code }}/customers/add" class="btn btn-success mb-3">
+    {{ _('+ إضافة زبون جديد') }}
+</a>
+
+<div class="card shadow-sm">
+    <table class="table table-hover mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>{{ _('الرقم') }}</th>
+                <th>{{ _('الاسم') }}</th>
+                <th>{{ _('الهاتف') }}</th>
+                <th>{{ _('ملاحظات') }}</th>
+                <th style="width: 150px;">{{ _('خيارات') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.custom_id }}</td>
+                <td>{{ pick_lang(customer.name, customer.name_tr) }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>{{ customer.notes }}</td>
+                <td>
+                    <a href="/customer/{{ customer.id }}" class="btn btn-primary btn-sm">{{ _('عرض') }}</a>
+                    <a href="/customer/{{ customer.id }}/edit" class="btn btn-warning btn-sm">{{ _('تعديل') }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

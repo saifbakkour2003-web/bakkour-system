@@ -1,0 +1,73 @@
+<!-- templates/installments/invoice_list.html -->
+<!DOCTYPE html>
+<html lang="{{ _('ar') }}" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ _('فاتورة التقسيط -') }} {{ customer.name }}</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='invoice_a5.css') }}">
+</head>
+
+<body>
+  <div class="invoice invoice-a5 compact">
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
+
+    <h2>{{ _('معرض بكّور') }}</h2>
+    <h3>{{ _('فاتورة تقسيط') }}</h3>
+
+    <p><strong>{{ _('الزبون:') }}</strong> {{ customer.name }}</p>
+    <p><strong>{{ _('ID:') }}</strong> {{ customer.custom_id }}</p>
+
+    <hr>
+
+    {% for product in products %}
+      <div class="product-box">
+
+        <h3>{{ _('المنتج:') }} {{ product.name }}</h3>
+        <p><strong>{{ _('السعر الكلي:') }}</strong> {{ product.total_price }} $</p>
+        <p><strong>{{ _('السلفة:') }}</strong> {{ product.initial_payment }} $</p>
+        <p><strong>{{ _('تاريخ الإضافة:') }}</strong> {{ product.date_added.strftime('%Y-%m-%d') }}</p>
+
+        <h4>{{ _('الدفعات') }}</h4>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ _('المبلغ') }}</th>
+              <th>{{ _('التاريخ') }}</th>
+              <th>{{ _('المتبقي') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set remaining = product.total_price - product.initial_payment %}
+
+            {% if product.initial_payment > 0 %}
+              <tr>
+                <td>{{ product.initial_payment }} $ <small class="text-primary">({{ _('سلفة') }})</small></td>
+                <td>{{ product.date_added.strftime('%Y-%m-%d') }}</td>
+                <td>{{ remaining }} $</td>
+              </tr>
+            {% endif %}
+
+            {% for p in product.payments|sort(attribute='date_paid') %}
+              {% set remaining = remaining - p.amount %}
+              <tr>
+                <td>{{ p.amount }} $</td>
+                <td>{{ p.date_paid.strftime('%Y-%m-%d') }}</td>
+                <td>{{ remaining if remaining > 0 else 0 }} $</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <p><strong>{{ _('المتبقي النهائي:') }}</strong> {{ remaining if remaining > 0 else 0 }} $</p>
+      </div>
+    {% endfor %}
+
+  </div>
+
+  <script>window.print();</script>
+</body>
+</html>

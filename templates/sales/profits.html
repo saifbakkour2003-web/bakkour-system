@@ -1,0 +1,149 @@
+{% extends "layout_new.html" %}
+{% block title %}{{ _('الأرباح') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <h2 class="mb-0">📊 {{ _('تقرير الأرباح') }}</h2>
+  </div>
+
+  <!-- فلترات -->
+  <div class="card shadow-sm mb-3 p-3">
+    <div class="d-flex flex-wrap gap-3 align-items-end">
+
+      <form method="GET" action="{{ url_for('sales.profits_report') }}" class="d-flex gap-2 align-items-end">
+        <input type="hidden" name="view" value="day">
+        <div>
+          <label class="form-label mb-1">{{ _('يومي') }}</label>
+          <input type="date" class="form-control" name="day" value="{{ day_str }}">
+        </div>
+        <button class="btn btn-outline-primary">{{ _('عرض') }}</button>
+      </form>
+
+      <form method="GET" action="{{ url_for('sales.profits_report') }}" class="d-flex gap-2 align-items-end">
+        <input type="hidden" name="view" value="month">
+        <div>
+          <label class="form-label mb-1">{{ _('شهري') }}</label>
+          <input type="month" class="form-control" name="month" value="{{ month_str }}">
+        </div>
+        <button class="btn btn-outline-dark">{{ _('عرض') }}</button>
+      </form>
+
+      <form method="GET" action="{{ url_for('sales.profits_report') }}" class="d-flex gap-2 align-items-end">
+        <input type="hidden" name="view" value="range">
+        <div>
+          <label class="form-label mb-1">{{ _('من') }}</label>
+          <input type="date" class="form-control" name="from" value="{{ from_str }}">
+        </div>
+        <div>
+          <label class="form-label mb-1">{{ _('إلى') }}</label>
+          <input type="date" class="form-control" name="to" value="{{ to_str }}">
+        </div>
+        <button class="btn btn-outline-secondary">{{ _('عرض') }}</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- أرقام سريعة -->
+  <div class="row g-3 mb-3">
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3">
+        <div class="text-muted">{{ _('إجمالي المبيعات') }}</div>
+        <div class="fw-bold stat-number">{{ total_revenue }} $</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3">
+        <div class="text-muted">{{ _('إجمالي رأس المال') }}</div>
+        <div class="fw-bold stat-number">{{ total_cost }} $</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm p-3">
+        <div class="text-muted">{{ _('إجمالي الربح') }}</div>
+        <div class="fw-bold stat-number text-success">{{ total_profit }} $</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ملخص يومي -->
+  <div class="card shadow-sm mb-3">
+    <div class="card-header bg-light fw-bold">{{ _('ملخص حسب اليوم') }}</div>
+    <div class="table-responsive">
+      <table class="table mb-0 text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('اليوم') }}</th>
+            <th>{{ _('عدد المبيعات') }}</th>
+            <th>{{ _('مبيعات') }}</th>
+            <th>{{ _('رأس مال') }}</th>
+            <th>{{ _('ربح') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if daily_rows and daily_rows|length %}
+            {% for r in daily_rows %}
+            <tr>
+              <td>{{ r.day }}</td>
+              <td>{{ r.count }}</td>
+              <td>{{ "%.2f"|format(r.revenue) }} $</td>
+              <td>{{ "%.2f"|format(r.cost) }} $</td>
+              <td class="fw-bold">{{ "%.2f"|format(r.profit) }} $</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" class="text-muted py-3">{{ _('لا يوجد بيانات') }}</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- تفاصيل المبيعات -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-light fw-bold">{{ _('تفاصيل المبيعات') }}</div>
+    <div class="table-responsive">
+      <table class="table mb-0 text-center align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('المنتج') }}</th>
+            <th>{{ _('نوع البيع') }}</th>
+            <th>{{ _('سعر البيع') }}</th>
+            <th>{{ _('رأس المال') }}</th>
+            <th>{{ _('الربح') }}</th>
+            <th>{{ _('التاريخ') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in sales %}
+          <tr>
+            <td class="text-start">{{pick_lang(s.product.name, s.product.name_tr) }}</td>
+            <td>
+              {# اختياري: خليها badge لطيف #}
+              {% if s.sale_type in ["cash", "Cash", "نقدي"] %}
+                <span class="badge bg-dark">{{ _('نقدي') }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ _('تقسيط') }}</span>
+              {% endif %}
+            </td>
+            <td>{{ "%.2f"|format(s.sell_price) }}</td>
+            <td>{{ "%.2f"|format(s.cost_price) }}</td>
+            <td class="fw-bold">{{ "%.2f"|format(s.sell_price - s.cost_price) }}</td>
+            <td class="text-nowrap">{{ s.date_created.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="text-muted py-4">{{ _('لا يوجد مبيعات ضمن الفترة') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

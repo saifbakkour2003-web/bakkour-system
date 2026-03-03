@@ -1,0 +1,164 @@
+<!-- templates/products/add.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('إضافة منتج') }}{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">{{ _('إضافة منتج') }}</h2>
+
+{% if forced_department %}
+  <div class="alert alert-info py-2" style="max-width: 720px;">
+    {{ _('القسم:') }} <b>{{ forced_department_label }}</b>
+  </div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm" style="max-width: 720px;">
+
+  <!-- الاسم -->
+  <div class="mb-3">
+    <label class="form-label">{{ _('اسم المنتج') }}</label>
+    <input type="text" name="name" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">{{ _('اسم المنتج (تركي)') }}</label>
+    <input type="text" name="name_tr" class="form-control">
+  </div>
+
+
+  <!-- التصنيف الفرعي -->
+  <div class="mb-3">
+    <label class="form-label">{{ _('التصنيف الفرعي') }}</label>
+    <select name="sub_category_id" class="form-select" id="subCategorySelect" required>
+      <option value="">{{ _('-- اختر --') }}</option>
+      {% for s in sub_categories %}
+        <option value="{{ s.id }}">{{ pick_lang(s.name, s.name_tr) }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- الماركة -->
+  <div class="mb-3">
+    <label class="form-label">{{ _('الماركة') }}</label>
+    <select name="brand_id" class="form-select" required>
+      <option value="">{{ _('-- اختر --') }}</option>
+      {% for b in brands %}
+        <option value="{{ b.id }}">{{ b.name }} ({{ b.code }})</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- الأسعار -->
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <label class="form-label">{{ _('رأس المال') }}</label>
+      <input type="number" step="0.01" name="capital_price" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">{{ _('سعر البيع النقدي') }}</label>
+      <input type="number" step="0.01" name="base_cash_price" class="form-control" required>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <h5 class="mb-3">{{ _('خصائص المنتج') }}</h5>
+  <div id="propertiesContainer" class="mb-3">
+    <div class="text-muted">{{ _('اختر التصنيف الفرعي لعرض الخصائص.') }}</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">ürün açıklaması (AR)</label>
+    <textarea class="form-control" name="description" rows="3">{{ product.description if product else '' }}</textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">ürün açıklaması (TR)</label>
+    <textarea class="form-control" name="description_tr" rows="3">{{ product.description_tr if product else '' }}</textarea>
+  </div>
+
+  <hr class="my-4">
+
+  <h5 class="mb-3">ürün fotoğrafları</h5>
+  <div class="mb-3">
+    <label class="form-label">yükle</label>
+    <input class="form-control" type="file" name="images" multiple accept="image/*">
+    <div class="form-text">birden fazla yüleyebilirsiniz</div>
+  </div>
+
+  <button class="btn btn-primary w-100">{{ _('حفظ') }}</button>
+</form>
+
+
+
+<script>
+  const subSelect = document.getElementById("subCategorySelect");
+  const container = document.getElementById("propertiesContainer");
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function renderProperties(props) {
+    if (!props || props.length === 0) {
+      container.innerHTML = `<div class="text-muted">لا توجد خصائص لهذا التصنيف.</div>`;
+      return;
+    }
+
+    let html = "";
+    for (const p of props) {
+      const requiredAttr = p.is_required ? "required" : "";
+      const requiredStar = p.is_required ? `<span class="text-danger">*</span>` : "";
+
+      html += `<div class="mb-3">
+        <label class="form-label">${escapeHtml(p.name)} ${requiredStar}</label>`;
+
+      if (p.input_type === "select") {
+        html += `<select name="property_${p.id}" class="form-select" ${requiredAttr}>
+          <option value="">-- اختر --</option>`;
+        for (const v of (p.values || [])) {
+          const optVal = (typeof v === "string") ? v : v.value;
+          const optLabel = (typeof v === "string") ? v : v.label;
+          html += `<option value="${escapeHtml(optVal)}">${escapeHtml(optLabel)}</option>`;
+        }
+
+        html += `</select>`;
+      } else if (p.input_type === "number") {
+        html += `<input type="number" name="property_${p.id}" class="form-control" ${requiredAttr}>`;
+      } else {
+        html += `<input type="text" name="property_${p.id}" class="form-control" ${requiredAttr}>`;
+      }
+
+      html += `</div>`;
+    }
+
+    container.innerHTML = html;
+  }
+
+  async function loadProperties() {
+    const subId = subSelect.value;
+    if (!subId) {
+      container.innerHTML = `<div class="text-muted">اختر التصنيف الفرعي لعرض الخصائص.</div>`;
+      return;
+    }
+
+    container.innerHTML = `<div class="text-muted">جاري تحميل الخصائص...</div>`;
+
+    try {
+      // ✅ endpoint الآمن: حسب subcategory (وفيه dept filter من الباك)
+      const res = await fetch(`/products/api/properties/${subId}`);
+      const data = await res.json();
+      renderProperties(data);
+    } catch (e) {
+      container.innerHTML = `<div class="text-danger">فشل تحميل الخصائص.</div>`;
+    }
+  }
+
+  subSelect.addEventListener("change", loadProperties);
+</script>
+
+{% endblock %}

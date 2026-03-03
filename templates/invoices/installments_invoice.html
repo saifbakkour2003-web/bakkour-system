@@ -1,0 +1,77 @@
+<!-- templates/invoices/installments_invoice.html -->
+<!DOCTYPE html>
+<html lang="{{ _('ar') }}" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ _('فاتورة تقسيط -') }} {{ customer.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
+</head>
+
+<body>
+  <div class="invoice invoice-a4">
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
+
+    <h2>{{ _('معرض بكّور') }}</h2>
+    <h3>{{ _('فاتورة تقسيط') }}</h3>
+
+    <p><strong>{{ _('الاسم:') }}</strong> {{ pick_lang(customer.name, customer.name_tr) }}</p>
+    <p><strong>{{ _('ID:') }}</strong> {{ customer.custom_id }}</p>
+
+    <hr>
+
+    <h3>{{ _('حركات التقسيط') }}</h3>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>{{ _('التاريخ') }}</th>
+          <th>{{ _('النوع') }}</th>
+          <th>{{ _('الوصف') }}</th>
+          <th>{{ _('المبلغ') }}</th>
+          <th>{{ _('الرصيد بعد الحركة') }}</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for e in events %}
+        <tr>
+          <td>{{ e.date.strftime('%Y-%m-%d') if e.date else '' }}</td>
+          <td>
+            {% if e.type == 'installment_product' %}{{ _('منتج تقسيط') }}
+            {% elif e.type == 'installment_initial_payment' %}{{ _('دفعة أولى') }}
+            {% elif e.type == 'installment_payment' %}{{ _('دفعة تقسيط') }}
+            {% else %}—{% endif %}
+          </td>
+          <td>{{ e.name if e.name else '—' }}</td>
+          <td>{% if e.sign == '+' %}+{% else %}-{% endif %} {{ "%.2f"|format(e.amount) }}</td>
+          <td>{{ "%.2f"|format(e.balance) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <div class="summary-row"><span><strong>{{ _('إجمالي التقسيط:') }}</strong></span><span>{{ "%.2f"|format(total_installments) }} $</span></div>
+
+      <hr>
+
+      <div class="summary-row"><span><strong>{{ _('إجمالي الدفعة الأولى:') }}</strong></span><span>{{ "%.2f"|format(total_initial_paid) }} $</span></div>
+      <div class="summary-row"><span><strong>{{ _('إجمالي دفعات التقسيط:') }}</strong></span><span>{{ "%.2f"|format(total_installment_paid) }} $</span></div>
+      <div class="summary-row"><span><strong>{{ _('إجمالي المدفوع:') }}</strong></span><span>{{ "%.2f"|format(total_paid) }} $</span></div>
+
+      <hr>
+
+      <div class="summary-row big">
+        <span>{{ _('الصافي النهائي (المتبقي):') }}</span>
+        <span>{{ "%.2f"|format(remaining) }} $</span>
+      </div>
+    </div>
+
+  </div>
+
+  {% if print_mode %}
+    <script>window.print();</script>
+  {% endif %}
+</body>
+</html>

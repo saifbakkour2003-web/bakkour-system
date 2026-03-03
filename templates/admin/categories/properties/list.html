@@ -1,0 +1,93 @@
+<!-- templates/admin/categories/properties/list.html -->
+{% extends "layout_new.html" %}
+{% block title %}{{ _('الخصائص') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+    <h2 class="mb-0">{{ _('🎛️ خصائص المنتجات') }}</h2>
+
+    <a href="{{ url_for('admin_properties.add_property', dept=dept) }}"
+       class="btn btn-success">
+      {{ _('+ إضافة خاصية') }}
+    </a>
+  </div>
+
+  <div class="d-flex gap-2 mb-3">
+    <a class="btn btn-sm btn-outline-warning {% if dept=='electrical' %}active{% endif %}"
+       href="{{ url_for('admin_properties.list_properties', dept='electrical') }}">{{ _('⚡ كهربائيات') }}</a>
+    <a class="btn btn-sm btn-outline-info {% if dept=='linens' %}active{% endif %}"
+       href="{{ url_for('admin_properties.list_properties', dept='linens') }}">{{ _('🧺 بياضات') }}</a>
+    <a class="btn btn-sm btn-outline-secondary {% if dept=='crystal' %}active{% endif %}"
+       href="{{ url_for('admin_properties.list_properties', dept='crystal') }}">{{ _('🍷 بلوريات') }}</a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('#') }}</th>
+            <th>{{ _('الاسم') }}</th>
+            <th>{{ _('النوع') }}</th>
+            <th>{{ _('النطاق') }}</th>
+            <th class="col-actions">{{ _('إجراءات') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in properties %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ pick_lang(p.name, p.name_tr) }}</td>
+
+            <td>
+              <span class="badge bg-info">
+                {% if p.input_type == 'text' %}{{ _('نص') }}
+                {% elif p.input_type == 'number' %}{{ _('رقم') }}
+                {% elif p.input_type == 'select' %}{{ _('قائمة') }}
+                {% else %}{{ p.input_type }}
+                {% endif %}
+              </span>
+              {% if p.is_required %}
+                <span class="badge bg-warning text-dark">{{ _('إلزامية') }}</span>
+              {% endif %}
+            </td>
+
+            <td>
+              {% if p.is_global %}
+                <span class="badge bg-success">{{ _('Global') }}</span>
+              {% else %}
+                {% for s in p.sub_categories %}
+                  <span class="badge bg-light text-dark">{{ pick_lang(s.name, s.name_tr) }}</span>
+                {% endfor %}
+              {% endif %}
+            </td>
+
+            <td class="col-actions">
+              <a href="{{ url_for('admin_properties.edit_property', property_id=p.id, dept=dept) }}"
+                 class="btn btn-sm btn-outline-primary">{{ _('تعديل') }}</a>
+
+              <a href="{{ url_for('admin_properties.manage_values', property_id=p.id, dept=dept) }}"
+                 class="btn btn-sm btn-outline-secondary">{{ _('قيم') }}</a>
+
+              <form method="POST"
+                    action="{{ url_for('admin_properties.delete_property', property_id=p.id) }}"
+                    class="d-inline"
+                    onsubmit="return confirm('متأكد من الحذف؟');">
+                <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-muted py-4">{{ _('لا يوجد خصائص') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

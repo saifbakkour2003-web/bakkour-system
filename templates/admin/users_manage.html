@@ -1,0 +1,103 @@
+{% extends "layout_new.html" %}
+
+{% block content %}
+<div class="container py-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="m-0">⚙️ {{ _('إدارة الحسابات') }}</h2>
+
+    <a class="btn btn-outline-secondary btn-sm" href="/admin/users/pending">
+      🧾 {{ _('طلبات الحسابات') }}
+    </a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, msg in messages %}
+        <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="card rounded-4">
+    <div class="card-header fw-bold">{{ _('الحسابات') }}</div>
+    <div class="card-body">
+      {% if users %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>{{ _('البريد') }}</th>
+                <th>{{ _('الدور') }}</th>
+                <th>{{ _('الحالة') }}</th>
+                <th style="min-width:240px;">{{ _('ربط الزبون') }}</th>
+                <th class="text-end">{{ _('إجراءات') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for u in users %}
+                <tr>
+                  <td>
+                    <div class="fw-semibold">{{ u.email }}</div>
+                    <div class="small text-muted">
+                      {{ _('Customer ID') }}:
+                      <b>{{ u.customer_ref_code if u.customer_ref_code else '-' }}</b>
+                    </div>
+                  </td>
+
+                  <td>{{ u.role }}</td>
+                  <td>
+                    {% if u.status == 'active' %}
+                      <span class="badge text-bg-success">{{ _('مفعّل') }}</span>
+                    {% elif u.status == 'pending' %}
+                      <span class="badge text-bg-warning">{{ _('قيد المراجعة') }}</span>
+                    {% elif u.status == 'blocked' %}
+                      <span class="badge text-bg-danger">{{ _('محظور') }}</span>
+                    {% else %}
+                      <span class="badge text-bg-secondary">{{ u.status }}</span>
+                    {% endif %}
+                  </td>
+
+                  <td>
+                    <form method="post" action="/admin/users/{{ u.id }}/link-customer" class="d-flex gap-2">
+                    <input class="form-control form-control-sm" name="customer_ref_code"
+                            value="{{ u.customer_ref_code or '' }}"
+                            placeholder="{{ _('مثل B.1') }}">
+                    <button class="btn btn-sm btn-outline-primary">{{ _('حفظ') }}</button>
+                    </form>
+
+                    <div class="small text-muted mt-1">
+                      {{ _('اتركه فارغًا لإزالة الربط') }}
+                    </div>
+                  </td>
+
+                  <td class="text-end">
+                    <form method="post" action="/admin/users/{{ u.id }}/toggle-admin" class="d-inline">
+                      {% if u.role == 'admin' %}
+                        <button class="btn btn-sm btn-outline-warning">⭐ {{ _('إزالة أدمن') }}</button>
+                      {% else %}
+                        <button class="btn btn-sm btn-warning">⭐ {{ _('جعله أدمن') }}</button>
+                      {% endif %}
+                    </form>
+
+                    {% if u.status == 'blocked' %}
+                      <form method="post" action="/admin/users/{{ u.id }}/unblock" class="d-inline">
+                        <button class="btn btn-sm btn-outline-success">♻️ {{ _('إلغاء الحظر') }}</button>
+                      </form>
+                    {% else %}
+                      <form method="post" action="/admin/users/{{ u.id }}/block" class="d-inline">
+                        <button class="btn btn-sm btn-outline-danger">⛔ {{ _('حظر') }}</button>
+                      </form>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-muted small">{{ _('لا يوجد حسابات') }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+<div class="card rounded-4 border-0 shadow-sm">
+  <div class="card-body p-3">
+
+    <form method="get" action="/shop/products" class="d-grid gap-3">
+
+      <div>
+        <label class="form-label small text-muted">{{ _('بحث') }}</label>
+        <input type="text" name="q" value="{{ request.args.get('q','') }}"
+               class="form-control bk-input" placeholder="{{ _('اكتب اسم المنتج...') }}">
+      </div>
+
+      <div>
+        <label class="form-label small text-muted">{{ _('التصنيف') }}</label>
+        <select name="cat" class="form-select bk-input">
+          <option value="">{{ _('الكل') }}</option>
+          <option value="fridges" {% if request.args.get('cat')=='fridges' %}selected{% endif %}>{{ _('برادات') }}</option>
+          <option value="washers" {% if request.args.get('cat')=='washers' %}selected{% endif %}>{{ _('غسالات') }}</option>
+          <option value="ovens" {% if request.args.get('cat')=='ovens' %}selected{% endif %}>{{ _('أفران') }}</option>
+          <option value="small" {% if request.args.get('cat')=='small' %}selected{% endif %}>{{ _('أجهزة صغيرة') }}</option>
+          <option value="ac" {% if request.args.get('cat')=='ac' %}selected{% endif %}>{{ _('مكيفات') }}</option>
+          <option value="tvs" {% if request.args.get('cat')=='tvs' %}selected{% endif %}>{{ _('تلفزيونات') }}</option>
+        </select>
+      </div>
+
+      <div class="d-flex gap-2">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="only_discounted" value="1"
+                 id="onlyDiscounted" {% if request.args.get('only_discounted') %}checked{% endif %}>
+          <label class="form-check-label" for="onlyDiscounted">{{ _('عروض فقط') }}</label>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button class="btn btn-dark">{{ _('تطبيق') }}</button>
+        <a class="btn btn-outline-secondary" href="/shop/products">{{ _('إعادة ضبط') }}</a>
+      </div>
+
+      {% if not is_shop_logged_in %}
+        <div class="alert alert-light border rounded-4 small mb-0">
+          <i class="bi bi-lock"></i>
+          {{ _('الأسعار مخفية للضيوف.') }}
+          <a href="/shop/login" class="text-decoration-none fw-semibold">{{ _('سجّل دخول') }}</a>
+        </div>
+      {% endif %}
+
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<!-- templates/shop/special_offers.html -->
+{% extends "shop/layout.html" %}
+
+{% block title %}{{ _("العروض الخاصة") }}{% endblock %}
+
+{% macro money(x) -%}
+  {{ "%.2f"|format(x or 0) }}
+{%- endmacro %}
+
+{% block content %}
+<div class="container py-3">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h5 fw-bold mb-0">🎁 {{ _("العروض الخاصة") }}</h1>
+    <a class="btn btn-outline-dark btn-sm" href="/shop/">{{ _("رجوع") }}</a>
+  </div>
+
+  {% if running and running|length %}
+    <h2 class="h6 fw-bold mb-2">{{ _("عروض سارية") }}</h2>
+
+    <div class="d-grid gap-3">
+      {% for o in running %}
+        {% include "shop/partials/special_offer_card.html" %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-light border rounded-4">
+      {{ _("لا يوجد عروض سارية حالياً.") }}
+    </div>
+  {% endif %}
+
+  <div class="my-4"></div>
+
+  <h2 class="h6 fw-bold mb-2 text-muted">{{ _("عروض سابقة") }}</h2>
+  <div class="d-grid gap-3">
+    {% for o in previous %}
+      {% include "shop/partials/special_offer_card.html" %}
+    {% else %}
+      <div class="text-muted small">{{ _("لا يوجد عروض سابقة.") }}</div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %} 

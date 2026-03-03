@@ -1,0 +1,83 @@
+{% extends "layout_new.html" %}
+{% block title %}{{ _('إدارة الماركات') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-end mb-3">
+    <h2 class="mb-0">{{ _('🏷️ إدارة الماركات') }}</h2>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">{{ _('إضافة ماركة جديدة') }}</div>
+    <div class="card-body">
+      <form method="POST" class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">{{ _('اسم الماركة') }}</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">{{ _('كود الماركة') }}</label>
+          <input type="text" name="code" class="form-control text-uppercase" required>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">{{ _('القسم') }}</label>
+          <select name="department" class="form-select" required>
+            <option value="electrical">{{ _('⚡ كهربائيات') }}</option>
+            <option value="linens">{{ _('🧺 بياضات') }}</option>
+            <option value="crystal">{{ _('🍷 بلوريات') }}</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <button class="btn btn-primary">{{ _('إضافة') }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>{{ _('#') }}</th>
+            <th>{{ _('الاسم') }}</th>
+            <th>{{ _('القسم') }}</th>
+            <th>{{ _('الكود') }}</th>
+            <th class="col-actions">{{ _('إجراءات') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in brands %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ b.name }}</td>
+            <td>
+              <span class="badge dept-badge dept-{{ b.department }}">
+                {{ b.department }}
+              </span>
+            </td>
+            <td class="fw-bold">{{ b.code }}</td>
+            <td class="col-actions">
+              <form method="POST"
+                    action="{{ url_for('admin_brands.delete_brand', brand_id=b.id) }}"
+                    onsubmit="return confirm('متأكد من الحذف؟');">
+                <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-muted py-4">{{ _('لا يوجد ماركات') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

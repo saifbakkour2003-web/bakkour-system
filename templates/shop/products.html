@@ -1,0 +1,133 @@
+{% extends "shop/layout.html" %}
+{% block title %}{{ _('المنتجات') }}{% endblock %}
+
+{% block content %}
+<div class="bk-products-page">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h5 fw-bold mb-0">{{ _('المنتجات') }}</h1>
+
+    <div class="d-flex gap-2 align-items-center">
+      <div class="dropdown d-none d-lg-block">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+          {{ _('الترتيب') }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="?dept={{ dept or '' }}&q={{ q }}&only_discounted={{ '1' if only_discounted else '' }}&sort=new">{{ _('الأحدث') }}</a></li>
+          <!-- <li><a class="dropdown-item" href="?dept={{ dept or '' }}&q={{ q }}&only_discounted={{ '1' if only_discounted else '' }}&sort=price_asc">{{ _('السعر: الأقل أولاً') }}</a></li>
+          <li><a class="dropdown-item" href="?dept={{ dept or '' }}&q={{ q }}&only_discounted={{ '1' if only_discounted else '' }}&sort=price_desc">{{ _('السعر: الأعلى أولاً') }}</a></li> -->
+        </ul>
+      </div>
+
+      <button class="btn btn-dark btn-sm d-lg-none" type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#bkFilters"
+              aria-controls="bkFilters">
+        <i class="bi bi-funnel"></i> {{ _('فلترة') }}
+      </button>
+    </div>
+  </div>
+
+  {# Dept pills #}
+  <div class="bk-pills mb-3">
+    <a class="bk-cat-pill" href="/shop/products"
+       style="min-width:auto">{% if not dept %}✅ {% endif %}{{ _('الكل') }}</a>
+
+    <a class="bk-cat-pill" href="/shop/products?dept=electrical"
+       style="min-width:auto">{% if dept=='electrical' %}✅ {% endif %}{{ pick_lang('كهربائيات','Elektrik') }}</a>
+
+    <a class="bk-cat-pill" href="/shop/products?dept=linens"
+       style="min-width:auto">{% if dept=='linens' %}✅ {% endif %}{{ pick_lang('بياضات','Tekstil') }}</a>
+
+    <a class="bk-cat-pill" href="/shop/products?dept=crystal"
+       style="min-width:auto">{% if dept=='crystal' %}✅ {% endif %}{{ pick_lang('بلوريات','Kristal') }}</a>
+  </div>
+
+  <div class="row g-3">
+    {# ===== Filters (Right side on desktop) ===== #}
+    <div class="col-12 col-lg-3 order-2 order-lg-1">
+      <div class="d-none d-lg-block">
+        {% include "shop/partials/products_filters.html" %}
+      </div>
+    </div>
+
+    {# ===== Products Grid ===== #}
+    <div class="col-12 col-lg-9 order-1 order-lg-2">
+      <div class="row g-3">
+        {% for p in products %}
+          <div class="col-6 col-md-4 col-xl-3">
+            <div class="card bk-product-card h-100 border-0 shadow-sm bk-hover">
+              <div class="bk-product-img-wrap">
+                {% if p.images and p.images|length > 0 and p.images[0].image_path %}
+                  {% set img_path = p.images[0].image_path %}
+                  {% if img_path.startswith('static/') %}
+                    {% set img_src = url_for('static', filename=img_path[7:]) %}
+                  {% else %}
+                    {% set img_src = url_for('static', filename=img_path) %}
+                  {% endif %}
+                {% else %}
+                  {% set img_src = url_for('static', filename='shop/img/logo.jpg') %}
+                {% endif %}
+
+                <img src="{{ img_src }}" alt="{{ pick_lang(p.name, p.name_tr) }}" class="bk-product-img">
+              </div>
+
+              <div class="card-body p-3 d-flex flex-column">
+                <div class="bk-product-name">{{ pick_lang(p.name, p.name_tr) }}</div>
+                {% set brand_name = (p.brand_rel.name if p.brand_rel else p.brand) %}
+                {% if brand_name %}
+                <div class="bk-product-brand text-muted small mt-1">
+                  {{ brand_name }}
+                </div>
+                {% endif %}
+                {# properties text line (optional) #}
+                <div class="text-muted small mt-1" style="min-height: 1.4em;">
+                  {{ pick_lang(props_text_ar.get(p.id,''), props_text_tr.get(p.id,'')) }}
+                </div>
+
+                {% if is_shop_logged_in %}
+                  <div class="bk-product-price mt-2">
+                    {% if p.is_discounted and p.discount_price %}
+                      <span class="text-muted text-decoration-line-through me-2">{{ p.price }}</span>
+                      <span>{{ p.discount_price }}</span>
+                    {% else %}
+                      <span>{{ p.price }}</span>
+                    {% endif %}
+                    <span class="text-muted small">{{ _('$') }}</span>
+                  </div>
+                {% else %}
+                  <div class="bk-product-login-hint mt-2">
+                    <i class="bi bi-lock"></i>
+                    {{ _('سجّل دخول لرؤية السعر') }}
+                  </div>
+                {% endif %}
+
+                {# ✅ IMPORTANT: detail route is /shop/product/<id> #}
+                <a href="/shop/product/{{ p.id }}" class="btn btn-outline-dark w-100 mt-3 mt-auto">
+                  {{ _('عرض التفاصيل') }}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="col-12">
+            <div class="alert alert-light border rounded-4">
+              {{ _('لا توجد منتجات مطابقة.') }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ===== Filters Offcanvas (mobile) ===== #}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="bkFilters" aria-labelledby="bkFiltersLabel">
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title" id="bkFiltersLabel">{{ _('الفلترة') }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{{ _('إغلاق') }}"></button>
+  </div>
+  <div class="offcanvas-body">
+    {% include "shop/partials/products_filters.html" %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,357 @@
+/* static/app.css */
+:root{
+  --sidebar-w: 250px;
+  --sidebar-w-collapsed: 72px;
+
+  /* Department palette (soft/pastel) */
+  --dept-electrical-1: #FFF9DB;
+  --dept-electrical-2: #FFF3BF;
+  --dept-electrical-3: #FFEC99;
+
+  --dept-linens-1: #F8F9FA;
+  --dept-linens-2: #F1F3F5;
+  --dept-linens-3: #E9ECEF;
+
+  --dept-crystal-1: #F3F0FF;
+  --dept-crystal-2: #E5DBFF;
+  --dept-crystal-3: #D0BFFF;
+}
+
+.app-body{
+  background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.app-sidebar{
+  width: var(--sidebar-w);
+  transition: width .25s ease;
+  overflow-x: hidden;
+  top: 56px; /* تقريبًا ارتفاع navbar */
+  right: 0; /* RTL default */
+  z-index: 1050; /* خلي السايدبار فوق المحتوى */
+}
+
+.app-sidebar.collapsed{
+  width: var(--sidebar-w-collapsed);
+}
+
+.sidebar-text{
+  transition: opacity .15s ease;
+  white-space: nowrap;
+}
+
+.app-sidebar.collapsed .sidebar-text{
+  opacity: 0;
+}
+
+/* Nav links */
+.app-navlink{
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: #212529;
+  border-radius: 10px;
+  padding: .55rem .6rem;
+}
+
+.app-navlink:hover{
+  background: rgba(0,0,0,.04);
+  color: #111;
+}
+
+.app-navicon{
+  font-size: 1.15rem;
+  width: 1.6rem;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.app-subnav{
+  border-right: 2px solid rgba(0,0,0,.06);
+  margin-right: .4rem;
+  padding-right: .4rem;
+}
+
+.app-navlink-sub{
+  padding-top: .35rem;
+  padding-bottom: .35rem;
+}
+
+/* Content */
+.app-content{
+  margin-right: var(--sidebar-w); /* RTL default */
+  transition: margin-right .25s ease, margin-left .25s ease;
+}
+
+.app-content.expanded{
+  margin-right: var(--sidebar-w-collapsed);
+}
+
+/* SubCategory badge system (كما كان بس منظم) */
+.sub-badge{
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: inline-block;
+  color: #212529;
+}
+
+.sub-electrical-1{ background-color: var(--dept-electrical-1); }
+.sub-electrical-2{ background-color: var(--dept-electrical-2); }
+.sub-electrical-3{ background-color: var(--dept-electrical-3); }
+
+.sub-linens-1{ background-color: var(--dept-linens-1); }
+.sub-linens-2{ background-color: var(--dept-linens-2); }
+.sub-linens-3{ background-color: var(--dept-linens-3); }
+
+.sub-crystal-1{ background-color: var(--dept-crystal-1); }
+.sub-crystal-2{ background-color: var(--dept-crystal-2); }
+.sub-crystal-3{ background-color: var(--dept-crystal-3); }
+
+
+/* Department badges (soft / consistent) */
+.dept-badge{
+  font-weight: 600;
+  padding: .4rem .55rem;
+  border-radius: 999px;
+}
+
+.dept-electrical{ background: var(--dept-electrical-2); color:#212529; }
+.dept-linens{ background: var(--dept-linens-2); color:#212529; }
+.dept-crystal{ background: var(--dept-crystal-2); color:#212529; }
+
+/* Small stat number used in dashboards/reports */
+.stat-number{
+  font-size: 18px;
+}
+
+.col-actions{
+  width: 150px;
+}
+
+/* =========================
+   Buttons System
+   ========================= */
+
+/* زر عام بلمسة ناعمة */
+.btn {
+  border-radius: 10px;
+}
+
+/* مقاسات ثابتة للأزرار */
+.btn.btn-sm {
+  border-radius: 9px;
+  padding: 0.25rem 0.5rem;
+}
+
+.btn.btn-lg {
+  border-radius: 12px;
+}
+
+/* أزرار actions بالجداول */
+.btn-action {
+  padding: 0.25rem 0.55rem;
+  border-radius: 9px;
+  line-height: 1.2;
+}
+
+/* أيقونة داخل الزر (RTL default) */
+.btn i.bi {
+  margin-left: 6px;
+  vertical-align: -0.1em;
+}
+
+/* LTR: قلب هوامش أيقونة الزر */
+html[dir="ltr"] .btn i.bi{
+  margin-left: 0;
+  margin-right: 6px;
+}
+
+/* لتقليل “الزحمة” بالجداول */
+.col-actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* Active styling */
+.app-navlink.active{
+  background: rgba(13,110,253,.12);
+  font-weight: 700;
+}
+
+.app-navlink:hover{
+  background: rgba(0,0,0,.04);
+}
+
+/* Sub links a bit smaller */
+.app-navlink-sub{
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.app-navlink-sub.active{
+  background: rgba(13,110,253,.10);
+}
+
+/* =========================
+   Responsive Sidebar (Mobile/Tablet)
+   ========================= */
+
+/* Overlay backdrop */
+.app-backdrop{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  z-index: 1040; /* تحت السايدبار */
+}
+
+/* شاشات أقل من lg */
+@media (max-width: 991.98px){
+
+  /* المحتوى ما لازم يضل مزاح */
+  .app-content{
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  /* السايدبار يصير drawer مخفي (RTL default: مخفي لليمين) */
+  .app-sidebar{
+    right: 0;
+    left: auto;
+    width: 280px;
+    max-width: 86vw;
+    transform: translateX(110%); /* مخفي برا الشاشة (RTL) */
+    transition: transform .25s ease;
+  }
+
+  /* لما يفتح */
+  body.sidebar-open .app-sidebar{
+    transform: translateX(0);
+  }
+
+  /* backdrop يظهر */
+  body.sidebar-open .app-backdrop{
+    display: block;
+  }
+
+  /* على الموبايل ما بدنا collapsed يلعب */
+  .app-sidebar.collapsed{
+    width: 280px;
+  }
+
+  .app-sidebar.collapsed .sidebar-text{
+    opacity: 1;
+  }
+
+  /* subnav border لا يضغط كتير */
+  .app-subnav{
+    border-right: 1px solid rgba(0,0,0,.06);
+  }
+}
+
+body.sidebar-open{
+  overflow: hidden;
+}
+
+/* =========================
+   Tables: mobile friendly
+   ========================= */
+.table-responsive{
+  border-radius: 12px;
+}
+
+.table thead th{
+  white-space: nowrap;
+}
+
+.table td{
+  vertical-align: middle;
+}
+
+@media (max-width: 576px){
+  .table{
+    font-size: 13px;
+  }
+  .stat-number{
+    font-size: 16px;
+  }
+}
+
+/* Actions group helper */
+.actions-group{
+  display: inline-flex;
+  gap: .35rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 576px){
+  .actions-group{
+    justify-content: center;
+  }
+}
+
+/* Sticky filters (admin tables) */
+.sticky-filter{
+  position: sticky;
+  top: 64px; /* تحت الـ navbar */
+  z-index: 10;
+  background: #f8f9fa;
+  padding: 8px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+/* =========================
+   LTR Support (Turkish)
+   ========================= */
+
+/* Desktop: sidebar left + content margin-left */
+html[dir="ltr"] .app-sidebar{
+  left: 0;
+  right: auto;
+  border-left: 0 !important;
+  border-right: 1px solid rgba(0,0,0,.12);
+}
+
+html[dir="ltr"] .app-content{
+  margin-left: var(--sidebar-w);
+  margin-right: 0;
+}
+
+html[dir="ltr"] .app-content.expanded{
+  margin-left: var(--sidebar-w-collapsed);
+  margin-right: 0;
+}
+
+/* subnav border flips */
+html[dir="ltr"] .app-subnav{
+  border-right: 0;
+  margin-right: 0;
+  padding-right: 0;
+
+  border-left: 2px solid rgba(0,0,0,.06);
+  margin-left: .4rem;
+  padding-left: .4rem;
+}
+
+@media (max-width: 991.98px){
+  /* Mobile: drawer hidden to the LEFT in LTR */
+  html[dir="ltr"] .app-sidebar{
+    left: 0;
+    right: auto;
+    transform: translateX(-110%); /* مخفي برا الشاشة (LTR) */
+  }
+
+  html[dir="ltr"] body.sidebar-open .app-sidebar{
+    transform: translateX(0);
+  }
+
+  /* subnav border on mobile */
+  html[dir="ltr"] .app-subnav{
+    border-left: 1px solid rgba(0,0,0,.06);
+  }
+}
