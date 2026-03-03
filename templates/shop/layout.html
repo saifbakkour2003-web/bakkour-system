@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='shop/css/store.css') }}">
   {% block head %}{% endblock %}
 </head>
-  <script src="{{ url_for('static', filename='shop/js/store.js') }}"></script>
 
 <body class="storefront">
 
@@ -29,7 +28,7 @@
         </button>
 
         <!-- Brand -->
-        <a href="/shop" class="bk-brand text-decoration-none d-flex align-items-center gap-2">
+        <a href="/shop/" class="bk-brand text-decoration-none d-flex align-items-center gap-2">
           <img src="{{ url_for('static', filename='shop/img/logo.jpg') }}" alt="{{ _('معرض بكّور') }}" height="26">
           <span class="bk-brand-name">{{ _('معرض بكّور') }}</span>
         </a>
@@ -55,10 +54,6 @@
             <i class="bi bi-person"></i>
           </a>
 
-          {# اختياري لاحقاً:
-          <a class="btn bk-icon-btn" href="/shop/cart" aria-label="{{ _('السلة') }}"><i class="bi bi-bag"></i></a>
-          #}
-
         </div>
       </div>
 
@@ -72,13 +67,6 @@
           </button>
         </div>
       </form>
-
-      <!-- Quick links -->
-      <!-- <div class="bk-quick-links mt-2">
-        <a class="bk-pill active" href="/shop/featured">{{ _('الأكثر تميزًا') }}</a>
-        <a class="bk-pill" href="/shop/offers">{{ _('العروض') }}</a>
-        <a class="bk-pill" href="/shop/ramadan">{{ _('رمضان') }}</a>
-      </div> -->
 
     </div>
   </header>
@@ -105,7 +93,7 @@
         {% endif %}
       </div>
 
-      <!-- Language inside menu (optional but useful) -->
+      <!-- Language inside menu -->
       <div class="p-3 border-bottom">
         <div class="small text-muted mb-2">{{ _('اللغة') }}</div>
         <div class="d-flex gap-2">
@@ -116,7 +104,7 @@
 
       <!-- Menu -->
       <nav class="list-group list-group-flush bk-menu">
-        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop">
+        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/">
           <span class="d-flex align-items-center gap-2"><i class="bi bi-house"></i><span>{{ _('الرئيسية') }}</span></span>
           <i class="bi bi-chevron-left"></i>
         </a>
@@ -149,14 +137,6 @@
         {% endif %}
       </nav>
 
-      <!-- <div class="p-3 border-top text-muted small">
-        {{ _('صفحات مساعدة') }}
-        <div class="mt-2">
-          <a class="text-decoration-none d-block py-1" href="/shop/order-tracking">{{ _('تتبع الطلب') }}</a>
-          <a class="text-decoration-none d-block py-1" href="/shop/help">{{ _('المساعدة') }}</a>
-        </div>
-      </div> -->
-
     </div>
   </div>
 
@@ -184,10 +164,7 @@
   <footer class="border-top py-4">
     <div class="container small d-flex flex-column flex-md-row justify-content-between gap-2">
       <div>© {{ _('جميع الحقوق محفوظة') }}</div>
-      <div class="d-flex gap-3">
-        <!-- <a href="/shop/contact">{{ _('التواصل') }}</a>
-        <a href="/shop/contact">{{ _('الشكاوى') }}</a> -->
-      </div>
+      <div class="d-flex gap-3"></div>
     </div>
   </footer>
 
