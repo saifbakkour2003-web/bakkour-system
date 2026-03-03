@@ -114,7 +114,8 @@ register_shop_routes(app)
 from routes.admin import register_admin_routes
 register_admin_routes(app)
 
-
+from root import register as register_root
+register_root(app)
 # =========================
 # SQLite-only patches (legacy)
 # =========================
