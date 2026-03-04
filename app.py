@@ -13,11 +13,7 @@ from utils.db_schema import apply_all_patches, ensure_sqlite_column
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(
-    __name__,
-    static_folder=os.path.join(BASE_DIR, "static"),
-    static_url_path="/static"
-)
+app = Flask(__name__)
 
 # =========================
 # Static files (حل مشكلة Render)
