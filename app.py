@@ -142,6 +142,13 @@ def apply_db_patches():
         column_sql="TEXT DEFAULT 'دفعة عامة'",
     )
 
+@app.get("/debug-static")
+def debug_static():
+    import os
+    path = os.path.join(BASE_DIR, "static")
+    files = os.listdir(path) if os.path.exists(path) else "static folder not found"
+    return {"base_dir": BASE_DIR, "static_path": path, "files": files}
+
 
 with app.app_context():
     if is_sqlite():
