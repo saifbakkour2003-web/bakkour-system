@@ -15,8 +15,6 @@ app = Flask(__name__, static_folder="static", static_url_path="/static")
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-
-
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
@@ -114,9 +112,7 @@ register_shop_routes(app)
 from routes.admin import register_admin_routes
 register_admin_routes(app)
 
-@app.get("/", strict_slashes=False)
-def root_index():
-    return redirect("/shop/", code=302)
+
 # =========================
 # SQLite-only patches (legacy)
 # =========================
