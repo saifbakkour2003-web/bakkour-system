@@ -11,7 +11,7 @@ from utils.db_schema import apply_all_patches, ensure_sqlite_column
 # App Setup
 # =========================
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path"/static")
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
