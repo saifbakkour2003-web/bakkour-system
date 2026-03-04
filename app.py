@@ -126,6 +126,10 @@ register_admin_routes(app)
 # SQLite-only patches
 # =========================
 
+@app.get("/")
+def root():
+    return redirect("/shop/",code=302)
+
 def is_sqlite():
     uri = app.config.get("SQLALCHEMY_DATABASE_URI", "")
     return uri.startswith("sqlite")
