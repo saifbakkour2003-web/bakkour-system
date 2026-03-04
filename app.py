@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, redirect
 from flask_migrate import Migrate
 import config
 
@@ -114,8 +114,9 @@ register_shop_routes(app)
 from routes.admin import register_admin_routes
 register_admin_routes(app)
 
-from root import register as register_root
-register_root(app)
+@app.get("/", strict_slashes=false)
+def root_index():
+    return redirect("/shop/", code=302)
 # =========================
 # SQLite-only patches (legacy)
 # =========================
