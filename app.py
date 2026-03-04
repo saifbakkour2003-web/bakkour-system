@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect
+from flask import Flask, redirect, send_from_directory
 from flask_migrate import Migrate
 import config
 
@@ -66,6 +66,11 @@ app.config["ALLOWED_IMAGE_EXTENSIONS"] = ALLOWED_IMAGE_EXTENSIONS
 app.config["CONTACT_PHONE_DISPLAY"] = config.CONTACT_PHONE_DISPLAY
 app.config["WHATSAPP_PHONE_E164"] = config.WHATSAPP_PHONE_E164
 app.config["SHAM_CASH_WALLET"] = "e7e80d54bb624e5fe88f3346b62753ca"
+
+
+@app.get("/static/<path:filename>")
+def custom_static(filenmae):
+    return send_from_directory(os.path.join(BASE_DIR, "static"). filename)
 
 
 @app.context_processor
