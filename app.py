@@ -19,6 +19,14 @@ app = Flask(
     static_url_path="/static"
 )
 
+# =========================
+# Static files (حل مشكلة Render)
+# =========================
+
+@app.route("/static/<path:filename>")
+def custom_static(filename):
+    return send_from_directory(os.path.join(BASE_DIR, "static"), filename)
+
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -68,11 +76,6 @@ app.config["WHATSAPP_PHONE_E164"] = config.WHATSAPP_PHONE_E164
 app.config["SHAM_CASH_WALLET"] = "e7e80d54bb624e5fe88f3346b62753ca"
 
 
-@app.get("/static/<path:filename>")
-def custom_static(filenmae):
-    return send_from_directory(os.path.join(BASE_DIR, "static"). filename)
-
-
 @app.context_processor
 def inject_contact_info():
     phone = app.config.get("CONTACT_PHONE_DISPLAY", "")
@@ -91,7 +94,7 @@ def inject_contact_info():
 db.init_app(app)
 init_i18n(app)
 
-# i18n blueprint (مهم جداً)
+# i18n blueprint
 from routes.i18n import i18n_bp
 app.register_blueprint(i18n_bp)
 
@@ -124,7 +127,7 @@ register_admin_routes(app)
 
 
 # =========================
-# SQLite-only patches (legacy)
+# SQLite-only patches
 # =========================
 
 def is_sqlite():
