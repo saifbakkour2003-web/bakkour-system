@@ -11,8 +11,13 @@ from utils.db_schema import apply_all_patches, ensure_sqlite_column
 # App Setup
 # =========================
 
-app = Flask(__name__, static_folder="static", static_url_path="/static")
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(
+    __name__,
+    static_folder=os.path.join(BASE_DIR, "static"),
+    static_url_path="/static"
+)
 
 
 app.config["SESSION_COOKIE_HTTPONLY"] = True
