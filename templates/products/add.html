@@ -1,9 +1,6 @@
-<!-- templates/products/add.html -->
 {% extends "layout_new.html" %}
 {% block title %}{{ _('إضافة منتج') }}{% endblock %}
-
 {% block content %}
-
 <h2 class="mb-4">{{ _('إضافة منتج') }}</h2>
 
 {% if forced_department %}
@@ -13,17 +10,16 @@
 {% endif %}
 
 <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm" style="max-width: 720px;">
-
   <!-- الاسم -->
   <div class="mb-3">
     <label class="form-label">{{ _('اسم المنتج') }}</label>
     <input type="text" name="name" class="form-control" required>
   </div>
+
   <div class="mb-3">
     <label class="form-label">{{ _('اسم المنتج (تركي)') }}</label>
     <input type="text" name="name_tr" class="form-control">
   </div>
-
 
   <!-- التصنيف الفرعي -->
   <div class="mb-3">
@@ -78,17 +74,16 @@
 
   <hr class="my-4">
 
+  <!-- الصور -->
   <h5 class="mb-3">ürün fotoğrafları</h5>
   <div class="mb-3">
     <label class="form-label">yükle</label>
     <input class="form-control" type="file" name="images" multiple accept="image/*">
-    <div class="form-text">birden fazla yüleyebilirsiniz</div>
+    <div class="form-text">birden fazla yükleyebilirsiniz</div>
   </div>
 
   <button class="btn btn-primary w-100">{{ _('حفظ') }}</button>
 </form>
-
-
 
 <script>
   const subSelect = document.getElementById("subCategorySelect");
@@ -120,6 +115,7 @@
       if (p.input_type === "select") {
         html += `<select name="property_${p.id}" class="form-select" ${requiredAttr}>
           <option value="">-- اختر --</option>`;
+
         for (const v of (p.values || [])) {
           const optVal = (typeof v === "string") ? v : v.value;
           const optLabel = (typeof v === "string") ? v : v.label;
@@ -141,6 +137,7 @@
 
   async function loadProperties() {
     const subId = subSelect.value;
+
     if (!subId) {
       container.innerHTML = `<div class="text-muted">اختر التصنيف الفرعي لعرض الخصائص.</div>`;
       return;
@@ -149,7 +146,6 @@
     container.innerHTML = `<div class="text-muted">جاري تحميل الخصائص...</div>`;
 
     try {
-      // ✅ endpoint الآمن: حسب subcategory (وفيه dept filter من الباك)
       const res = await fetch(`/products/api/properties/${subId}`);
       const data = await res.json();
       renderProperties(data);
@@ -160,5 +156,4 @@
 
   subSelect.addEventListener("change", loadProperties);
 </script>
-
 {% endblock %}
