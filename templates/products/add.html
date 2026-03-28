@@ -72,6 +72,44 @@
     <textarea class="form-control" name="description_tr" rows="3">{{ product.description_tr if product else '' }}</textarea>
   </div>
 
+  {% if forced_department == "linens" %}
+  <hr class="my-4">
+  <h5 class="mb-3">المقاسات والألوان والأسعار</h5>
+
+  <div id="variantsContainer">
+    <div class="variant-row border rounded-3 p-3 mb-2">
+      <div class="row g-2">
+        <div class="col-md-3">
+          <label class="form-label">المقاس</label>
+          <input type="text" name="variant_size[]" class="form-control" placeholder="S / M / L">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">اللون</label>
+          <input type="text" name="variant_color[]" class="form-control" placeholder="أبيض / رمادي">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">رأس المال</label>
+          <input type="number" step="0.01" name="variant_capital_price[]" class="form-control">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">سعر البيع</label>
+          <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">الكمية</label>
+          <input type="number" name="variant_stock_qty[]" class="form-control" value="0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mb-3">
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addVariantRow()">
+      + إضافة مقاس
+    </button>
+  </div>
+{% endif %}
+
   <hr class="my-4">
 
   <!-- الصور -->
@@ -155,5 +193,42 @@
   }
 
   subSelect.addEventListener("change", loadProperties);
+
+
+  function addVariantRow(data = {}) {
+    const container = document.getElementById("variantsContainer");
+    if (!container) return;
+
+    const row = document.createElement("div");
+    row.className = "variant-row border rounded-3 p-3 mb-2";
+    row.innerHTML = `
+      <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label">المقاس</label>
+          <input type="text" name="variant_size[]" class="form-control" value="${data.size || ''}" placeholder="S / M / L">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">اللون</label>
+          <input type="text" name="variant_color[]" class="form-control" value="${data.color || ''}" placeholder="أبيض / رمادي">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">رأس المال</label>
+          <input type="number" step="0.01" name="variant_capital_price[]" class="form-control" value="${data.capital_price || ''}">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">سعر البيع</label>
+          <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control" value="${data.base_cash_price || ''}">
+        </div>
+        <div class="col-md-1">
+          <label class="form-label">الكمية</label>
+          <input type="number" name="variant_stock_qty[]" class="form-control" value="${data.stock_qty || 0}">
+        </div>
+        <div class="col-md-1 d-grid">
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.variant-row').remove()">✕</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(row);
+  }
 </script>
 {% endblock %}

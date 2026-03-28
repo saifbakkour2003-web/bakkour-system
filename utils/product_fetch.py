@@ -1,4 +1,3 @@
-# utils/product_fetch.py
 """Shared product fetching/query helpers.
 
 We want ONE consistent query used by both:
@@ -11,10 +10,10 @@ So we avoid duplicated joins and mismatched data between interfaces.
 from __future__ import annotations
 
 from typing import Optional
-
 from sqlalchemy.orm import joinedload
 
-from models import Product, SubCategory, MainCategory, ProductProperty, ProductImage
+from models import Product, SubCategory, MainCategory, ProductProperty, ProductImage, ProductVariant
+
 
 ALLOWED_DEPTS = {"electrical", "linens", "crystal"}
 
@@ -28,6 +27,8 @@ def products_base_query():
     """Base query with all eager-loads used across the app."""
     return (
         Product.query.options(
+            joinedload(Product.images),
+            joinedload(Product.variants),
             joinedload(Product.brand_rel),
             joinedload(Product.sub_category).joinedload(SubCategory.main_category),
             joinedload(Product.properties).joinedload(ProductProperty.property),
@@ -63,18 +64,8 @@ def get_products_query(
 def get_product_by_id(product_id: int, *, for_shop: bool = False):
     """Fetch a single product with all relations eagerly loaded."""
     q = products_base_query().filter(Product.id == product_id)
+
     if for_shop:
         q = q.filter(Product.is_active == True)
+
     return q.first()
-
-
-
-def products_base_query():
-    return (
-        Product.query.options(
-            joinedload(Product.images),  # ✅ هذا الجديد
-            joinedload(Product.brand_rel),
-            joinedload(Product.sub_category).joinedload(SubCategory.main_category),
-            joinedload(Product.properties).joinedload(ProductProperty.property),
-        )
-    )

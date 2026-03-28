@@ -1,3 +1,4 @@
+# routes/admin/products.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify, abort
 from flask_babel import gettext as _, get_locale
 from datetime import datetime
@@ -7,7 +8,7 @@ import os
 from extensions import db
 from models import (
     Product, SubCategory, ProductProperty, Property, Brand, MainCategory,
-    PropertyValue, ProductImage
+    PropertyValue, ProductImage, ProductVariant
 )
 from utils.product_fetch import get_products_query
 from utils.product_code import generate_product_code
@@ -83,6 +84,72 @@ def get_allowed_properties_for_subcategory(sub: SubCategory, dept: str):
 
     scoped_props = list(sub.properties or [])
     return list({p.id: p for p in (global_props + scoped_props)}.values())
+
+def parse_variants_from_form(form):
+    sizes = form.getlist("variant_size[]")
+    colors = form.getlist("variant_color[]")
+    capitals = form.getlist("variant_capital_price[]")
+    prices = form.getlist("variant_base_cash_price[]")
+    stocks = form.getlist("variant_stock_qty[]")
+
+    variants = []
+    max_len = max(
+        len(sizes),
+        len(colors),
+        len(capitals),
+        len(prices),
+        len(stocks),
+        0
+    )
+
+    for i in range(max_len):
+        size = (sizes[i] if i < len(sizes) else "").strip()
+        color = (colors[i] if i < len(colors) else "").strip() or None
+        capital_raw = (capitals[i] if i < len(capitals) else "").strip()
+        price_raw = (prices[i] if i < len(prices) else "").strip()
+        stock_raw = (stocks[i] if i < len(stocks) else "").strip()
+
+        # إذا الصف فاضي كله، نتجاهله
+        if not size and not color and not capital_raw and not price_raw and not stock_raw:
+            continue
+
+        if not size or not capital_raw or not price_raw:
+            raise ValueError("كل صف مقاس يحتاج: مقاس + رأس مال + سعر بيع")
+
+        try:
+            capital_price = float(capital_raw)
+            base_cash_price = float(price_raw)
+            stock_qty = int(stock_raw) if stock_raw else 0
+        except Exception:
+            raise ValueError("قيم المقاسات غير صالحة")
+
+        variants.append({
+            "size": size,
+            "color": color,
+            "capital_price": capital_price,
+            "base_cash_price": base_cash_price,
+            "stock_qty": max(0, stock_qty),
+            "is_available": max(0, stock_qty) > 0,
+            "sort_order": i,
+        })
+
+    return variants
+
+
+def replace_product_variants(product, variants_data):
+    ProductVariant.query.filter_by(product_id=product.id).delete()
+
+    for item in variants_data:
+        db.session.add(ProductVariant(
+            product_id=product.id,
+            size=item["size"],
+            color=item["color"],
+            capital_price=item["capital_price"],
+            base_cash_price=item["base_cash_price"],
+            stock_qty=item["stock_qty"],
+            is_available=item["is_available"],
+            sort_order=item["sort_order"],
+        ))
 
 
 # =========================
@@ -258,6 +325,15 @@ def add_product_by_department(department):
         product.description = request.form.get("description") or None
         product.description_tr = request.form.get("description_tr") or None
 
+        variants_data = []
+        if department == "linens":
+            try:
+                variants_data = parse_variants_from_form(request.form)
+            except ValueError as e:
+                db.session.rollback()
+                flash(str(e), "danger")
+                return redirect(request.url)
+
         db.session.add(product)
         db.session.flush()
 
@@ -311,6 +387,9 @@ def add_product_by_department(department):
             )
             db.session.add(img)
 
+        if department == "linens" and variants_data:
+            replace_product_variants(product, variants_data)
+        
         db.session.commit()
         flash(_("تمت إضافة المنتج بنجاح ✅"), "success")
         return redirect(url_for("products.products_list", dept=department))
@@ -346,6 +425,14 @@ def edit_product(product_id):
         # ✅ (كان مكرر عندك) خليناه مرة وحدة
         product.description = request.form.get("description") or None
         product.description_tr = request.form.get("description_tr") or None
+
+        variants_data = []
+        if product_dept == "linens":
+            try:
+                variants_data = parse_variants_from_form(request.form)
+            except ValueError as e:
+                flash(str(e), "danger")
+                return redirect(request.url)
 
         product.is_discounted = (request.form.get("is_discounted") == "on")
         discount_price = request.form.get("discount_price")
@@ -442,6 +529,9 @@ def edit_product(product_id):
             )
             db.session.add(img)
 
+        if product_dept == "linens":
+            replace_product_variants(product, variants_data)
+
         db.session.commit()
         flash(_("تم تعديل المنتج بنجاح ✅"), "success")
         return redirect(url_for("products.products_list", dept=product_dept))
@@ -462,7 +552,8 @@ def edit_product(product_id):
         sub_categories=sub_categories,
         brands=brands,
         existing_map=existing_map,
-        initial_props=list(initial_props)
+        initial_props=list(initial_props),
+        variants= list(product.variants)
     )
 
 

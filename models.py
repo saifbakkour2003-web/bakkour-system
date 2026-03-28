@@ -329,6 +329,13 @@ class Product(db.Model):
         order_by="ProductImage.sort_order.asc(), ProductImage.id.asc()",
     )
 
+    variants = db.relationship(
+        "ProductVariant",
+        back_populates="product",
+        cascade="all, delete-orphan",
+        order_by="ProductVariant.sort_order.asc(), ProductVariant.id.asc()",
+    )
+
     @property
     def price(self) -> float:
         """Base cash price (legacy alias)."""
@@ -369,6 +376,9 @@ class Product(db.Model):
         except Exception:
             return float(self.base_cash_price or 0)
 
+    @property
+    def has_variants(self):
+        return bool(self.variants)
 
 # =======================
 # Product Property
@@ -481,6 +491,36 @@ class ProductImage(db.Model):
 
     product = db.relationship("Product", back_populates="images")
 
+
+# =======================
+# Product Variant
+# =======================
+class ProductVariant(db.Model):
+    __tablename__ = "product_variant"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True
+    )
+
+    size = db.Column(db.String(50), nullable=False)
+    color = db.Column(db.String(50), nullable=True)
+
+    capital_price = db.Column(db.Float, nullable=False, default=0)
+    base_cash_price = db.Column(db.Float, nullable=False, default=0)
+
+    stock_qty = db.Column(db.Integer, nullable=False, default=0)
+    is_available = db.Column(db.Boolean, nullable=False, default=True)
+
+    sort_order = db.Column(db.Integer, nullable=False, default=0)
+    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
+
+    product = db.relationship("Product", back_populates="variants")
+    
     # =========================
 # Special Offers
 # =========================

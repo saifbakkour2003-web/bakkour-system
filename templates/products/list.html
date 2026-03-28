@@ -1,4 +1,3 @@
-<!-- templates/products/list.html -->
 {% extends "layout_new.html" %}
 {% block title %}{{ _('إدارة المنتجات') }}{% endblock %}
 
@@ -48,6 +47,7 @@
             <th>{{ _('الكمية') }}</th>
             <th>{{ _('السعر') }}</th>
             <th>{{ _('باركود') }}</th>
+            <th>{{ _('المقاسات') }}</th>
             <th class="col-actions">{{ _('إجراءات') }}</th>
           </tr>
         </thead>
@@ -55,7 +55,7 @@
         {% if dept in ["electrical", "linens", "crystal"] %}
         <thead class="table-light">
           <tr>
-            <th colspan="12">
+            <th colspan="13">
               <form method="GET" class="d-flex align-items-center gap-2 flex-wrap">
                 <input type="hidden" name="dept" value="{{ dept }}">
                 <span class="fw-bold">{{ _('فلترة حسب التصنيف:') }}</span>
@@ -93,8 +93,11 @@
                 <span title="Ürün indirimde" style="color:#28a745;">★</span>
               {% endif %}
             </td>
+
             <td class="fw-bold">{{ p.serial_no or "—" }}</td>
+
             <td class="fw-bold text-primary">{{ p.code }}</td>
+
             <td class="text-start">{{ pick_lang(p.name, p.name_tr) }}</td>
 
             <td>
@@ -123,7 +126,6 @@
                 ) }}
               </span>
             </td>
-
 
             <td class="text-muted">
               {{ pick_lang(
@@ -179,6 +181,21 @@
               {% endif %}
             </td>
 
+            <td>
+              {% if p.variants and p.variants|length %}
+                <button class="btn btn-sm btn-outline-secondary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#variantsRow{{ p.id }}"
+                        aria-expanded="false"
+                        aria-controls="variantsRow{{ p.id }}">
+                  {{ _('فتح / إغلاق') }}
+                </button>
+              {% else %}
+                —
+              {% endif %}
+            </td>
+
             <td class="col-actions">
               <div class="actions-group">
                 <a href="{{ url_for('products.edit_product', product_id=p.id) }}"
@@ -195,9 +212,53 @@
               </div>
             </td>
           </tr>
+
+          {% if p.variants and p.variants|length %}
+          <tr class="collapse bg-light" id="variantsRow{{ p.id }}">
+            <td colspan="13" class="text-start">
+              <div class="p-2">
+                <div class="fw-bold mb-2">المقاسات والألوان والأسعار</div>
+
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th>المقاس</th>
+                        <th>اللون</th>
+                        <th>رأس المال</th>
+                        <th>سعر البيع</th>
+                        <th>الكمية</th>
+                        <th>الحالة</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for v in p.variants %}
+                        <tr>
+                          <td>{{ v.size }}</td>
+                          <td>{{ v.color or '—' }}</td>
+                          <td>{{ "%.2f"|format(v.capital_price) }}</td>
+                          <td>{{ "%.2f"|format(v.base_cash_price) }}</td>
+                          <td>{{ v.stock_qty }}</td>
+                          <td>
+                            {% if v.is_available %}
+                              <span class="badge bg-success">متوفر</span>
+                            {% else %}
+                              <span class="badge bg-secondary">غير متوفر</span>
+                            {% endif %}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+
           {% else %}
           <tr>
-            <td colspan="12" class="text-muted py-4">{{ _('لا يوجد منتجات') }}</td>
+            <td colspan="13" class="text-muted py-4">{{ _('لا يوجد منتجات') }}</td>
           </tr>
           {% endfor %}
         </tbody>
