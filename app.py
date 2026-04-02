@@ -1,5 +1,5 @@
 import os
-from flask import Flask, redirect, send_from_directory
+from flask import Flask, redirect
 from flask_migrate import Migrate
 import config
 
@@ -15,15 +15,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 
-# =========================
-# Static files (حل مشكلة Render)
-# =========================
-
-@app.route("/static/<path:filename>")
-def custom_static(filename):
-    return send_from_directory(os.path.join(BASE_DIR, "static"), filename)
-
-
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
@@ -32,7 +23,7 @@ if not app.debug:
     app.config["SESSION_COOKIE_SECURE"] = True
 
 # =========================
-# Database (PostgreSQL)
+# Database
 # =========================
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
@@ -108,7 +99,6 @@ migrate = Migrate(app, db)
 
 from models import *  # noqa
 
-
 # =========================
 # Register Routes
 # =========================
@@ -121,14 +111,17 @@ register_shop_routes(app)
 from routes.admin import register_admin_routes
 register_admin_routes(app)
 
-
 # =========================
-# SQLite-only patches
+# Root
 # =========================
 
 @app.get("/")
 def root():
-    return redirect("/shop/",code=302)
+    return redirect("/shop/", code=302)
+
+# =========================
+# SQLite-only patches
+# =========================
 
 def is_sqlite():
     uri = app.config.get("SQLALCHEMY_DATABASE_URI", "")
@@ -136,24 +129,20 @@ def is_sqlite():
 
 
 def apply_db_patches():
-    ensure_sqlite_column(
-        table_name="general_cash_payment",
-        column_name="source",
-        column_sql="TEXT DEFAULT 'دفعة عامة'",
-    )
-
-@app.get("/debug-static")
-def debug_static():
-    import os
-    path = os.path.join(BASE_DIR, "static")
-    files = os.listdir(path) if os.path.exists(path) else "static folder not found"
-    return {"base_dir": BASE_DIR, "static_path": path, "files": files}
+    try:
+        ensure_sqlite_column(
+            table_name="general_cash_payment",
+            column_name="source",
+            column_sql="TEXT DEFAULT 'دفعة عامة'",
+        )
+    except Exception:
+        # مهم جدًا: لا نكسر flask db migrate على قاعدة جديدة/فارغة
+        pass
 
 
 with app.app_context():
     if is_sqlite():
         apply_db_patches()
-
 
 # =========================
 # Run App
