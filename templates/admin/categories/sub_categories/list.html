@@ -1,20 +1,33 @@
+<!-- templates/admin/categories/sub_categories/list.html -->
 {% extends "layout_new.html" %}
 {% block title %}{{ _('التصنيفات الفرعية') }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-end mb-3">
+  <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
     <h2 class="mb-0">📂 {{ _('التصنيفات الفرعية') }}</h2>
 
-    <a href="{{ url_for('admin_sub_categories.add_sub_category') }}"
+    <a href="{{ url_for('admin_sub_categories.add_sub_category', dept=selected_dept) }}"
        class="btn btn-success">
       + {{ _('إضافة تصنيف فرعي') }}
     </a>
   </div>
 
-  <div class="sticky-filter">
+  <div class="sticky-top bg-white pt-2 pb-2 mb-3 border-bottom" style="z-index: 1020;">
     <form method="GET" class="d-flex align-items-center gap-2 flex-wrap">
+      <span class="fw-bold text-muted">{{ _('القسم:') }}</span>
+
+      <select name="dept"
+              class="form-select form-select-sm"
+              style="max-width:220px"
+              onchange="this.form.submit()">
+        <option value="">{{ _('— الكل —') }}</option>
+        <option value="electrical" {% if selected_dept == 'electrical' %}selected{% endif %}>⚡ {{ _('كهربائيات') }}</option>
+        <option value="linens" {% if selected_dept == 'linens' %}selected{% endif %}>🧺 {{ _('بياضات') }}</option>
+        <option value="crystal" {% if selected_dept == 'crystal' %}selected{% endif %}>🍷 {{ _('بلوريات') }}</option>
+      </select>
+
       <span class="fw-bold text-muted">{{ _('فلترة حسب التصنيف:') }}</span>
 
       <select name="main"
@@ -31,9 +44,9 @@
         {% endfor %}
       </select>
 
-      {% if selected_main_id %}
+      {% if selected_main_id or selected_dept %}
         <a href="{{ url_for('admin_sub_categories.list_sub_categories') }}"
-          class="btn btn-sm btn-outline-secondary">
+           class="btn btn-sm btn-outline-secondary">
           {{ _('مسح الفلتر') }}
         </a>
       {% endif %}
@@ -47,7 +60,8 @@
           <tr>
             <th>#</th>
             <th>{{ _('الاسم') }}</th>
-            <th>{{ _('التصنيف') }}</th>
+            <th>{{ _('التصنيف الرئيسي') }}</th>
+            <th>{{ _('القسم') }}</th>
             <th>{{ _('Code Prefix') }}</th>
             <th class="col-actions">{{ _('إجراءات') }}</th>
           </tr>
@@ -60,29 +74,25 @@
             <td>{{ pick_lang(s.name, s.name_tr) }}</td>
 
             <td>
+              {{ pick_lang(s.main_category.name, s.main_category.name_tr) }}
+            </td>
+
+            <td>
               {% if s.main_category.department == "electrical" %}
-                <span class="badge dept-badge dept-electrical">
-                  ⚡ {{ pick_lang(s.main_category.name, s.main_category.name_tr) }}
-                </span>
+                <span class="badge dept-badge dept-electrical">⚡ {{ _('كهربائيات') }}</span>
               {% elif s.main_category.department == "linens" %}
-                <span class="badge dept-badge dept-linens">
-                  🧺 {{ pick_lang(s.main_category.name, s.main_category.name_tr) }}
-                </span>
+                <span class="badge dept-badge dept-linens">🧺 {{ _('بياضات') }}</span>
               {% elif s.main_category.department == "crystal" %}
-                <span class="badge dept-badge dept-crystal">
-                  🍷 {{ pick_lang(s.main_category.name, s.main_category.name_tr) }}
-                </span>
+                <span class="badge dept-badge dept-crystal">🍷 {{ _('بلوريات') }}</span>
               {% else %}
-                <span class="badge bg-secondary">
-                  {{ pick_lang(s.main_category.name, s.main_category.name_tr) }}
-                </span>
+                <span class="badge bg-secondary">{{ s.main_category.department }}</span>
               {% endif %}
             </td>
 
             <td class="fw-bold">{{ s.code_prefix }}</td>
 
             <td class="col-actions">
-              <a href="{{ url_for('admin_sub_categories.edit_sub_category', sub_id=s.id) }}"
+              <a href="{{ url_for('admin_sub_categories.edit_sub_category', sub_id=s.id, dept=selected_dept or s.main_category.department) }}"
                  class="btn btn-sm btn-outline-primary">
                 {{ _('تعديل') }}
               </a>
@@ -97,7 +107,7 @@
           </tr>
           {% else %}
           <tr>
-            <td colspan="5" class="text-muted py-4">{{ _('لا يوجد تصنيفات فرعية') }}</td>
+            <td colspan="6" class="text-muted py-4">{{ _('لا يوجد تصنيفات فرعية') }}</td>
           </tr>
           {% endfor %}
         </tbody>

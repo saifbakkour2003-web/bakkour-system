@@ -1,4 +1,3 @@
-# routes/admin/sub_categories.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_babel import gettext as _
 from extensions import db
@@ -11,31 +10,62 @@ admin_sub_categories_bp = Blueprint(
     url_prefix="/admin/sub-categories"
 )
 
+ALLOWED_DEPTS = {"electrical", "linens", "crystal"}
+
+DEPT_LABELS = {
+    "electrical": _("كهربائيات"),
+    "linens": _("بياضات"),
+    "crystal": _("بلوريات"),
+}
+
+
+def normalize_dept(dept: str | None) -> str | None:
+    d = (dept or "").strip().lower()
+    return d if d in ALLOWED_DEPTS else None
+
 
 @admin_sub_categories_bp.get("/")
 @admin_required
 def list_sub_categories():
+    dept = normalize_dept(request.args.get("dept"))
     main_id = request.args.get("main", type=int)
 
     q = SubCategory.query.join(MainCategory)
+
+    if dept:
+        q = q.filter(MainCategory.department == dept)
+
     if main_id:
         q = q.filter(SubCategory.main_category_id == main_id)
 
     sub_categories = q.order_by(SubCategory.id.asc()).all()
-    main_categories = MainCategory.query.order_by(MainCategory.name.asc()).all()
+
+    main_categories_q = MainCategory.query
+    if dept:
+        main_categories_q = main_categories_q.filter(MainCategory.department == dept)
+
+    main_categories = main_categories_q.order_by(MainCategory.name.asc()).all()
 
     return render_template(
         "admin/categories/sub_categories/list.html",
         sub_categories=sub_categories,
         main_categories=main_categories,
-        selected_main_id=main_id
+        selected_main_id=main_id,
+        selected_dept=dept,
+        dept_labels=DEPT_LABELS
     )
 
 
 @admin_sub_categories_bp.route("/add", methods=["GET", "POST"])
 @admin_required
 def add_sub_category():
-    main_categories = MainCategory.query.order_by(MainCategory.name).all()
+    dept = normalize_dept(request.args.get("dept"))
+
+    main_categories_q = MainCategory.query
+    if dept:
+        main_categories_q = main_categories_q.filter(MainCategory.department == dept)
+
+    main_categories = main_categories_q.order_by(MainCategory.name).all()
 
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
@@ -49,6 +79,10 @@ def add_sub_category():
 
         main = MainCategory.query.get_or_404(int(main_category_id))
 
+        if dept and (main.department != dept):
+            flash(_("⚠️ لا يمكن اختيار تصنيف رئيسي من قسم مختلف."), "danger")
+            return redirect(request.url)
+
         sub = SubCategory(
             name=name,
             name_tr=name_tr,
@@ -61,11 +95,13 @@ def add_sub_category():
         db.session.commit()
 
         flash(_("تمت إضافة التصنيف الفرعي بنجاح ✅"), "success")
-        return redirect(url_for("admin_sub_categories.list_sub_categories"))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=main.department))
 
     return render_template(
         "admin/categories/sub_categories/add.html",
-        main_categories=main_categories
+        main_categories=main_categories,
+        selected_dept=dept,
+        dept_labels=DEPT_LABELS
     )
 
 
@@ -94,7 +130,14 @@ def get_sub_category_properties(sub_id: int):
 @admin_required
 def edit_sub_category(sub_id: int):
     sub = SubCategory.query.get_or_404(sub_id)
-    main_categories = MainCategory.query.order_by(MainCategory.name).all()
+
+    dept = normalize_dept(request.args.get("dept")) or normalize_dept(sub.main_category.department)
+
+    main_categories_q = MainCategory.query
+    if dept:
+        main_categories_q = main_categories_q.filter(MainCategory.department == dept)
+
+    main_categories = main_categories_q.order_by(MainCategory.name).all()
 
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
@@ -108,6 +151,10 @@ def edit_sub_category(sub_id: int):
 
         main = MainCategory.query.get_or_404(int(main_category_id))
 
+        if dept and (main.department != dept):
+            flash(_("⚠️ لا يمكن اختيار تصنيف رئيسي من قسم مختلف."), "danger")
+            return redirect(request.url)
+
         sub.name = name
         sub.name_tr = name_tr
         sub.code_prefix = code_prefix
@@ -116,12 +163,14 @@ def edit_sub_category(sub_id: int):
 
         db.session.commit()
         flash(_("تم تعديل التصنيف الفرعي بنجاح ✅"), "success")
-        return redirect(url_for("admin_sub_categories.list_sub_categories"))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=main.department))
 
     return render_template(
         "admin/categories/sub_categories/edit.html",
         sub=sub,
-        main_categories=main_categories
+        main_categories=main_categories,
+        selected_dept=dept,
+        dept_labels=DEPT_LABELS
     )
 
 
@@ -132,14 +181,16 @@ def delete_sub_category(sub_id: int):
 
     if Product.query.filter_by(sub_category_id=sub.id).first():
         flash(_("لا يمكن حذف تصنيف يحتوي منتجات ❌"), "warning")
-        return redirect(url_for("admin_sub_categories.list_sub_categories"))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=sub.main_category.department))
 
     if Property.query.filter_by(sub_category_id=sub.id).first():
         flash(_("لا يمكن حذف تصنيف يحتوي خصائص ❌"), "warning")
-        return redirect(url_for("admin_sub_categories.list_sub_categories"))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=sub.main_category.department))
+
+    dept = sub.main_category.department
 
     db.session.delete(sub)
     db.session.commit()
 
     flash(_("تم حذف التصنيف الفرعي 🗑️"), "success")
-    return redirect(url_for("admin_sub_categories.list_sub_categories"))
+    return redirect(url_for("admin_sub_categories.list_sub_categories", dept=dept))

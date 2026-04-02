@@ -1,9 +1,16 @@
+<!-- templates/admin/categories/sub_categories/add.html -->
 {% extends "layout_new.html" %}
 {% block title %}{{ _('إضافة تصنيف فرعي') }}{% endblock %}
 
 {% block content %}
-
 <h2 class="mb-4">{{ _('إضافة تصنيف فرعي') }}</h2>
+
+{% if selected_dept %}
+  <div class="alert alert-info py-2" style="max-width: 450px;">
+    {{ _('القسم الحالي:') }}
+    <b>{{ dept_labels[selected_dept] }}</b>
+  </div>
+{% endif %}
 
 <form method="POST"
       class="card p-4 shadow-sm"
@@ -13,7 +20,8 @@
         <label class="form-label">{{ _('اسم التصنيف الفرعي') }}</label>
         <input type="text" name="name" class="form-control" required>
     </div>
-        <div class="mb-3">
+
+    <div class="mb-3">
         <label class="form-label">{{ _('اسم التصنيف الفرعي (تركي)') }}</label>
         <input type="text" name="name_tr" class="form-control">
     </div>
@@ -46,7 +54,5 @@
     <button class="btn btn-primary w-100">
         {{ _('حفظ') }}
     </button>
-
 </form>
-
 {% endblock %}

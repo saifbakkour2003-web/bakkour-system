@@ -1,8 +1,16 @@
+<!-- templates/admin/categories/sub_categories/edit.html -->
 {% extends "layout_new.html" %}
 {% block title %}{{ _('تعديل تصنيف فرعي') }}{% endblock %}
 
 {% block content %}
 <h2 class="mb-4">✏️ {{ _('تعديل تصنيف فرعي') }}</h2>
+
+{% if selected_dept %}
+  <div class="alert alert-info py-2" style="max-width: 450px;">
+    {{ _('القسم الحالي:') }}
+    <b>{{ dept_labels[selected_dept] }}</b>
+  </div>
+{% endif %}
 
 <form method="POST"
       class="card p-4 shadow-sm"
@@ -16,12 +24,13 @@
                value="{{ sub.name }}"
                required>
     </div>
+
     <div class="mb-3">
         <label class="form-label">{{ _('اسم التصنيف الفرعي (تركي)') }}</label>
         <input type="text"
-                name="name_tr"
-                class="form-control"
-                value="{{ sub.name_tr or '' }}">
+               name="name_tr"
+               class="form-control"
+               value="{{ sub.name_tr or '' }}">
     </div>
 
     <div class="mb-3">
