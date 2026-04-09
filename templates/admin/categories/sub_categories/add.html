@@ -1,4 +1,3 @@
-<!-- templates/admin/categories/sub_categories/add.html -->
 {% extends "layout_new.html" %}
 {% block title %}{{ _('إضافة تصنيف فرعي') }}{% endblock %}
 
@@ -38,16 +37,12 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">{{ _('التصنيف الرئيسي') }}</label>
-        <select name="main_category_id"
-                class="form-select"
-                required>
+        <label class="form-label">{{ _('القسم') }}</label>
+        <select name="department" class="form-select" required>
             <option value="">{{ _('-- اختر --') }}</option>
-            {% for c in main_categories %}
-            <option value="{{ c.id }}">
-                {{ pick_lang(c.name, c.name_tr) }}
-            </option>
-            {% endfor %}
+            <option value="electrical" {% if selected_dept == 'electrical' %}selected{% endif %}>⚡ {{ _('كهربائيات') }}</option>
+            <option value="linens" {% if selected_dept == 'linens' %}selected{% endif %}>🧺 {{ _('بياضات') }}</option>
+            <option value="crystal" {% if selected_dept == 'crystal' %}selected{% endif %}>🍷 {{ _('بلوريات') }}</option>
         </select>
     </div>
 

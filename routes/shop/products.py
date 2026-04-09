@@ -1,13 +1,9 @@
-# routes/shop/products.py
 from urllib.parse import quote
 
 from flask import render_template, abort, request, current_app
-from datetime import datetime
-
 from models import Product, SubCategory
 from i18n import pick_lang
 from utils.product_fetch import get_products_query, get_product_by_id, normalize_dept
-
 
 DEPT_LABELS_AR = {
     "electrical": "كهربائيات",
@@ -47,7 +43,6 @@ def _build_props_text(products):
 def _build_specs(product):
     specs = []
 
-    # Department
     if getattr(product, "department", None):
         specs.append(
             {
@@ -59,21 +54,21 @@ def _build_specs(product):
             }
         )
 
-    # Category
-    if getattr(product, "sub_category", None) and product.sub_category and product.sub_category.main_category:
-        mc = product.sub_category.main_category
+    if getattr(product, "sub_category", None) and product.sub_category:
         sc = product.sub_category
+        dept_label_ar = DEPT_LABELS_AR.get(sc.department, sc.department)
+        dept_label_tr = DEPT_LABELS_TR.get(sc.department, sc.department)
+
         specs.append(
             {
                 "label": pick_lang("التصنيف", "Kategori"),
                 "value": pick_lang(
-                    f"{mc.name} › {sc.name}",
-                    f"{(mc.name_tr or mc.name)} › {(sc.name_tr or sc.name)}",
+                    f"{dept_label_ar} › {sc.name}",
+                    f"{dept_label_tr} › {(sc.name_tr or sc.name)}",
                 ),
             }
         )
 
-    # Brand
     if getattr(product, "brand_rel", None):
         specs.append(
             {
@@ -82,16 +77,18 @@ def _build_specs(product):
             }
         )
 
-    # Properties
     props_sorted = sorted(
         product.properties,
         key=lambda pp: (pp.property.name if pp.property else "", pp.property_id),
     )
+
     for pp in props_sorted:
         if not pp.property:
             continue
+
         label = pick_lang(pp.property.name, pp.property.name_tr or pp.property.name)
         value = pick_lang(pp.value, (pp.value_tr or pp.value))
+
         if value:
             specs.append({"label": label, "value": value})
 
@@ -129,9 +126,8 @@ def register(app):
     @app.get("/shop/products")
     def shop_products_list():
         dept_raw = (request.args.get("dept") or "").strip().lower() or None
-        dept = normalize_dept(dept_raw)  # لو غلط -> None
+        dept = normalize_dept(dept_raw)
 
-        # ✅ sub category filter
         sub_raw = (request.args.get("sub") or "").strip()
         sub_id = int(sub_raw) if sub_raw.isdigit() else None
 
@@ -141,11 +137,9 @@ def register(app):
 
         query = get_products_query(dept=dept, for_shop=True)
 
-        # ✅ Filter by sub category
         if sub_id:
             query = query.filter(Product.sub_category_id == sub_id)
 
-        # Search (name/name_tr/code)
         if q:
             like = f"%{q}%"
             query = query.filter(
@@ -154,14 +148,12 @@ def register(app):
                 Product.code.ilike(like)
             )
 
-        # Discount only
         if only_discounted:
             query = query.filter(
                 Product.is_discounted == True,
                 Product.discount_price.isnot(None),
             )
 
-        # Sorting
         if sort == "price_asc":
             query = query.order_by(Product.price.asc(), Product.id.desc())
         elif sort == "price_desc":
@@ -174,15 +166,9 @@ def register(app):
         products = query.all()
         props_text_ar, props_text_tr = _build_props_text(products)
 
-        # ✅ Build sub categories list for filters
-        # فكرة: إذا اختار dept نجيب subcategories التابعة له فقط، وإلا نجيب الكل
         sub_categories_q = SubCategory.query
         if dept:
-            # SubCategory -> MainCategory (حسب اللي استخدمته أنت في _build_specs)
-            # نفترض: SubCategory.main_category علاقة موجودة و MainCategory فيه department
-            sub_categories_q = sub_categories_q.join(SubCategory.main_category).filter(
-                SubCategory.main_category.has(department=dept)
-            )
+            sub_categories_q = sub_categories_q.filter(SubCategory.department == dept)
 
         sub_categories = sub_categories_q.order_by(SubCategory.name.asc()).all()
 
@@ -200,6 +186,7 @@ def register(app):
             sub_id=sub_id,
             sub_categories=sub_categories,
         )
+
     @app.get("/shop/product/<int:product_id>")
     def shop_product_detail(product_id: int):
         product = get_product_by_id(product_id, for_shop=True)

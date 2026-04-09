@@ -18,39 +18,82 @@ DEPT_LABELS = {
     "crystal": _("بلوريات"),
 }
 
+FIXED_MAIN_CATEGORY_DATA = {
+    "electrical": {
+        "name": "كهربائيات",
+        "name_tr": "Elektrik",
+        "code_prefix": "ELE",
+    },
+    "linens": {
+        "name": "بياضات",
+        "name_tr": "Tekstil",
+        "code_prefix": "LIN",
+    },
+    "crystal": {
+        "name": "بلوريات",
+        "name_tr": "Kristal",
+        "code_prefix": "CRY",
+    },
+}
+
 
 def normalize_dept(dept: str | None) -> str | None:
     d = (dept or "").strip().lower()
     return d if d in ALLOWED_DEPTS else None
 
 
+def get_or_create_fixed_main_category(dept: str) -> MainCategory:
+    """
+    Keep MainCategory as a legacy backing table, but treat it as fixed.
+    We ensure one canonical row exists per department.
+    """
+    dept = normalize_dept(dept)
+    if not dept:
+        raise ValueError("Invalid department")
+
+    existing = (
+        MainCategory.query
+        .filter(MainCategory.department == dept)
+        .order_by(MainCategory.id.asc())
+        .first()
+    )
+
+    data = FIXED_MAIN_CATEGORY_DATA[dept]
+
+    if existing:
+        # normalize the canonical row
+        existing.name = data["name"]
+        existing.name_tr = data["name_tr"]
+        existing.code_prefix = data["code_prefix"]
+        db.session.flush()
+        return existing
+
+    obj = MainCategory(
+        name=data["name"],
+        name_tr=data["name_tr"],
+        code_prefix=data["code_prefix"],
+        department=dept
+    )
+    db.session.add(obj)
+    db.session.flush()
+    return obj
+
+
 @admin_sub_categories_bp.get("/")
 @admin_required
 def list_sub_categories():
     dept = normalize_dept(request.args.get("dept"))
-    main_id = request.args.get("main", type=int)
 
-    q = SubCategory.query.join(MainCategory)
+    q = SubCategory.query
 
     if dept:
-        q = q.filter(MainCategory.department == dept)
-
-    if main_id:
-        q = q.filter(SubCategory.main_category_id == main_id)
+        q = q.filter(SubCategory.department == dept)
 
     sub_categories = q.order_by(SubCategory.id.asc()).all()
-
-    main_categories_q = MainCategory.query
-    if dept:
-        main_categories_q = main_categories_q.filter(MainCategory.department == dept)
-
-    main_categories = main_categories_q.order_by(MainCategory.name.asc()).all()
 
     return render_template(
         "admin/categories/sub_categories/list.html",
         sub_categories=sub_categories,
-        main_categories=main_categories,
-        selected_main_id=main_id,
         selected_dept=dept,
         dept_labels=DEPT_LABELS
     )
@@ -61,45 +104,34 @@ def list_sub_categories():
 def add_sub_category():
     dept = normalize_dept(request.args.get("dept"))
 
-    main_categories_q = MainCategory.query
-    if dept:
-        main_categories_q = main_categories_q.filter(MainCategory.department == dept)
-
-    main_categories = main_categories_q.order_by(MainCategory.name).all()
-
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
         name_tr = (request.form.get("name_tr") or "").strip() or None
         code_prefix = (request.form.get("code_prefix") or "").strip().upper()
-        main_category_id = request.form.get("main_category_id")
+        department = normalize_dept(request.form.get("department"))
 
-        if not name or not code_prefix or not main_category_id:
+        if not name or not code_prefix or not department:
             flash(_("كل الحقول مطلوبة"), "danger")
             return redirect(request.url)
 
-        main = MainCategory.query.get_or_404(int(main_category_id))
-
-        if dept and (main.department != dept):
-            flash(_("⚠️ لا يمكن اختيار تصنيف رئيسي من قسم مختلف."), "danger")
-            return redirect(request.url)
+        main = get_or_create_fixed_main_category(department)
 
         sub = SubCategory(
             name=name,
             name_tr=name_tr,
             code_prefix=code_prefix,
-            main_category_id=main.id,
-            department=(main.department or "electrical")
+            main_category_id=main.id,   # legacy compatibility
+            department=department
         )
 
         db.session.add(sub)
         db.session.commit()
 
         flash(_("تمت إضافة التصنيف الفرعي بنجاح ✅"), "success")
-        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=main.department))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=department))
 
     return render_template(
         "admin/categories/sub_categories/add.html",
-        main_categories=main_categories,
         selected_dept=dept,
         dept_labels=DEPT_LABELS
     )
@@ -131,44 +163,34 @@ def get_sub_category_properties(sub_id: int):
 def edit_sub_category(sub_id: int):
     sub = SubCategory.query.get_or_404(sub_id)
 
-    dept = normalize_dept(request.args.get("dept")) or normalize_dept(sub.main_category.department)
-
-    main_categories_q = MainCategory.query
-    if dept:
-        main_categories_q = main_categories_q.filter(MainCategory.department == dept)
-
-    main_categories = main_categories_q.order_by(MainCategory.name).all()
+    dept = normalize_dept(request.args.get("dept")) or normalize_dept(sub.department)
 
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
         name_tr = (request.form.get("name_tr") or "").strip() or None
         code_prefix = (request.form.get("code_prefix") or "").strip().upper()
-        main_category_id = request.form.get("main_category_id")
+        department = normalize_dept(request.form.get("department"))
 
-        if not name or not code_prefix or not main_category_id:
+        if not name or not code_prefix or not department:
             flash(_("كل الحقول مطلوبة"), "danger")
             return redirect(request.url)
 
-        main = MainCategory.query.get_or_404(int(main_category_id))
-
-        if dept and (main.department != dept):
-            flash(_("⚠️ لا يمكن اختيار تصنيف رئيسي من قسم مختلف."), "danger")
-            return redirect(request.url)
+        main = get_or_create_fixed_main_category(department)
 
         sub.name = name
         sub.name_tr = name_tr
         sub.code_prefix = code_prefix
-        sub.main_category_id = main.id
-        sub.department = (main.department or "electrical")
+        sub.department = department
+        sub.main_category_id = main.id  # legacy compatibility
 
         db.session.commit()
+
         flash(_("تم تعديل التصنيف الفرعي بنجاح ✅"), "success")
-        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=main.department))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=department))
 
     return render_template(
         "admin/categories/sub_categories/edit.html",
         sub=sub,
-        main_categories=main_categories,
         selected_dept=dept,
         dept_labels=DEPT_LABELS
     )
@@ -181,13 +203,13 @@ def delete_sub_category(sub_id: int):
 
     if Product.query.filter_by(sub_category_id=sub.id).first():
         flash(_("لا يمكن حذف تصنيف يحتوي منتجات ❌"), "warning")
-        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=sub.main_category.department))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=sub.department))
 
     if Property.query.filter_by(sub_category_id=sub.id).first():
         flash(_("لا يمكن حذف تصنيف يحتوي خصائص ❌"), "warning")
-        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=sub.main_category.department))
+        return redirect(url_for("admin_sub_categories.list_sub_categories", dept=sub.department))
 
-    dept = sub.main_category.department
+    dept = sub.department
 
     db.session.delete(sub)
     db.session.commit()

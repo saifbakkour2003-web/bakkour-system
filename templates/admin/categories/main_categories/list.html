@@ -1,17 +1,23 @@
-
 {% extends "layout_new.html" %}
-{% block title %}{{ _('إدارة التصنيفات') }}{% endblock %}
+{% block title %}{{ _('إدارة التصنيفات الرئيسية') }}{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-end mb-3">
-    <h2 class="mb-0">{{ _('📁 التصنيفات الرئيسية') }}</h2>
+  <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+    <div>
+      <h2 class="mb-1">{{ _('📁 التصنيفات الرئيسية') }}</h2>
+      <div class="text-muted">{{ _('هذه الأقسام ثابتة بالنظام وتُستخدم كأساس للتصنيفات الفرعية والمنتجات.') }}</div>
+    </div>
 
-    <a href="{{ url_for('admin_main_categories.add_main_category') }}"
-       class="btn btn-success">
-      {{ _('+ إضافة تصنيف رئيسي') }}
+    <a href="{{ url_for('admin_sub_categories.list_sub_categories') }}"
+       class="btn btn-primary">
+      {{ _('إدارة التصنيفات الفرعية') }}
     </a>
+  </div>
+
+  <div class="alert alert-info">
+    {{ _('الأقسام الرئيسية لم تعد قابلة للإضافة أو الحذف من الواجهة. الإدارة الفعلية أصبحت عبر التصنيفات الفرعية.') }}
   </div>
 
   <div class="card shadow-sm">
@@ -20,40 +26,70 @@
         <thead class="table-light">
           <tr>
             <th>{{ _('#') }}</th>
-            <th>{{ _('الاسم') }}</th>
+            <th>{{ _('القسم الثابت') }}</th>
+            <th>{{ _('الاسم (تركي)') }}</th>
             <th>{{ _('Code Prefix') }}</th>
-            <th class="col-actions">{{ _('إجراءات') }}</th>
+            <th>{{ _('Department Key') }}</th>
+            <th>{{ _('الحالة') }}</th>
           </tr>
         </thead>
         <tbody>
-          {% for c in categories %}
+          {% for item in fixed_departments %}
           <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ pick_lang(c.name, c.name_tr) }}</td>
-            <td class="fw-bold">{{ c.code_prefix }}</td>
-            <td class="col-actions">
-              <a href="{{ url_for('admin_main_categories.edit_main_category', category_id=c.id) }}"
-                 class="btn btn-sm btn-outline-primary">
-                {{ _('تعديل') }}
-              </a>
-
-              <form method="POST"
-                    action="{{ url_for('admin_main_categories.delete_main_category', category_id=c.id) }}"
-                    class="d-inline"
-                    onsubmit="return confirm('متأكد من الحذف؟');">
-                <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
-              </form>
+            <td>
+              {% if item.department == "electrical" %}
+                <span class="badge dept-badge dept-electrical">⚡ {{ item.name }}</span>
+              {% elif item.department == "linens" %}
+                <span class="badge dept-badge dept-linens">🧺 {{ item.name }}</span>
+              {% elif item.department == "crystal" %}
+                <span class="badge dept-badge dept-crystal">🍷 {{ item.name }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ item.name }}</span>
+              {% endif %}
             </td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="4" class="text-muted py-4">{{ _('لا يوجد تصنيفات') }}</td>
+            <td>{{ item.name_tr }}</td>
+            <td class="fw-bold">{{ item.code_prefix }}</td>
+            <td><code>{{ item.department }}</code></td>
+            <td><span class="badge bg-success">{{ _('ثابت') }}</span></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
+
+  {% if categories %}
+  <div class="card shadow-sm mt-4">
+    <div class="card-header bg-light fw-bold">
+      {{ _('السجلات الموجودة حاليًا في قاعدة البيانات (Legacy)') }}
+    </div>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0 align-middle text-center">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{{ _('الاسم') }}</th>
+            <th>{{ _('الاسم (تركي)') }}</th>
+            <th>{{ _('Code Prefix') }}</th>
+            <th>{{ _('Department') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in categories %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ c.name }}</td>
+            <td>{{ c.name_tr or '—' }}</td>
+            <td>{{ c.code_prefix }}</td>
+            <td><code>{{ c.department }}</code></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
 
 </div>
 {% endblock %}

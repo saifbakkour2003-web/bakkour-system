@@ -2,36 +2,15 @@
 {% block title %}{{ _('إضافة تصنيف رئيسي') }}{% endblock %}
 
 {% block content %}
+<div class="container-fluid" style="max-width: 720px;">
+  <h2 class="mb-4">{{ _('إضافة تصنيف رئيسي') }}</h2>
 
-<h2 class="mb-4">{{ _('إضافة تصنيف رئيسي') }}</h2>
+  <div class="alert alert-warning">
+    {{ _('التصنيفات الرئيسية أصبحت ثابتة بالنظام. لا يمكن إضافة قسم جديد من هذه الصفحة.') }}
+  </div>
 
-<form method="POST" class="card p-4 shadow-sm" style="max-width: 400px;">
-
-
-    <div class="mb-3">
-        <label class="form-label">{{ _('اسم التصنيف') }}</label>
-        <input type="text" name="name" class="form-control" required>
-    </div>
-        <div class="mb-3">
-        <label class="form-label">{{ _('اسم التصنيف (تركي)') }}</label>
-        <input type="text" name="name_tr" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Code Prefix</label>
-        <input type="text"
-                name="code_prefix"
-                class="form-control"
-                placeholder="مثال: ELE"
-                maxlength="5"
-                style="text-transform: uppercase;"
-                required>
-    </div>
-
-    <button class="btn btn-primary w-100">
-        {{ _('حفظ') }}
-    </button>
-
-</form>
-
+  <a href="{{ url_for('admin_main_categories.list_main_categories') }}" class="btn btn-primary">
+    {{ _('الرجوع إلى قائمة الأقسام') }}
+  </a>
+</div>
 {% endblock %}
