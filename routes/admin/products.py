@@ -1,14 +1,20 @@
-# routes/admin/products.py
+from datetime import datetime
+import os
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify, abort
 from flask_babel import gettext as _, get_locale
-from datetime import datetime
 from sqlalchemy.orm import joinedload
-import os
 
 from extensions import db
 from models import (
-    Product, SubCategory, ProductProperty, Property, Brand, MainCategory,
-    PropertyValue, ProductImage, ProductVariant
+    Product,
+    SubCategory,
+    ProductProperty,
+    Property,
+    Brand,
+    PropertyValue,
+    ProductImage,
+    ProductVariant,
 )
 from utils.product_fetch import get_products_query
 from utils.product_code import generate_product_code
@@ -20,12 +26,20 @@ from utils.admin_auth import admin_required
 DEPT_LABELS = {
     "electrical": "كهربائيات",
     "linens": "بياضات",
-    "crystal": "بلوريات"
+    "crystal": "بلوريات",
 }
 
 ALLOWED_DEPTS = {"electrical", "linens", "crystal"}
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
+
+
+# =========================
+# Helpers
+# =========================
+def normalize_dept(dept: str | None) -> str | None:
+    d = (dept or "").strip().lower()
+    return d if d in ALLOWED_DEPTS else None
 
 
 def norm_val(v: str | None) -> str:
@@ -52,22 +66,24 @@ def existing_props_signature(product: Product):
     return tuple(pairs)
 
 
-def normalize_dept(dept: str | None) -> str | None:
-    d = (dept or "").strip().lower()
-    return d if d in ALLOWED_DEPTS else None
-
-
 def get_subcategories_by_dept(dept: str):
+    dept = normalize_dept(dept)
+    if not dept:
+        return []
+
     return (
         SubCategory.query
-        .join(MainCategory)
-        .filter(MainCategory.department == dept)
+        .filter(SubCategory.department == dept)
         .order_by(SubCategory.name.asc())
         .all()
     )
 
 
 def get_brands_by_dept(dept: str):
+    dept = normalize_dept(dept)
+    if not dept:
+        return []
+
     return (
         Brand.query
         .filter(Brand.department == dept)
@@ -77,6 +93,8 @@ def get_brands_by_dept(dept: str):
 
 
 def get_allowed_properties_for_subcategory(sub: SubCategory, dept: str):
+    dept = normalize_dept(dept) or "electrical"
+
     global_props = Property.query.filter(
         Property.department == dept,
         Property.is_global == True
@@ -84,6 +102,7 @@ def get_allowed_properties_for_subcategory(sub: SubCategory, dept: str):
 
     scoped_props = list(sub.properties or [])
     return list({p.id: p for p in (global_props + scoped_props)}.values())
+
 
 def parse_variants_from_form(form):
     sizes = form.getlist("variant_size[]")
@@ -140,27 +159,27 @@ def replace_product_variants(product, variants_data):
     ProductVariant.query.filter_by(product_id=product.id).delete()
 
     for item in variants_data:
-        db.session.add(ProductVariant(
-            product_id=product.id,
-            size=item["size"],
-            color=item["color"],
-            capital_price=item["capital_price"],
-            base_cash_price=item["base_cash_price"],
-            stock_qty=item["stock_qty"],
-            is_available=item["is_available"],
-            sort_order=item["sort_order"],
-        ))
+        db.session.add(
+            ProductVariant(
+                product_id=product.id,
+                size=item["size"],
+                color=item["color"],
+                capital_price=item["capital_price"],
+                base_cash_price=item["base_cash_price"],
+                stock_qty=item["stock_qty"],
+                is_available=item["is_available"],
+                sort_order=item["sort_order"],
+            )
+        )
 
 
 # =========================
-# عرض المنتجات
+# Product List
 # =========================
 @products_bp.route("/")
 @admin_required
 def products_list():
-    dept = (request.args.get("dept") or "").strip().lower()
-    if dept not in ("electrical", "linens", "crystal"):
-        dept = None
+    dept = normalize_dept(request.args.get("dept"))
 
     sub_id_raw = (request.args.get("sub") or "").strip()
     try:
@@ -175,22 +194,14 @@ def products_list():
         if not sub_obj:
             sub_id = None
         else:
-            if dept and (sub_obj.department != dept):
+            if dept and normalize_dept(sub_obj.department) != dept:
                 flash(_("⚠️ التصنيف المختار لا ينتمي لهذا القسم."), "warning")
                 return redirect(url_for("products.products_list", dept=dept))
             q = q.filter(Product.sub_category_id == sub_id)
 
     products = q.all()
 
-    sub_categories = []
-    if dept:
-        sub_categories = (
-            SubCategory.query
-            .join(MainCategory)
-            .filter(MainCategory.department == dept)
-            .order_by(SubCategory.name.asc())
-            .all()
-        )
+    sub_categories = get_subcategories_by_dept(dept) if dept else []
 
     props_text_ar = {}
     props_text_tr = {}
@@ -219,7 +230,7 @@ def products_list():
         dept=dept,
         dept_label=DEPT_LABELS.get(dept, _("كل المنتجات")),
         sub_categories=sub_categories,
-        selected_sub_id=sub_id
+        selected_sub_id=sub_id,
     )
 
 
@@ -241,6 +252,9 @@ def products_crystal():
     return redirect(url_for("products.products_list", dept="crystal"))
 
 
+# =========================
+# Add Product
+# =========================
 @products_bp.route("/add", methods=["GET", "POST"])
 @admin_required
 def add_product():
@@ -294,7 +308,8 @@ def add_product_by_department(department):
                 Product.department == department,
                 Product.sub_category_id == sub.id,
                 Product.brand_id == brand.id
-            ).all()
+            )
+            .all()
         )
 
         for ex in candidates:
@@ -304,8 +319,14 @@ def add_product_by_department(department):
                 flash(_("⚠️ هذا المنتج موجود مسبقًا بنفس الخصائص (كود: %(code)s)", code=ex.code), "warning")
                 return redirect(url_for("products.products_list", dept=department))
 
+        code_prefix_map = {
+            "electrical": "ELE",
+            "linens": "LIN",
+            "crystal": "CRY",
+        }
+
         code = generate_product_code(
-            sub.main_category.code_prefix,
+            code_prefix_map.get(department, "GEN"),
             sub.code_prefix,
             brand.code
         )
@@ -389,7 +410,7 @@ def add_product_by_department(department):
 
         if department == "linens" and variants_data:
             replace_product_variants(product, variants_data)
-        
+
         db.session.commit()
         flash(_("تمت إضافة المنتج بنجاح ✅"), "success")
         return redirect(url_for("products.products_list", dept=department))
@@ -399,10 +420,13 @@ def add_product_by_department(department):
         sub_categories=sub_categories,
         brands=brands,
         forced_department=department,
-        forced_department_label=DEPT_LABELS.get(department, department)
+        forced_department_label=DEPT_LABELS.get(department, department),
     )
 
 
+# =========================
+# Edit Product
+# =========================
 @products_bp.route("/<int:product_id>/edit", methods=["GET", "POST"])
 @admin_required
 def edit_product(product_id):
@@ -422,7 +446,6 @@ def edit_product(product_id):
         capital_price = request.form.get("capital_price")
         base_cash_price = request.form.get("base_cash_price")
 
-        # ✅ (كان مكرر عندك) خليناه مرة وحدة
         product.description = request.form.get("description") or None
         product.description_tr = request.form.get("description_tr") or None
 
@@ -471,7 +494,8 @@ def edit_product(product_id):
                 Product.department == product_dept,
                 Product.sub_category_id == sub.id,
                 Product.brand_id == brand.id
-            ).all()
+            )
+            .all()
         )
 
         for ex in candidates:
@@ -484,6 +508,7 @@ def edit_product(product_id):
         product.name = name
         product.sub_category_id = sub.id
         product.brand_id = brand.id
+        product.department = normalize_dept(sub.department) or product_dept
         product.capital_price = float(capital_price)
         product.base_cash_price = float(base_cash_price)
 
@@ -541,10 +566,15 @@ def edit_product(product_id):
     if current_sub and normalize_dept(current_sub.department) == product_dept:
         initial_props = get_allowed_properties_for_subcategory(current_sub, product_dept)
     else:
-        initial_props = Property.query.filter(
-            Property.department == product_dept,
-            Property.is_global == True
-        ).order_by(Property.id.asc()).all()
+        initial_props = (
+            Property.query
+            .filter(
+                Property.department == product_dept,
+                Property.is_global == True
+            )
+            .order_by(Property.id.asc())
+            .all()
+        )
 
     return render_template(
         "products/edit.html",
@@ -553,10 +583,13 @@ def edit_product(product_id):
         brands=brands,
         existing_map=existing_map,
         initial_props=list(initial_props),
-        variants= list(product.variants)
+        variants=list(product.variants),
     )
 
 
+# =========================
+# Delete Product
+# =========================
 @products_bp.route("/<int:product_id>/delete", methods=["POST"])
 @admin_required
 def delete_product(product_id):
@@ -570,6 +603,9 @@ def delete_product(product_id):
     return redirect(url_for("products.products_list", dept=normalize_dept(product.department)))
 
 
+# =========================
+# Properties API
+# =========================
 @products_bp.route("/api/properties/<int:sub_category_id>")
 @admin_required
 def api_properties(sub_category_id):
@@ -703,6 +739,9 @@ def toggle_available(product_id):
     return redirect(request.referrer or url_for("products.products_list", dept=normalize_dept(product.department)))
 
 
+# =========================
+# Images
+# =========================
 @products_bp.post("/<int:product_id>/images/<int:image_id>/delete")
 @admin_required
 def delete_product_image(product_id, image_id):
@@ -734,7 +773,6 @@ def make_primary_product_image(product_id, image_id):
     if not target:
         abort(404)
 
-    # ✅ reset ثم ترتيب جديد (مضمون ما يصير 2 صفر)
     for im in imgs:
         im.sort_order = 9999
 
