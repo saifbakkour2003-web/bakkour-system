@@ -1,56 +1,59 @@
-# models.py
 from datetime import datetime
-from extensions import db
+
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from extensions import db
+
+
+# =======================
+# Association Tables
+# =======================
 sub_category_property = db.Table(
     "sub_category_property",
     db.Column("sub_category_id", db.Integer, db.ForeignKey("sub_category.id"), primary_key=True),
     db.Column("property_id", db.Integer, db.ForeignKey("property.id"), primary_key=True),
 )
 
+
 # =======================
-# Customer
+# Customer / Ledgers
 # =======================
 class Customer(db.Model):
-    __tablename__ = 'customer'
+    __tablename__ = "customer"
 
     id = db.Column(db.Integer, primary_key=True)
     custom_id = db.Column(db.String(20), unique=True)
     name = db.Column(db.String(100), nullable=False)
     name_tr = db.Column(db.String(255), nullable=True)
 
-    phone = db.Column(db.String(20), default='')
-    notes = db.Column(db.Text, default='')
-    ledger = db.Column(db.String(50), default='تقسيط')
+    phone = db.Column(db.String(20), default="")
+    notes = db.Column(db.Text, default="")
+    ledger = db.Column(db.String(50), default="تقسيط")
 
     installment_products = db.relationship(
-        'InstallmentProduct',
-        back_populates='customer',
-        cascade='all, delete-orphan'
+        "InstallmentProduct",
+        back_populates="customer",
+        cascade="all, delete-orphan"
     )
 
     cash_debts = db.relationship(
-        'CashDebt',
-        back_populates='customer',
-        cascade='all, delete-orphan'
+        "CashDebt",
+        back_populates="customer",
+        cascade="all, delete-orphan"
     )
 
     general_cash_payments = db.relationship(
-        'GeneralCashPayment',
-        back_populates='customer',
-        cascade='all, delete-orphan'
+        "GeneralCashPayment",
+        back_populates="customer",
+        cascade="all, delete-orphan"
     )
 
 
-# =======================
-# Installment Product
-# =======================
 class InstallmentProduct(db.Model):
-    __tablename__ = 'installment_product'
+    __tablename__ = "installment_product"
 
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
 
     name = db.Column(db.String(100), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
@@ -59,12 +62,12 @@ class InstallmentProduct(db.Model):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     paid_off = db.Column(db.Boolean, default=False)
 
-    customer = db.relationship('Customer', back_populates='installment_products')
+    customer = db.relationship("Customer", back_populates="installment_products")
 
     payments = db.relationship(
-        'InstallmentPayment',
-        back_populates='product',
-        cascade='all, delete-orphan'
+        "InstallmentPayment",
+        back_populates="product",
+        cascade="all, delete-orphan"
     )
 
     items = db.relationship(
@@ -72,6 +75,7 @@ class InstallmentProduct(db.Model):
         back_populates="installment",
         cascade="all, delete-orphan"
     )
+
 
 class InstallmentItem(db.Model):
     __tablename__ = "installment_item"
@@ -91,36 +95,30 @@ class InstallmentItem(db.Model):
     )
 
     name = db.Column(db.String(200), nullable=False)
-
     qty = db.Column(db.Integer, nullable=False, default=1)
 
     product = db.relationship("Product")
     installment = db.relationship("InstallmentProduct", back_populates="items")
 
-# =======================
-# Installment Payment
-# =======================
+
 class InstallmentPayment(db.Model):
-    __tablename__ = 'installment_payment'
+    __tablename__ = "installment_payment"
 
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('installment_product.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("installment_product.id"), nullable=False)
 
     amount = db.Column(db.Float, nullable=False)
     date_paid = db.Column(db.DateTime, default=datetime.utcnow)
-    source = db.Column(db.String(100), default='دفعة تقسيط')
+    source = db.Column(db.String(100), default="دفعة تقسيط")
 
-    product = db.relationship('InstallmentProduct', back_populates='payments')
+    product = db.relationship("InstallmentProduct", back_populates="payments")
 
 
-# =======================
-# Cash Debt
-# =======================
 class CashDebt(db.Model):
-    __tablename__ = 'cash_debt'
+    __tablename__ = "cash_debt"
 
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
 
     # product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=True)
     product_id = db.Column(db.Integer, nullable=True)
@@ -129,32 +127,65 @@ class CashDebt(db.Model):
     price = db.Column(db.Float, nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # 🔴 عمود قديم – نتركه
+    # legacy
     paid_off = db.Column(db.Boolean, default=False)
 
-    customer = db.relationship('Customer', back_populates='cash_debts')
+    customer = db.relationship("Customer", back_populates="cash_debts")
 
 
-# =======================
-# General Cash Payment
-# =======================
 class GeneralCashPayment(db.Model):
-    __tablename__ = 'general_cash_payment'
+    __tablename__ = "general_cash_payment"
 
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
 
     amount = db.Column(db.Float, nullable=False)
     date_paid = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # ✅ NEW: مصدر/سبب الدفعة (حتى الفواتير تكون واضحة + توحيد مع InstallmentPayment)
-    source = db.Column(db.String(100), default='دفعة عامة')
+    # مصدر/سبب الدفعة
+    source = db.Column(db.String(100), default="دفعة عامة")
 
-    customer = db.relationship('Customer', back_populates='general_cash_payments')
+    customer = db.relationship("Customer", back_populates="general_cash_payments")
 
 
 # =======================
-# Main Category
+# Users
+# =======================
+class User(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    customer_ref_code = db.Column(db.String(50), nullable=True)
+
+    first_name = db.Column(db.String(120), nullable=True)
+    last_name = db.Column(db.String(120), nullable=True)
+    phone = db.Column(db.String(50), nullable=True)
+    address = db.Column(db.String(255), nullable=True)
+
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(255), nullable=False)
+
+    # buyer / admin
+    role = db.Column(db.String(20), nullable=False, default="buyer")
+
+    # pending / active / blocked
+    status = db.Column(db.String(20), nullable=False, default="pending")
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def set_password(self, password: str):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.password_hash, password)
+
+    @property
+    def can_view_prices(self) -> bool:
+        return (self.role == "admin") or (self.status == "active")
+
+
+# =======================
+# Categories / Properties
 # =======================
 class MainCategory(db.Model):
     __tablename__ = "main_category"
@@ -164,7 +195,7 @@ class MainCategory(db.Model):
     name_tr = db.Column(db.String(255), nullable=True)
     code_prefix = db.Column(db.String(10), nullable=False)
 
-    # ✅ جديد
+    # legacy / fixed departments backing rows
     department = db.Column(db.String(20), nullable=False, default="electrical")
 
     sub_categories = db.relationship(
@@ -174,9 +205,6 @@ class MainCategory(db.Model):
     )
 
 
-# =======================
-# Sub Category
-# =======================
 class SubCategory(db.Model):
     __tablename__ = "sub_category"
 
@@ -187,10 +215,10 @@ class SubCategory(db.Model):
     code_prefix = db.Column(db.String(10), nullable=False)
     department = db.Column(db.String(20), nullable=False, default="electrical")
 
+    # legacy compatibility
     main_category_id = db.Column(db.Integer, db.ForeignKey("main_category.id"), nullable=False)
     main_category = db.relationship("MainCategory", back_populates="sub_categories")
 
-    # many-to-many properties
     properties = db.relationship(
         "Property",
         secondary=sub_category_property,
@@ -198,21 +226,20 @@ class SubCategory(db.Model):
     )
 
 
-# =======================
-# Property
-# =======================
 class Property(db.Model):
     __tablename__ = "property"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     name_tr = db.Column(db.String(255), nullable=True)
-    input_type = db.Column(db.String(20), nullable=False)  # text / number / select
-    department = db.Column(db.String(20), nullable=False, default="electrical")
 
+    # text / number / select
+    input_type = db.Column(db.String(20), nullable=False)
+
+    department = db.Column(db.String(20), nullable=False, default="electrical")
     is_required = db.Column(db.Boolean, default=False)
 
-    #  خاصية عامة لكل المنتجات
+    # خاصية عامة لكل المنتجات
     is_global = db.Column(db.Boolean, default=False)
 
     sub_category_id = db.Column(db.Integer, db.ForeignKey("sub_category.id"), nullable=True)
@@ -234,9 +261,6 @@ class Property(db.Model):
     )
 
 
-# =======================
-# Property Value
-# =======================
 class PropertyValue(db.Model):
     __tablename__ = "property_value"
 
@@ -249,9 +273,6 @@ class PropertyValue(db.Model):
     property = db.relationship("Property", back_populates="values")
 
 
-# =======================
-# Brand
-# =======================
 class Brand(db.Model):
     __tablename__ = "brand"
 
@@ -264,7 +285,7 @@ class Brand(db.Model):
 
 
 # =======================
-# Product
+# Products
 # =======================
 class Product(db.Model):
     __tablename__ = "product"
@@ -272,17 +293,17 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(30), unique=True, nullable=False)
 
-    # ✅ Barcode
+    # Barcode
     barcode_value = db.Column(db.String(60), nullable=True)
     barcode_image = db.Column(db.String(255), nullable=True)
 
-    # ✅ Department
+    # Department
     department = db.Column(db.String(20), nullable=False, default="electrical")
 
-    # ✅ Serial
+    # Serial
     serial_no = db.Column(db.String(40), unique=True, nullable=True)
 
-    # ✅ availability + stock
+    # availability + stock
     is_available = db.Column(db.Boolean, default=True)
     stock_qty = db.Column(db.Integer, nullable=False, default=0)
 
@@ -292,12 +313,12 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=True)
     description_tr = db.Column(db.Text, nullable=True)
 
-    # 🔴 legacy fields
+    # legacy fields
     brand = db.Column(db.String(100))
     color = db.Column(db.String(50))
     size = db.Column(db.String(50))
 
-    # ✅ NEW brand relation
+    # brand relation
     brand_id = db.Column(db.Integer, db.ForeignKey("brand.id"), nullable=True)
     brand_rel = db.relationship("Brand", back_populates="products")
 
@@ -310,7 +331,7 @@ class Product(db.Model):
     sub_category_id = db.Column(db.Integer, db.ForeignKey("sub_category.id"), nullable=False)
     sub_category = db.relationship("SubCategory")
 
-    # ✅ Discount fields
+    # Discount
     is_discounted = db.Column(db.Boolean, default=False)
     discount_price = db.Column(db.Float, nullable=True)
     discount_start = db.Column(db.DateTime, nullable=True)
@@ -338,13 +359,11 @@ class Product(db.Model):
 
     @property
     def price(self) -> float:
-        """Base cash price (legacy alias)."""
         try:
             return float(self.base_cash_price or 0)
         except Exception:
             return 0.0
 
-    # ✅ VERY IMPORTANT: property (not function)
     @property
     def is_discount_active(self) -> bool:
         if not bool(self.is_discounted):
@@ -368,7 +387,6 @@ class Product(db.Model):
 
         return True
 
-    # ✅ Template-friendly effective price
     @property
     def effective_price(self) -> float:
         try:
@@ -380,9 +398,7 @@ class Product(db.Model):
     def has_variants(self):
         return bool(self.variants)
 
-# =======================
-# Product Property
-# =======================
+
 class ProductProperty(db.Model):
     __tablename__ = "product_property"
 
@@ -397,89 +413,6 @@ class ProductProperty(db.Model):
     property = db.relationship("Property")
 
 
-# =======================
-# Sale
-# =======================
-class Sale(db.Model):
-    __tablename__ = 'sale'
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    # ✅ صار Nullable لبيع يدوي
-    product_id = db.Column(
-        db.Integer,
-        db.ForeignKey("product.id"),
-        nullable=True
-    )
-
-    customer_id = db.Column(
-        db.Integer,
-        db.ForeignKey("customer.id"),
-        nullable=True
-    )
-
-    sale_type = db.Column(db.String(20), nullable=False)
-
-    sell_price = db.Column(db.Float, nullable=False)
-    cost_price = db.Column(db.Float, nullable=False)
-
-    # ✅ معلومات إضافية للبيع اليدوي
-    manual_name = db.Column(db.String(200), nullable=True)
-    manual_code = db.Column(db.String(60), nullable=True)
-
-    date_created = db.Column(
-        db.DateTime,
-        default=datetime.utcnow
-    )
-
-    product = db.relationship("Product")
-    customer = db.relationship("Customer")
-
-
-# =======================
-# User
-# =======================
-class User(db.Model):
-    __tablename__ = "users"
-
-    id = db.Column(db.Integer, primary_key=True)
-    customer_ref_code = db.Column(db.String(50), nullable=True)  # مثل A-1
-    # models.py (داخل class User)
-
-    first_name = db.Column(db.String(120), nullable=True)
-    last_name  = db.Column(db.String(120), nullable=True)
-    phone      = db.Column(db.String(50), nullable=True)
-    address    = db.Column(db.String(255), nullable=True)
-
-    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(255), nullable=False)
-
-    # buyer / admin
-    role = db.Column(db.String(20), nullable=False, default="buyer")
-
-    # pending / active / blocked
-    status = db.Column(db.String(20), nullable=False, default="pending")
-
-    # # ربط اختياري بصفحة زبون بالدفاتر (لاحقًا)
-    # customer_id = db.Column(db.Integer, db.ForeignKey("customers.id"), nullable=True)
-    # customer = db.relationship("Customer", backref=db.backref("user", uselist=False))
-
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def set_password(self, password: str):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password: str) -> bool:
-        return check_password_hash(self.password_hash, password)
-
-    @property
-    def can_view_prices(self) -> bool:
-        return (self.role == "admin") or (self.status == "active")
-
-
-# =======================
-# Product Image
-# =======================
 class ProductImage(db.Model):
     __tablename__ = "product_image"
 
@@ -492,9 +425,6 @@ class ProductImage(db.Model):
     product = db.relationship("Product", back_populates="images")
 
 
-# =======================
-# Product Variant
-# =======================
 class ProductVariant(db.Model):
     __tablename__ = "product_variant"
 
@@ -520,37 +450,70 @@ class ProductVariant(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
 
     product = db.relationship("Product", back_populates="variants")
-    
-    # =========================
+
+
+# =======================
+# Sales
+# =======================
+class Sale(db.Model):
+    __tablename__ = "sale"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    # صار Nullable لبيع يدوي
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product.id"),
+        nullable=True
+    )
+
+    customer_id = db.Column(
+        db.Integer,
+        db.ForeignKey("customer.id"),
+        nullable=True
+    )
+
+    sale_type = db.Column(db.String(20), nullable=False)
+
+    sell_price = db.Column(db.Float, nullable=False)
+    cost_price = db.Column(db.Float, nullable=False)
+
+    # معلومات إضافية للبيع اليدوي
+    manual_name = db.Column(db.String(200), nullable=True)
+    manual_code = db.Column(db.String(60), nullable=True)
+
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    product = db.relationship("Product")
+    customer = db.relationship("Customer")
+
+
+# =======================
 # Special Offers
-# =========================
+# =======================
 class SpecialOffer(db.Model):
     __tablename__ = "special_offer"
 
     id = db.Column(db.Integer, primary_key=True)
 
-    title = db.Column(db.String(200), nullable=False)          # عنوان العرض
-    note = db.Column(db.String(255), nullable=True)            # وصف صغير يظهر بالكرت
+    title = db.Column(db.String(200), nullable=False)
+    note = db.Column(db.String(255), nullable=True)
 
-    # 3 حالات:
     # gift | bundle_discount | third_discount
     offer_kind = db.Column(db.String(30), nullable=False, default="gift")
 
     product1_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     product2_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
+    third_product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=True)
 
-    third_product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=True)  # للهدية أو خصم الثالث
+    # خصم ثابت
+    discount_amount = db.Column(db.Float, nullable=True)
 
-    # خصم ثابت (قيمة فقط) - حسب طلبك
-    discount_amount = db.Column(db.Float, nullable=True)  # مثال: 5$ أو 50000 ل.س حسب عملتك
-
-    # وقت العرض
     start_at = db.Column(db.DateTime, nullable=True)
     end_at = db.Column(db.DateTime, nullable=True)
 
-    # إدارة العرض
     is_active = db.Column(db.Boolean, default=True)
-    is_cancelled = db.Column(db.Boolean, default=False)  # إذا وقفته يدويًا ينزل للسابق
+    is_cancelled = db.Column(db.Boolean, default=False)
     is_archived = db.Column(db.Boolean, default=False, nullable=False)
     archived_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -559,7 +522,6 @@ class SpecialOffer(db.Model):
     stock_limit = db.Column(db.Integer, nullable=True)
     stock_remaining = db.Column(db.Integer, nullable=True)
 
-    # علاقات المنتجات
     product1 = db.relationship("Product", foreign_keys=[product1_id])
     product2 = db.relationship("Product", foreign_keys=[product2_id])
     third_product = db.relationship("Product", foreign_keys=[third_product_id])
@@ -584,7 +546,9 @@ class SpecialOffer(db.Model):
         return bool(self.is_active) and (not self.is_cancelled) and self.is_time_active and self.has_stock
 
 
-
+# =======================
+# Coupons
+# =======================
 class Coupon(db.Model):
     __tablename__ = "coupon"
 
@@ -594,10 +558,10 @@ class Coupon(db.Model):
     title = db.Column(db.String(120), nullable=True)
     description = db.Column(db.Text, nullable=True)
 
-    # خصم ثابت (مبلغ) — لأنك بدك خصم مبلغ مو نسبة
+    # خصم ثابت (مبلغ)
     discount_amount = db.Column(db.Float, nullable=False, default=0)
 
-    usage_limit = db.Column(db.Integer, nullable=True)      # مثلاً 5
+    usage_limit = db.Column(db.Integer, nullable=True)
     usage_count = db.Column(db.Integer, nullable=False, default=0)
 
     start_at = db.Column(db.DateTime, nullable=True)
@@ -605,7 +569,7 @@ class Coupon(db.Model):
 
     is_active = db.Column(db.Boolean, nullable=False, default=True)
 
-    # ✅ لأول X أشخاص يسجلوا دخول
+    # لأول X أشخاص يسجلوا دخول
     auto_claim = db.Column(db.Boolean, nullable=False, default=False)
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
