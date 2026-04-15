@@ -3,7 +3,6 @@
 
 {% block content %}
 <div class="bk-product-page">
-
   <nav class="small mb-3">
     <a href="/shop/" class="text-decoration-none text-muted">{{ _('الرئيسية') }}</a>
     <span class="text-muted">/</span>
@@ -14,65 +13,57 @@
 
   <div class="row g-4">
 
-{# ================== GALLERY ================== #}
-<div class="col-12 col-lg-6">
-  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-    <div class="bk-gallery">
+    {# ================== GALLERY ================== #}
+    <div class="col-12 col-lg-6">
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="bk-gallery">
 
-      {# Helper: build a usable url for ProductImage.image_path #}
-      {% macro img_url(img) -%}
-        {%- if img and img.image_path -%}
-          {%- set p = img.image_path -%}
-          {# إذا مخزن مع static/ نشيله #}
-          {%- if p.startswith('static/') -%}
-            {{ url_for('static', filename=p[7:]) }}
-          {%- else -%}
-            {{ url_for('static', filename=p) }}
-          {%- endif -%}
-        {%- else -%}
-          {{ '' }}
-        {%- endif -%}
-      {%- endmacro %}
+          {% macro img_url(img) -%}
+            {%- if img and img.image_path -%}
+              {%- set p = img.image_path -%}
+              {%- if p.startswith('static/') -%}
+                {{ url_for('static', filename=p[7:]) }}
+              {%- else -%}
+                {{ url_for('static', filename=p) }}
+              {%- endif -%}
+            {%- else -%}
+              {{ '' }}
+            {%- endif -%}
+          {%- endmacro %}
 
-      {# fallback: logo image #}
-      {% set fallback_img = url_for('static', filename='shop/img/logo.jpg') %}
+          {% set fallback_img = url_for('static', filename='shop/img/logo.jpg') %}
 
-      {# Determine main image #}
-      {% if product.images and product.images|length > 0 and img_url(product.images[0]) %}
-        {% set main_img = img_url(product.images[0]) %}
-      {% else %}
-        {% set main_img = fallback_img %}
-      {% endif %}
+          {% if product.images and product.images|length > 0 and img_url(product.images[0]) %}
+            {% set main_img = img_url(product.images[0]) %}
+          {% else %}
+            {% set main_img = fallback_img %}
+          {% endif %}
 
-      {# Main image #}
-      <div class="bk-gallery-main">
-        <img id="bkMainImg" src="{{ main_img }}" alt="{{ pick_lang(product.name, product.name_tr) }}">
-      </div>
+          <div class="bk-gallery-main">
+            <img id="bkMainImg" src="{{ main_img }}" alt="{{ pick_lang(product.name, product.name_tr) }}">
+          </div>
 
-      {# Thumbnails #}
-      <div class="bk-gallery-thumbs">
-        {% if product.images and product.images|length > 0 %}
-          {% for img in product.images %}
-            {% set u = img_url(img) %}
-            {% if u %}
-              <button type="button"
-                      class="bk-thumb {% if loop.first %}active{% endif %}"
-                      data-src="{{ u }}">
-                <img src="{{ u }}" alt="thumb">
+          <div class="bk-gallery-thumbs">
+            {% if product.images and product.images|length > 0 %}
+              {% for img in product.images %}
+                {% set u = img_url(img) %}
+                {% if u %}
+                  <button type="button"
+                          class="bk-thumb {% if loop.first %}active{% endif %}"
+                          data-src="{{ u }}">
+                    <img src="{{ u }}" alt="thumb">
+                  </button>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <button type="button" class="bk-thumb active" data-src="{{ main_img }}">
+                <img src="{{ main_img }}" alt="thumb">
               </button>
             {% endif %}
-          {% endfor %}
-        {% else %}
-          <button type="button" class="bk-thumb active" data-src="{{ main_img }}">
-            <img src="{{ main_img }}" alt="thumb">
-          </button>
-        {% endif %}
+          </div>
+        </div>
       </div>
 
-    </div>
-  </div>
-
-      {# Variants chips #}
       {% if variants and variants|length > 1 %}
         <div class="mt-3">
           <div class="small text-muted mb-2">{{ _('خيارات أخرى') }}</div>
@@ -99,28 +90,22 @@
           <div class="text-muted">{{ _('الماركة') }}: <span class="fw-semibold">{{ brand_name }}</span></div>
         {% endif %}
 
-        <!-- {% if product.code %}
-          <div class="text-muted small mt-1">{{ _('الكود') }}: {{ product.code }}</div>
-        {% endif %} -->
-
         <div class="bk-divider my-3"></div>
 
         {# Price area #}
         {% if is_shop_logged_in %}
           <div class="bk-price-box">
-            {% if product.is_discount_active %}
-              <div class="text-muted text-decoration-line-through">
-                {{ product.base_cash_price }} <span class="small">{{ _('$') }}</span>
-              </div>
-              <div class="bk-main-price">
-                {{ product.discount_price }} <span class="small text-muted">{{ _('$') }}</span>
-              </div>
-              <!-- <span class="bk-discount-badge">{{ _('خصم') }}</span> -->
-            {% else %}
-              <div class="bk-main-price">
-                {{ product.base_cash_price }} <span class="small text-muted">{{ _('$') }}</span>
+            <div class="bk-main-price" id="product-price">
+              {{ min_price }} <span class="small text-muted">{{ _('$') }}</span>
+            </div>
+
+            {% if product.variants and product.variants|length > 0 %}
+              <div class="small text-muted mt-1" id="price-note">
+                {{ _('ابتداءً من') }}
               </div>
             {% endif %}
+
+            <div class="small mt-2" id="stock-status"></div>
           </div>
         {% else %}
           <div class="alert alert-light border rounded-4">
@@ -130,13 +115,46 @@
           </div>
         {% endif %}
 
+        {# Size variants #}
+        {% if product.variants and product.variants|length > 0 %}
+          <div class="bk-divider my-4"></div>
+
+          <h2 class="h6 fw-bold mb-2">{{ _('المقاسات المتوفرة') }}</h2>
+
+          <div class="d-flex flex-wrap gap-2" id="variant-buttons">
+            {% for v in product.variants %}
+              <button
+                type="button"
+                class="btn btn-outline-dark rounded-3 variant-btn {% if loop.first %}active{% endif %}"
+                data-size="{{ v.size }}"
+                data-color="{{ v.color or '' }}"
+                data-price="{{ v.base_cash_price }}"
+                data-stock="{{ v.stock_qty }}"
+                data-available="{{ '1' if v.is_available else '0' }}"
+              >
+                {{ v.size }}
+                {% if v.color %}
+                  - {{ v.color }}
+                {% endif %}
+              </button>
+            {% endfor %}
+          </div>
+
+          <div class="small text-muted mt-2" id="selected-variant-text"></div>
+        {% endif %}
+
         {# Actions #}
         <div class="d-grid gap-2 mt-3">
           {% if whatsapp_product_link %}
-            <a class="btn btn-success py-2 rounded-3" href="{{ whatsapp_product_link }}" target="_blank">
+            <a class="btn btn-success py-2 rounded-3"
+               href="{{ whatsapp_product_link }}"
+               target="_blank"
+               id="whatsapp-btn"
+               data-base-link="{{ whatsapp_product_link }}">
               <i class="bi bi-whatsapp"></i> {{ _('اسأل عبر واتساب') }}
             </a>
           {% endif %}
+
           <a class="btn btn-outline-dark py-2 rounded-3" href="/shop/products">
             <i class="bi bi-arrow-right"></i> {{ _('رجوع للمنتجات') }}
           </a>
@@ -172,7 +190,6 @@
 
       </div>
     </div>
-
   </div>
 </div>
 {% endblock %}
@@ -182,16 +199,91 @@
   (function () {
     const main = document.getElementById("bkMainImg");
     const thumbs = document.querySelectorAll(".bk-thumb");
-    if (!main || !thumbs.length) return;
 
-    thumbs.forEach(btn => {
-      btn.addEventListener("click", () => {
-        thumbs.forEach(x => x.classList.remove("active"));
-        btn.classList.add("active");
-        const src = btn.getAttribute("data-src");
-        if (src) main.setAttribute("src", src);
+    if (main && thumbs.length) {
+      thumbs.forEach(btn => {
+        btn.addEventListener("click", () => {
+          thumbs.forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+          const src = btn.getAttribute("data-src");
+          if (src) main.setAttribute("src", src);
+        });
       });
+    }
+
+    const variantButtons = document.querySelectorAll(".variant-btn");
+    const priceEl = document.getElementById("product-price");
+    const stockEl = document.getElementById("stock-status");
+    const selectedVariantText = document.getElementById("selected-variant-text");
+    const whatsappBtn = document.getElementById("whatsapp-btn");
+
+    if (!variantButtons.length || !priceEl) return;
+
+    function updateWhatsappLink(size, color) {
+      if (!whatsappBtn) return;
+
+      const baseLink = whatsappBtn.getAttribute("data-base-link");
+      if (!baseLink) return;
+
+      const separator = baseLink.includes("?") ? "%0A" : "";
+      let extra = "";
+
+      if (size) {
+        extra += `%0Aالمقاس: ${encodeURIComponent(size)}`;
+      }
+
+      if (color) {
+        extra += `%0Aاللون: ${encodeURIComponent(color)}`;
+      }
+
+      whatsappBtn.setAttribute("href", baseLink + extra);
+    }
+
+    function selectVariant(btn) {
+      variantButtons.forEach(b => {
+        b.classList.remove("active");
+        b.classList.remove("btn-dark");
+        b.classList.add("btn-outline-dark");
+      });
+
+      btn.classList.add("active");
+      btn.classList.remove("btn-outline-dark");
+      btn.classList.add("btn-dark");
+
+      const size = btn.dataset.size || "";
+      const color = btn.dataset.color || "";
+      const price = btn.dataset.price || "";
+      const stock = parseInt(btn.dataset.stock || "0", 10);
+      const available = btn.dataset.available === "1";
+
+      priceEl.innerHTML = `${price} <span class="small text-muted">$</span>`;
+
+      if (selectedVariantText) {
+        if (color) {
+          selectedVariantText.textContent = `{{ _("المحدد حاليًا") }}: ${size} - ${color}`;
+        } else {
+          selectedVariantText.textContent = `{{ _("المحدد حاليًا") }}: ${size}`;
+        }
+      }
+
+      if (stockEl) {
+        if (available && stock > 0) {
+          stockEl.textContent = `{{ _("متوفر") }} (${stock})`;
+          stockEl.className = "small mt-2 text-success";
+        } else {
+          stockEl.textContent = `{{ _("غير متوفر") }}`;
+          stockEl.className = "small mt-2 text-danger";
+        }
+      }
+
+      updateWhatsappLink(size, color);
+    }
+
+    variantButtons.forEach(btn => {
+      btn.addEventListener("click", () => selectVariant(btn));
     });
+
+    selectVariant(variantButtons[0]);
   })();
 </script>
 {% endblock %}

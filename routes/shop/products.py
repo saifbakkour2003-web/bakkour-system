@@ -205,6 +205,11 @@ def register(app):
         specs = _build_specs(product)
         whatsapp_product_link = _build_whatsapp_link(product, specs)
 
+        if product.variants and len(product.variants) > 0:
+            min_price = min(v.base_cash_price for v in product.variants)
+        else:
+            min_price = product.base_cash_price
+
         return render_template(
             "shop/product_detail.html",
             product=product,
@@ -212,4 +217,5 @@ def register(app):
             specs=specs,
             pick_lang=pick_lang,
             whatsapp_product_link=whatsapp_product_link,
+            min_price=min_price,
         )
