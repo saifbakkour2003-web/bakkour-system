@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-02-10 22:27+0300\n"
+"POT-Creation-Date: 2026-04-15 15:10+0300\n"
 "PO-Revision-Date: 2026-02-06 11:01+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: tr\n"
@@ -18,73 +18,577 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: routes/admin_users.py:33
+#: routes/admin/auth.py:19
+msgid "بيانات الأدمن غير صحيحة."
+msgstr "Admin giriş bilgileri hatalı."
+
+#: routes/admin/auth.py:23
+msgid "تم تسجيل الدخول للأدمن ✅"
+msgstr "Admin girişi başarılı ✅"
+
+#: routes/admin/auth.py:31
+msgid "تم تسجيل خروج الأدمن"
+msgstr "Admin çıkış yaptı"
+
+#: routes/admin/brands.py:25
+msgid "الاسم والكود مطلوبان"
+msgstr "Ad ve kod zorunludur"
+
+#: routes/admin/brands.py:30
+#, python-format
+msgid "هذه الماركة موجودة مسبقًا في هذا القسم. (ID: %(id)s)"
+msgstr "Bu marka bu bölümde zaten موجود (ID: %(id)s)"
+
+#: routes/admin/brands.py:36
+msgid "تمت إضافة الماركة ✅"
+msgstr "Marka başarıyla eklendi ✅"
+
+#: routes/admin/brands.py:49
+msgid "تم حذف الماركة 🗑️"
+msgstr "Marka silindi 🗑️"
+
+#: routes/admin/coupons.py:55
+msgid "يرجى إدخال كود الكوبون"
+msgstr "Lütfen kupon kodunu girin"
+
+#: routes/admin/coupons.py:60
+msgid "هذا الكود مستخدم مسبقًا"
+msgstr "Bu kupon kodu daha önce kullanılmış"
+
+#: routes/admin/coupons.py:77
+msgid "تم إنشاء الكوبون ✅"
+msgstr "Kupon oluşturuldu ✅"
+
+#: routes/admin/coupons.py:108
+msgid "تم حفظ التعديلات ✅"
+msgstr "Değişiklikler kaydedildi ✅"
+
+#: routes/admin/coupons.py:118
+msgid "تم تحديث حالة الكوبون"
+msgstr "Kupon durumu güncellendi"
+
+#: routes/admin/coupons.py:152
+msgid "تم تصفير مستلمي الكوبون وعداد الاستخدام ✅"
+msgstr "Kupon kullanıcıları ve kullanım sayacı sıfırlandı ✅"
+
+#: routes/admin/customers.py:93
+msgid "الاسم مطلوب"
+msgstr "Ad gerekli"
+
+#: routes/admin/customers.py:132
+msgid "تم حذف الزبون"
+msgstr "Müşteri silindi"
+
+#: routes/admin/customers.py:154
+msgid "تم تعديل بيانات الزبون ✅"
+msgstr "Müşteri bilgileri güncellendi ✅"
+
+#: routes/admin/installments.py:39
+msgid "الرجاء إدخال قيم صحيحة"
+msgstr "Lütfen geçerli değerler girin"
+
+#: routes/admin/installments.py:53
+msgid "أدخل كود منتج واحد على الأقل"
+msgstr "En az bir ürün kodu girin"
+
+#: routes/admin/installments.py:66
+msgid "أكواد غير صحيحة: "
+msgstr "Geçersiz ürün kodları: "
+
+#: routes/admin/installments.py:149
+msgid "تمت إضافة التقسيط بنجاح ✅"
+msgstr "Taksit başarıyla eklendi ✅"
+
+#: routes/admin/installments.py:165 routes/admin/installments.py:186 routes/admin/installments.py:230
+msgid "هذا الدفتر لا يحتوي على أقساط"
+msgstr "Bu defterde taksit bulunmuyor"
+
+#: routes/admin/installments.py:172
+msgid "تم حذف منتج التقسيط 🗑️"
+msgstr "Taksit ürünü silindi 🗑️"
+
+#: routes/admin/installments.py:192
+msgid "دفعة على المنتج"
+msgstr "Ürün ödemesi"
+
+#: routes/admin/installments.py:198
+msgid "بيانات غير صحيحة في الفورم"
+msgstr "Formda geçersiz bilgiler var"
+
+#: routes/admin/installments.py:214
+msgid "تمت إضافة الدفعة ✅"
+msgstr "Ödeme eklendi ✅"
+
+#: routes/admin/installments.py:237
+msgid "تم حذف الدفعة 🗑️"
+msgstr "Ödeme silindi 🗑️"
+
+#: routes/admin/installments.py:253
+msgid "لا يوجد منتجات تقسيط غير مسددة لهذا الزبون."
+msgstr "Bu müşteri için ödenmemiş taksitli ürün yok"
+
+#: routes/admin/invoices.py:42
+msgid "دفعة عامة"
+msgstr "Genel ödeme"
+
+#: routes/admin/invoices.py:93
+msgid "دفعة أولى"
+msgstr "İlk ödeme"
+
+#: routes/admin/invoices.py:102
+msgid "دفعة تقسيط"
+msgstr "Taksit ödemesi"
+
+#: routes/admin/main_categories.py:53
+msgid "التصنيفات الرئيسية أصبحت ثابتة بالنظام ولا يمكن إضافة قسم جديد من الواجهة."
+msgstr "Ana kategoriler sabit hale getirildi, yeni kategori eklenemez."
+
+#: routes/admin/main_categories.py:60
+msgid "التصنيفات الرئيسية أصبحت ثابتة بالنظام ولا يمكن تعديلها من الواجهة."
+msgstr "Ana kategoriler düzenlenemez."
+
+#: routes/admin/main_categories.py:67
+msgid "التصنيفات الرئيسية أصبحت ثابتة بالنظام ولا يمكن حذفها من الواجهة."
+msgstr "Ana kategoriler silinemez."
+
+#: routes/admin/payments.py:41
+msgid "اسم الدين مطلوب"
+msgstr "Borç adı gerekli"
+
+#: routes/admin/payments.py:50
+msgid "السعر/رأس المال غير صالح"
+msgstr "Geçersiz fiyat / maliyet"
+
+#: routes/admin/payments.py:76
+msgid "تم إضافة الدين اليدوي بنجاح ✅"
+msgstr "Manuel borç başarıyla eklendi ✅"
+
+#: routes/admin/payments.py:86
+msgid "كود المنتج غير صحيح ❌"
+msgstr "Ürün kodu hatalı ❌"
+
+#: routes/admin/payments.py:99 routes/admin/payments.py:172
+msgid "السعر غير صالح"
+msgstr "Geçersiz fiyat"
+
+#: routes/admin/payments.py:131
+msgid "تم إضافة الدين النقدي بنجاح ✅"
+msgstr "Nakit borç başarıyla eklendi ✅"
+
+#: routes/admin/payments.py:154
+msgid "تم حذف الدين النقدي 🗑️"
+msgstr "Nakit borç silindi 🗑️"
+
+#: routes/admin/payments.py:183
+msgid "تم تعديل الدين النقدي بنجاح ✅"
+msgstr "Nakit borç güncellendi ✅"
+
+#: routes/admin/payments.py:204 routes/admin/payments.py:268
+msgid "المبلغ غير صالح ❌"
+msgstr "Geçersiz tutar ❌"
+
+#: routes/admin/payments.py:229
+msgid "تمت إضافة الدفعة العامة بنجاح ✅"
+msgstr "Genel ödeme başarıyla eklendi ✅"
+
+#: routes/admin/payments.py:251
+msgid "تم حذف الدفعة العامة 🗑️"
+msgstr "Genel ödeme silindi 🗑️"
+
+#: routes/admin/payments.py:282
+msgid "تم تعديل الدفعة العامة بنجاح ✅"
+msgstr "Genel ödeme güncellendi ✅"
+
+#: routes/admin/products.py:198
+msgid "⚠️ التصنيف المختار لا ينتمي لهذا القسم."
+msgstr "⚠️ Seçilen kategori bu bölüme ait değil."
+
+#: routes/admin/products.py:231
+msgid "كل المنتجات"
+msgstr "Tüm ürünler"
+
+#: routes/admin/products.py:261
+msgid "⚠️ إضافة المنتج لازم تكون من صفحة القسم (كهربائيات/بياضات/بلوريات)."
+msgstr "⚠️ Ürün ekleme sadece ilgili bölüm sayfasından yapılmalı."
+
+#: routes/admin/products.py:270
+msgid "قسم غير صالح"
+msgstr "Geçersiz bölüm"
+
+#: routes/admin/products.py:285 routes/admin/products.py:470
+msgid "كل الحقول الأساسية مطلوبة"
+msgstr "Tüm temel alanlar zorunludur"
+
+#: routes/admin/products.py:292 routes/admin/products.py:477
+msgid "⚠️ لا يمكن اختيار تصنيف من قسم مختلف."
+msgstr "⚠️ Farklı bir bölümden kategori seçilemez."
+
+#: routes/admin/products.py:296 routes/admin/products.py:481
+msgid "⚠️ لا يمكن اختيار ماركة من قسم مختلف."
+msgstr "⚠️ Farklı bir bölümden marka seçilemez."
+
+#: routes/admin/products.py:319
+#, python-format
+msgid "⚠️ هذا المنتج موجود مسبقًا بنفس الخصائص (كود: %(code)s)"
+msgstr "⚠️ Bu ürün aynı özelliklerle zaten موجود (Kod: %(code)s)"
+
+#: routes/admin/products.py:377 routes/admin/products.py:523
+#, python-format
+msgid "الخاصية '%(name)s' إلزامية"
+msgstr "'%(name)s' özelliği zorunludur"
+
+#: routes/admin/products.py:415
+msgid "تمت إضافة المنتج بنجاح ✅"
+msgstr "Ürün başarıyla eklendi ✅"
+
+#: routes/admin/products.py:505
+#, python-format
+msgid "⚠️ يوجد منتج مطابق بنفس الخصائص (كود: %(code)s)"
+msgstr "⚠️ Aynı özelliklere sahip ürün zaten موجود (Kod: %(code)s)"
+
+#: routes/admin/products.py:561
+msgid "تم تعديل المنتج بنجاح ✅"
+msgstr "Ürün başarıyla güncellendi ✅"
+
+#: routes/admin/products.py:602
+msgid "تم حذف المنتج 🗑️"
+msgstr "Ürün silindi 🗑️"
+
+#: routes/admin/products.py:697
+msgid "✅ تم زيادة الكمية"
+msgstr "✅ Miktar artırıldı"
+
+#: routes/admin/products.py:709
+msgid "✅ تم إنقاص الكمية"
+msgstr "✅ Miktar azaltıldı"
+
+#: routes/admin/products.py:728
+msgid "✅ تم تحديث الكمية"
+msgstr "✅ Miktar güncellendi"
+
+#: routes/admin/products.py:738
+msgid "✅ تم تحديث حالة التوفر"
+msgstr "✅ Stok durumu güncellendi"
+
+#: routes/admin/products.py:762
+msgid "تم حذف الصورة."
+msgstr "Görsel silindi."
+
+#: routes/admin/products.py:789
+msgid "تم تعيين الصورة الأساسية ✅"
+msgstr "Ana görsel ayarlandı ✅"
+
+#: routes/admin/properties.py:73 routes/admin/properties.py:147
+msgid "اسم الخاصية ونوع الإدخال مطلوبان"
+msgstr "Özellik adı ve giriş türü zorunludur"
+
+#: routes/admin/properties.py:77 routes/admin/properties.py:151
+msgid "اختر تصنيفًا فرعيًا واحدًا على الأقل أو فعّل خيار (خاصية عامة للقسم)"
+msgstr "En az bir alt kategori seçin veya genel özellik seçeneğini aktif edin"
+
+#: routes/admin/properties.py:107 routes/admin/properties.py:179
+msgid "التصنيفات المختارة غير صالحة لهذا القسم"
+msgstr "Seçilen kategoriler bu bölüm için geçersiz"
+
+#: routes/admin/properties.py:113
+msgid "تمت إضافة الخاصية بنجاح ✅"
+msgstr "Özellik başarıyla eklendi ✅"
+
+#: routes/admin/properties.py:185
+msgid "تم تعديل الخاصية بنجاح ✅"
+msgstr "Özellik güncellendi ✅"
+
+#: routes/admin/properties.py:210
+msgid "تم حذف الخاصية 🗑️"
+msgstr "Özellik silindi 🗑️"
+
+#: routes/admin/properties.py:221
+msgid "هذه الخاصية ليست من نوع (قائمة). إذا بدك قيم جاهزة غيّر نوعها إلى select."
+msgstr "Bu özellik liste tipi değil. Hazır değerler için türü 'select' yap."
+
+#: routes/admin/properties.py:235
+msgid "أدخل قيمة"
+msgstr "Bir değer girin"
+
+#: routes/admin/properties.py:240
+msgid "هذه القيمة موجودة مسبقًا"
+msgstr "Bu değer zaten موجود"
+
+#: routes/admin/properties.py:245
+msgid "تمت إضافة القيمة ✅"
+msgstr "Değer eklendi ✅"
+
+#: routes/admin/properties.py:268
+msgid "تم حذف القيمة 🗑️"
+msgstr "Değer silindi 🗑️"
+
+#: routes/admin/sales.py:40
+msgid "تم تسجيل البيع بنجاح 💰"
+msgstr "Satış başarıyla kaydedildi 💰"
+
+#: routes/admin/sales_quick.py:25
+msgid "الكود فارغ"
+msgstr "Kod boş"
+
+#: routes/admin/sales_quick.py:32
+msgid "المنتج غير موجود"
+msgstr "Ürün bulunamadı"
+
+#: routes/admin/sales_quick.py:55
+msgid "السلة فارغة"
+msgstr "Sepet boş"
+
+#: routes/admin/sales_quick.py:87
+msgid "عناصر غير صالحة"
+msgstr "Geçersiz öğeler"
+
+#: routes/admin/sales_quick.py:99
+msgid "منتج غير موجود"
+msgstr "Ürün bulunamadı"
+
+#: routes/admin/sales_quick.py:110
+msgid "سعر غير صالح"
+msgstr "Geçersiz fiyat"
+
+#: routes/admin/sales_quick.py:123
+msgid "المخزون غير كافي"
+msgstr "Stok yetersiz"
+
+#: routes/admin/sales_quick.py:168
+msgid "خطأ بالسيرفر"
+msgstr "sunucu hatası"
+
+#: routes/admin/special_offers.py:59
+msgid "يرجى تعبئة العنوان واختيار المنتجين"
+msgstr "İütfen başlık ve 2 ürün seçin"
+
+#: routes/admin/special_offers.py:64
+msgid "خصم الباكج يحتاج قيمة خصم ثابتة"
+msgstr "Paket indirimi için sabit bir indirim değeri gereklidir."
+
+#: routes/admin/special_offers.py:68
+msgid "هذا النوع يحتاج اختيار منتج ثالث"
+msgstr "Bu tür işlemlerden 3. ürün seçmelisiniz"
+
+#: routes/admin/special_offers.py:72
+msgid "خصم المنتج الثالث يحتاج قيمة خصم ثابتة"
+msgstr "Ürün indirimi için sabit bir indirim değeri gereklidir."
+
+#: routes/admin/special_offers.py:93
+#, fuzzy
+msgid "تم إنشاء العرض ✅"
+msgstr "indirim oluşturuldu ✅"
+
+#: routes/admin/special_offers.py:134
+#, fuzzy
+msgid "تم حفظ التعديل ✅"
+msgstr "Değişikliği kaydedildi ✅"
+
+#: routes/admin/special_offers.py:143
+#, fuzzy
+msgid "تم تحديث حالة العرض"
+msgstr "İndirim durumu güncellendi"
+
+#: routes/admin/special_offers.py:156
+#, fuzzy
+msgid "تم إخفاء العرض ✅"
+msgstr "indirim kaldırıldı ✅"
+
+#: routes/admin/special_offers.py:168
+#, fuzzy
+msgid "تمت إعادة العرض ✅"
+msgstr "İndirim açıldı ✅"
+
+#: routes/admin/sub_categories.py:16
+#: templates/admin/categories/sub_categories/add.html:43
+#: templates/admin/categories/sub_categories/edit.html:49
+#: templates/admin/categories/sub_categories/list.html:28
+#: templates/admin/categories/sub_categories/list.html:63
+#: templates/layout_new.html:126 templates/products/list.html:24
+#: templates/products/list.html:105
+msgid "كهربائيات"
+msgstr "Elektrikli"
+
+#: routes/admin/sub_categories.py:17
+#: templates/admin/categories/sub_categories/add.html:44
+#: templates/admin/categories/sub_categories/edit.html:50
+#: templates/admin/categories/sub_categories/list.html:29
+#: templates/admin/categories/sub_categories/list.html:65
+#: templates/layout_new.html:131 templates/products/list.html:25
+#: templates/products/list.html:107
+msgid "بياضات"
+msgstr "Tekstil"
+
+#: routes/admin/sub_categories.py:18
+#: templates/admin/categories/sub_categories/add.html:45
+#: templates/admin/categories/sub_categories/edit.html:51
+#: templates/admin/categories/sub_categories/list.html:30
+#: templates/admin/categories/sub_categories/list.html:67
+#: templates/layout_new.html:136 templates/products/list.html:26
+#: templates/products/list.html:109
+msgid "بلوريات"
+msgstr "Zücacciye"
+
+#: routes/admin/sub_categories.py:114 routes/admin/sub_categories.py:175
+msgid "كل الحقول مطلوبة"
+msgstr "Tüm alanlar doldurulmalı"
+
+#: routes/admin/sub_categories.py:130
+#, fuzzy
+msgid "تمت إضافة التصنيف الفرعي بنجاح ✅"
+msgstr "Alt kategori başarıyla eklendi ✅"
+
+#: routes/admin/sub_categories.py:188
+#, fuzzy
+msgid "تم تعديل التصنيف الفرعي بنجاح ✅"
+msgstr "Alt kategoriyi düzenlendi ✅"
+
+#: routes/admin/sub_categories.py:205
+msgid "لا يمكن حذف تصنيف يحتوي منتجات ❌"
+msgstr "Ürünlü kategory silinemez ❌"
+
+#: routes/admin/sub_categories.py:209
+msgid "لا يمكن حذف تصنيف يحتوي خصائص ❌"
+msgstr "Özellikli Kategory silinemez ❌"
+
+#: routes/admin/sub_categories.py:217
+#, fuzzy
+msgid "تم حذف التصنيف الفرعي 🗑️"
+msgstr "Alt kategori silindi 🗑️"
+
+#: routes/admin/users.py:42
 msgid "تم تفعيل الحساب ✅"
 msgstr "Hesap aktifleştirildi ✅"
 
-#: routes/admin_users.py:41
+#: routes/admin/users.py:52
 msgid "تم حظر الحساب"
 msgstr "Hesap bloke alındı"
 
-#: routes/admin_users.py:49
+#: routes/admin/users.py:62
 msgid "تم إلغاء الحظر ✅"
 msgstr "Bloke Kaldırıldı ✅"
 
-#: routes/admin_users.py:59
+#: routes/admin/users.py:73
 msgid "تم إزالة صلاحية الأدمن"
 msgstr "Admin çıkarıldı"
 
-#: routes/admin_users.py:63
+#: routes/admin/users.py:77
 msgid "تم منح صلاحية الأدمن ✅"
-msgstr "Admi Rolü verildi"
+msgstr "Admi Rolü verildi ✅"
 
-#: routes/admin_users.py:76
+#: routes/admin/users.py:92
 msgid "تم إزالة الربط"
 msgstr "Bağ kpuldu"
 
-#: routes/admin_users.py:82
+#: routes/admin/users.py:97
 msgid "كود الزبون غير صحيح (مثال: B.1)"
 msgstr "Müşteri Kodu yanlış (Ör: B.1)"
 
-#: routes/admin_users.py:87
+#: routes/admin/users.py:102
 msgid "تم ربط الحساب بصفحة الزبون ✅"
-msgstr "Müşteri Sayfasaına Bağlandı"
+msgstr "Müşteri Sayfasaına Bağlandı ✅"
 
-#: routes/shop/account.py:18
+#: routes/shop/account.py:30
 msgid "حسابك قيد المراجعة. الأسعار والصفحة الخاصة ستظهر بعد التفعيل."
-msgstr "Hesabınız inceleniyor, fiyatlar ve sayfan aktifleştirdikten sonra görünecektir"
+msgstr ""
+"Hesabınız inceleniyor, fiyatlar ve sayfan aktifleştirdikten sonra "
+"görünecektir"
 
-#: routes/shop/auth.py:17
-msgid "بيانات الدخول غير صحيحة"
-msgstr "Giriş Bilgileri Yanlış"
+#: routes/shop/account.py:74
+#, fuzzy
+msgid "تم تحديث معلوماتك ✅"
+msgstr "Bilgileriniz güncellendi ✅"
 
-#: routes/shop/auth.py:21
-msgid "حسابك موقوف. تواصل معنا."
-msgstr "Hesabınız pasiftir, bizimle iletişime geçin"
+#: routes/shop/account.py:84
+#, fuzzy
+msgid "حسابك قيد المراجعة. ستتمكن من استخدام الكوبونات بعد التفعيل."
+msgstr "Hesabınız inceleniyor. Aktivasyondan sonra sayfanız açılacaktır."
 
-#: routes/shop/auth.py:26
-msgid "تم تسجيل الدخول بنجاح ✅"
-msgstr "Giriş Başarıyla yapıldı"
+#: routes/shop/account.py:89
+msgid "اكتب كود الكوبون أولاً."
+msgstr "Kupon kodunu girin"
 
-#: routes/shop/auth.py:40
+#: routes/shop/account.py:95
+msgid "هذا الكوبون غير موجود."
+msgstr "Bu kupon kodu bulunmamaktadır"
+
+#: routes/shop/account.py:101 routes/shop/account.py:130
+msgid "انتهت كمية هذا الكوبون (خلص العدد)."
+msgstr "Kupon miktarı bitti"
+
+#: routes/shop/account.py:103
+msgid "هذا الكوبون لم يبدأ بعد."
+msgstr "Bu kupon kodu başlamadı daha"
+
+#: routes/shop/account.py:105
+msgid "انتهت صلاحية هذا الكوبون."
+msgstr "Bu kupon kodu pasif"
+
+#: routes/shop/account.py:107
+msgid "هذا الكوبون غير متاح حالياً."
+msgstr "Bu kupon aktif değil"
+
+#: routes/shop/account.py:113
+msgid "أنت حاصل على هذا الكوبون مسبقاً ✅"
+msgstr "Daha önce kullanıldı"
+
+#: routes/shop/account.py:139
+msgid "صار خطأ أثناء إضافة الكوبون. جرّب مرة ثانية."
+msgstr "hata oldu, Tekrar dene"
+
+#: routes/shop/account.py:142
+#, fuzzy
+msgid "تم إضافة الكوبون لحسابك ✅ "
+msgstr "Kupon hesapınıza eklendi ✅"
+
+#: routes/shop/auth.py:46
 msgid "يرجى تعبئة جميع الحقول"
 msgstr "lütfen Tüm alanları doldurun"
 
-#: routes/shop/auth.py:44
+#: routes/shop/auth.py:51
+msgid "بيانات الدخول غير صحيحة"
+msgstr "Giriş Bilgileri Yanlış"
+
+#: routes/shop/auth.py:55 routes/shop/helpers.py:45
+msgid "حسابك موقوف. تواصل معنا."
+msgstr "Hesabınız pasiftir, bizimle iletişime geçin"
+
+#: routes/shop/auth.py:117
+msgid "🎁 مبروك! حصلت على كوبون جديد: "
+msgstr "🎁 Tebrikler! Kupon kazandınız "
+
+#: routes/shop/auth.py:119
+msgid "تم تسجيل الدخول بنجاح ✅"
+msgstr "Giriş Başarıyla yapıldı ✅"
+
+#: routes/shop/auth.py:141
+#, fuzzy
+msgid "يرجى تعبئة جميع الحقول المطلوبة"
+msgstr "lütfen Tüm alanları doldurun"
+
+#: routes/shop/auth.py:145
 msgid "كلمتا المرور غير متطابقتين"
 msgstr "şifre onayı yanlış"
 
-#: routes/shop/auth.py:49
+#: routes/shop/auth.py:150
 msgid "هذا البريد مستخدم مسبقًا"
 msgstr "Bu mail adresi daha önce kullanılımış"
 
-#: routes/shop/auth.py:57
+#: routes/shop/auth.py:166
 msgid "تم إنشاء الحساب. حسابك قيد المراجعة الآن ✅"
-msgstr "hesap oluştulurldu, değerlendirilmeye alındı"
+msgstr "hesap oluştulurldu, değerlendirilmeye alındı ✅"
 
-#: routes/shop/auth.py:63
+#: routes/shop/auth.py:173
 msgid "تم تسجيل الخروج"
 msgstr "çıkış yapıldı"
+
+#: routes/shop/contact.py:18
+msgid "اكتب رسالتك أولاً."
+msgstr "Mesajınızı yazın"
+
+#: routes/shop/contact.py:22
+msgid "تم استلام رسالتك ✅ سنتواصل معك قريباً."
+msgstr "İletiniz alındı ✅ en yakın zamanda dönüş yapılacak"
 
 #: templates/home_dashboard.html:3
 msgid "Dashboard"
@@ -114,7 +618,7 @@ msgstr "Üç defter"
 msgid "الدفتر"
 msgstr "Defter"
 
-#: templates/home_dashboard.html:46 templates/shop/ledger.html:135
+#: templates/home_dashboard.html:46 templates/shop/ledger.html:225
 msgid "مجموع الديون"
 msgstr "Borç toplamı"
 
@@ -135,92 +639,98 @@ msgstr "R-M Defteri (B)"
 msgid "دفتر الديون النقدية (C)"
 msgstr "Nakit Borç Defteri (C)"
 
-#: templates/layout_new.html:7 templates/layout_new.html:31
+#: templates/layout_new.html:6 templates/layout_new.html:31
 msgid "لوحة التحكم"
 msgstr "Kontrol Paneli"
 
-#: templates/layout_new.html:27
+#: templates/layout_new.html:27 templates/shop/home.html:2
+#: templates/shop/layout.html:108 templates/shop/product_detail.html:7
 msgid "الرئيسية"
 msgstr "Ana Sayfa"
 
+#: templates/layout_new.html:35
+#, fuzzy
+msgid "أدمن"
+msgstr "Admin"
+
+#: templates/layout_new.html:38 templates/shop/layout.html:87
+#: templates/shop/my.html:11
+#, fuzzy
+msgid "تسجيل الخروج"
+msgstr "çıkış yap"
+
 #: templates/admin/users_manage.html:6 templates/admin/users_pending.html:9
-#: templates/layout_new.html:65 templates/layout_new.html:72
+#: templates/layout_new.html:72 templates/layout_new.html:79
 msgid "إدارة الحسابات"
 msgstr "Hesap Yönetimi"
 
 #: templates/admin/users_manage.html:9 templates/admin/users_pending.html:6
-#: templates/layout_new.html:68
+#: templates/layout_new.html:75
 msgid "طلبات الحسابات"
-msgstr "hesap onayılamaları"
+msgstr "hesap istekleri"
 
-#: templates/layout_new.html:77
+#: templates/layout_new.html:84
 msgid "📁 الدفاتر"
 msgstr "📁 Defterler"
 
-#: templates/layout_new.html:81
+#: templates/layout_new.html:88
 msgid "دفتر التقسيط"
 msgstr "Taksit Defteri"
 
-#: templates/layout_new.html:86
+#: templates/layout_new.html:93
 msgid "دفتر R-M"
 msgstr "R-M Defteri"
 
-#: templates/layout_new.html:91
+#: templates/layout_new.html:98
 msgid "دفتر الديون النقدية"
 msgstr "Nakit Borç Defteri"
 
-#: templates/layout_new.html:98
+#: templates/layout_new.html:105
 msgid "فاتورة نقدي (سريعة)"
 msgstr "Nakit Fatura (Hızlı)"
 
-#: templates/layout_new.html:103
+#: templates/layout_new.html:110
 msgid "🧰 الإدارة"
 msgstr "Yönetim 🧰"
 
-#: templates/layout_new.html:111 templates/products/list.html:3
+#: templates/layout_new.html:118 templates/products/list.html:2
 msgid "إدارة المنتجات"
 msgstr "Ürün Yönetimi"
 
-#: templates/layout_new.html:119 templates/products/list.html:25
-#: templates/products/list.html:102
-msgid "كهربائيات"
-msgstr "Elektrik"
+#: templates/layout_new.html:142
+#, fuzzy
+msgid "إدارة العروض الخاصة"
+msgstr "Özel indirimler yönetimi"
 
-#: templates/layout_new.html:124 templates/products/list.html:26
-#: templates/products/list.html:104
-msgid "بياضات"
-msgstr "Tekstil"
+#: templates/layout_new.html:145
+#, fuzzy
+msgid "إدارة الكوبونات"
+msgstr "Kupon Yönetimi"
 
-#: templates/layout_new.html:129 templates/products/list.html:27
-#: templates/products/list.html:106
-msgid "بلوريات"
-msgstr "Zücacciye"
-
-#: templates/admin/brands.html:2 templates/layout_new.html:135
+#: templates/admin/brands.html:2 templates/layout_new.html:150
 msgid "إدارة الماركات"
 msgstr "Marka Yönetimi"
 
-#: templates/admin/categories/main_categories/list.html:3
-#: templates/layout_new.html:140
+#: templates/layout_new.html:155
 msgid "إدارة التصنيفات"
 msgstr "Kategori Yönetimi"
 
 #: templates/admin/categories/sub_categories/list.html:2
-#: templates/admin/categories/sub_categories/list.html:8
-#: templates/layout_new.html:145
+#: templates/admin/categories/sub_categories/list.html:9
+#: templates/layout_new.html:160
 msgid "التصنيفات الفرعية"
 msgstr "Alt Kategoriler"
 
 #: templates/admin/categories/properties/list.html:3
-#: templates/layout_new.html:150 templates/products/list.html:46
+#: templates/layout_new.html:165 templates/products/list.html:45
 msgid "الخصائص"
 msgstr "Özellikler"
 
-#: templates/layout_new.html:155 templates/sales/profits.html:2
+#: templates/layout_new.html:170 templates/sales/profits.html:2
 msgid "الأرباح"
 msgstr "Kâr"
 
-#: templates/layout_new.html:160
+#: templates/layout_new.html:175
 msgid "تصدير Excel"
 msgstr "Excel’e Aktar"
 
@@ -234,7 +744,7 @@ msgstr "Defter kodu:"
 
 #: templates/customers/index.html:11 templates/ledger_dashboard.html:14
 msgid "+ إضافة زبون جديد"
-msgstr "Yeni Müşteri Ekle"
+msgstr "Yeni Müşteri Ekle +"
 
 #: templates/ledger_dashboard.html:21
 msgid "عدد العملاء في الدفتر"
@@ -244,14 +754,14 @@ msgstr "Müşteri Sayısı"
 msgid "مجموع التقسيط"
 msgstr "Taksit toplamı"
 
-#: templates/ledger_dashboard.html:32 templates/shop/admin_users.html:65
-#: templates/shop/admin_users.html:78
+#: templates/ledger_dashboard.html:32 templates/shop/admin_users.html:70
+#: templates/shop/admin_users.html:83
 msgid "لا يوجد"
 msgstr "Bulunmadı"
 
 #: templates/client/client_view.html:38 templates/client/client_view.html:78
-#: templates/customers/view.html:155 templates/ledger_dashboard.html:39
-#: templates/shop/ledger.html:109
+#: templates/customers/view.html:236 templates/invoices/mixed_invoice.html:27
+#: templates/ledger_dashboard.html:39 templates/shop/ledger.html:197
 msgid "الديون النقدية"
 msgstr "Nakit borçlar"
 
@@ -265,45 +775,52 @@ msgstr "Defter Müşterileri"
 
 #: templates/customers/index.html:18 templates/ledger_dashboard.html:63
 msgid "الرقم"
-msgstr "Sayı"
+msgstr "NO"
 
 #: templates/admin/brands.html:47
-#: templates/admin/categories/main_categories/list.html:23
+#: templates/admin/categories/main_categories/list.html:72
 #: templates/admin/categories/properties/list.html:32
-#: templates/admin/categories/sub_categories/list.html:49
-#: templates/customers/index.html:19 templates/ledger_dashboard.html:64
-#: templates/products/list.html:43 templates/shop/my.html:50
+#: templates/admin/categories/sub_categories/list.html:48
+#: templates/customers/index.html:19 templates/customers/view.html:145
+#: templates/ledger_dashboard.html:64 templates/products/list.html:42
+#: templates/shop/admin_users.html:28 templates/shop/contact.html:105
+#: templates/shop/my.html:51 templates/shop/my.html:95
+#: templates/shop/register.html:29
 msgid "الاسم"
 msgstr "Ad"
 
-#: templates/customers/index.html:20 templates/ledger_dashboard.html:65
-#: templates/shop/ledger.html:28
+#: templates/admin/coupon_claims.html:34 templates/customers/index.html:20
+#: templates/ledger_dashboard.html:65 templates/shop/admin_users.html:29
+#: templates/shop/ledger.html:29
 msgid "الهاتف"
 msgstr "TEL"
 
 #: templates/customers/add.html:33 templates/customers/edit.html:35
 #: templates/customers/index.html:21 templates/ledger_dashboard.html:66
-#: templates/shop/ledger.html:31
+#: templates/shop/ledger.html:32
 msgid "ملاحظات"
 msgstr "NOT"
 
-#: templates/customers/index.html:22 templates/customers/view.html:68
-#: templates/customers/view.html:176 templates/ledger_dashboard.html:67
+#: templates/admin/coupons_list.html:24
+#: templates/admin/special_offers_list.html:21
+#: templates/customers/index.html:22 templates/customers/view.html:76
+#: templates/customers/view.html:259 templates/ledger_dashboard.html:67
 msgid "خيارات"
 msgstr "Seçenekler"
 
-#: templates/customers/index.html:34 templates/ledger_dashboard.html:78
-#: templates/sales/profits.html:21 templates/sales/profits.html:30
-#: templates/sales/profits.html:43
+#: templates/admin/coupons_list.html:68 templates/customers/index.html:34
+#: templates/ledger_dashboard.html:78 templates/sales/profits.html:21
+#: templates/sales/profits.html:30 templates/sales/profits.html:43
 msgid "عرض"
 msgstr "Göster"
 
-#: templates/admin/categories/main_categories/list.html:37
 #: templates/admin/categories/properties/list.html:69
-#: templates/admin/categories/sub_categories/list.html:87
-#: templates/customers/index.html:35 templates/customers/view.html:189
-#: templates/customers/view.html:209 templates/ledger_dashboard.html:79
-#: templates/products/list.html:186
+#: templates/admin/categories/sub_categories/list.html:78
+#: templates/admin/coupons_list.html:73
+#: templates/admin/special_offers_list.html:57
+#: templates/customers/index.html:35 templates/customers/view.html:275
+#: templates/customers/view.html:295 templates/ledger_dashboard.html:79
+#: templates/products/list.html:203
 msgid "تعديل"
 msgstr "Düzenle"
 
@@ -317,7 +834,7 @@ msgstr "🏷️ Marka Yönetimi"
 
 #: templates/admin/brands.html:12
 msgid "إضافة ماركة جديدة"
-msgstr "Yeni Mark Ekle"
+msgstr "Yeni Marka Ekle"
 
 #: templates/admin/brands.html:16
 msgid "اسم الماركة"
@@ -328,7 +845,10 @@ msgid "كود الماركة"
 msgstr "Marka kodu"
 
 #: templates/admin/brands.html:26 templates/admin/brands.html:48
-#: templates/products/list.html:44
+#: templates/admin/categories/sub_categories/add.html:40
+#: templates/admin/categories/sub_categories/edit.html:47
+#: templates/admin/categories/sub_categories/list.html:49
+#: templates/products/list.html:43
 msgid "القسم"
 msgstr "Bölüm"
 
@@ -353,40 +873,403 @@ msgid "إضافة"
 msgstr "Ekle"
 
 #: templates/admin/brands.html:46
-#: templates/admin/categories/main_categories/list.html:22
+#: templates/admin/categories/main_categories/list.html:28
 #: templates/admin/categories/properties/list.html:31
-#: templates/products/list.html:40
+#: templates/products/list.html:39
 msgid "#"
 msgstr "#"
 
-#: templates/admin/brands.html:49 templates/products/list.html:42
+#: templates/admin/brands.html:49 templates/admin/coupon_form.html:12
+#: templates/admin/coupons_list.html:18 templates/customers/view.html:144
+#: templates/products/list.html:41 templates/shop/my.html:154
 msgid "الكود"
 msgstr "Kod"
 
 #: templates/admin/brands.html:50
-#: templates/admin/categories/main_categories/list.html:25
 #: templates/admin/categories/properties/list.html:35
-#: templates/admin/categories/sub_categories/list.html:52
+#: templates/admin/categories/sub_categories/list.html:51
 #: templates/admin/users.html:29 templates/admin/users.html:69
 #: templates/admin/users_manage.html:33 templates/admin/users_pending.html:31
 #: templates/client/client_view.html:65 templates/client/client_view.html:94
-#: templates/products/list.html:51 templates/shop/admin_users.html:27
+#: templates/products/list.html:51 templates/shop/admin_users.html:30
 msgid "إجراءات"
 msgstr "İşlemler"
 
 #: templates/admin/brands.html:68
-#: templates/admin/categories/main_categories/list.html:44
 #: templates/admin/categories/properties/list.html:78
 #: templates/admin/categories/properties/values.html:54
-#: templates/admin/categories/sub_categories/list.html:94
-#: templates/customers/view.html:99 templates/customers/view.html:194
-#: templates/customers/view.html:213 templates/products/list.html:193
+#: templates/admin/categories/sub_categories/list.html:85
+#: templates/customers/view.html:115 templates/customers/view.html:280
+#: templates/customers/view.html:299 templates/products/list.html:210
 msgid "حذف"
 msgstr "Sil"
 
 #: templates/admin/brands.html:74
 msgid "لا يوجد ماركات"
 msgstr "Marka Bulunmadı"
+
+#: templates/admin/coupon_claims.html:3 templates/admin/coupon_claims.html:9
+#, fuzzy
+msgid "مستلمو الكوبون"
+msgstr "Kupon alanları"
+
+#: templates/admin/categories/properties/add.html:64
+#: templates/admin/categories/properties/edit.html:81
+#: templates/admin/categories/properties/values.html:68
+#: templates/admin/coupon_claims.html:17 templates/admin/coupon_form.html:74
+#: templates/customers/add.html:44 templates/installments/add.html:96
+#: templates/invoices/cash_invoice.html:99
+#: templates/invoices/mixed_invoice.html:193
+#: templates/shop/special_offers.html:15
+msgid "رجوع"
+msgstr "Geri"
+
+#: templates/admin/coupon_claims.html:21
+msgid "تصفير المستلمين"
+msgstr "Kupon alanları sıfırla"
+
+#: templates/admin/coupon_claims.html:32
+#, fuzzy
+msgid "المستخدم"
+msgstr "Kullancı"
+
+#: templates/admin/coupon_claims.html:33
+msgid "الإيميل"
+msgstr "mail adresi"
+
+#: templates/admin/coupon_claims.html:35
+msgid "أخذه بتاريخ"
+msgstr "Tarhinde alındı"
+
+#: templates/admin/categories/main_categories/list.html:33
+#: templates/admin/coupon_claims.html:36 templates/admin/coupons_list.html:22
+#: templates/admin/special_offers_list.html:18 templates/admin/users.html:67
+#: templates/admin/users_manage.html:31 templates/customers/view.html:75
+#: templates/products/list.html:46 templates/shop/ledger.html:104
+#: templates/shop/my.html:157
+msgid "الحالة"
+msgstr "Durum"
+
+#: templates/admin/coupon_claims.html:54 templates/shop/my.html:193
+#, fuzzy
+msgid "مستخدم"
+msgstr "Kullanıldı"
+
+#: templates/admin/coupon_claims.html:59
+#, fuzzy
+msgid "غير مستخدم"
+msgstr "Kullanılmadı"
+
+#: templates/admin/coupon_claims.html:66
+#, fuzzy
+msgid "لا يوجد مستلمون لهذا الكوبون بعد."
+msgstr "alan yok daha"
+
+#: templates/admin/coupon_form.html:3
+#, fuzzy
+msgid "كوبون"
+msgstr "Kupon"
+
+#: templates/admin/coupon_form.html:6
+#, fuzzy
+msgid "تعديل كوبون"
+msgstr "Kuponu düzenle"
+
+#: templates/admin/coupon_form.html:6 templates/admin/coupons_list.html:9
+#, fuzzy
+msgid "إضافة كوبون"
+msgstr "Kupon Ekle"
+
+#: templates/admin/coupon_form.html:14
+msgid "يفضّل أحرف كبيرة + أرقام"
+msgstr "BÜyük harfler + sayılar tercih edilir"
+
+#: templates/admin/coupon_form.html:18
+msgid "قيمة الخصم (مبلغ ثابت)"
+msgstr "indirim miktarı (sabit sayı)"
+
+#: templates/admin/coupon_form.html:24
+#, fuzzy
+msgid "عنوان اختياري"
+msgstr "Başlık (isteğe bağlı)"
+
+#: templates/admin/coupon_form.html:29
+#, fuzzy
+msgid "وصف اختياري"
+msgstr "Açıklama (isteğe bağlı)"
+
+#: templates/admin/coupon_form.html:34
+#, fuzzy
+msgid "حد الاستخدام (اختياري)"
+msgstr "Kullanım sınırı (isteğe bağlı)"
+
+#: templates/admin/coupon_form.html:41
+msgid "Auto-claim لأول X دخول؟"
+msgstr "Otomatik alım ilk giriş yapana؟"
+
+#: templates/admin/coupon_form.html:46
+msgid "نعم"
+msgstr "Evet"
+
+#: templates/admin/coupon_form.html:49
+msgid "إذا فعلته + usage_limit=5 => أول 5 أشخاص يسجلوا دخول بيناخدوه"
+msgstr "Eğer bunu + usage_limit=5 olarak ayarlarsanız, giriş yapan ilk 5 kişi bu özelliği alır."
+
+#: templates/admin/coupon_form.html:53
+#, fuzzy
+msgid "بداية"
+msgstr "Başlangıç"
+
+#: templates/admin/coupon_form.html:59
+msgid "نهاية"
+msgstr "Bitiş"
+
+#: templates/admin/coupon_form.html:68 templates/admin/coupons_list.html:59
+#, fuzzy
+msgid "فعال"
+msgstr "Aktif"
+
+#: templates/admin/categories/properties/add.html:61
+#: templates/admin/categories/properties/edit.html:70
+#: templates/admin/categories/sub_categories/add.html:50
+#: templates/admin/coupon_form.html:73
+#: templates/admin/special_offer_form.html:111 templates/admin/users.html:83
+#: templates/admin/users_manage.html:65 templates/products/add.html:123
+msgid "حفظ"
+msgstr "Kaydet"
+
+#: templates/admin/coupons_list.html:3 templates/admin/coupons_list.html:8
+#: templates/shop/coupons.html:2 templates/shop/coupons.html:8
+#, fuzzy
+msgid "الكوبونات"
+msgstr "Kuponlar"
+
+#: templates/admin/coupons_list.html:19 templates/shop/my.html:155
+#, fuzzy
+msgid "الخصم"
+msgstr "İndirim"
+
+#: templates/admin/coupons_list.html:20
+#, fuzzy
+msgid "الاستخدام"
+msgstr "Kullanım"
+
+#: templates/admin/coupons_list.html:21
+#: templates/admin/special_offers_list.html:19
+#, fuzzy
+msgid "الوقت"
+msgstr "Zaman"
+
+#: templates/admin/coupons_list.html:23
+#, fuzzy
+msgid "المستلمين"
+msgstr "Alanlar"
+
+#: templates/admin/coupons_list.html:48
+msgid "Auto"
+msgstr "Oto"
+
+#: templates/admin/coupons_list.html:61
+#, fuzzy
+msgid "متوقف"
+msgstr "pasif"
+
+#: templates/admin/coupons_list.html:77
+#: templates/admin/special_offers_list.html:61
+#, fuzzy
+msgid "إيقاف"
+msgstr "Durudur"
+
+#: templates/admin/coupons_list.html:77
+#: templates/admin/special_offers_list.html:61 templates/admin/users.html:38
+#: templates/admin/users_pending.html:40 templates/shop/admin_users.html:41
+msgid "تفعيل"
+msgstr "aktif et"
+
+#: templates/admin/coupons_list.html:84
+#, fuzzy
+msgid "لا يوجد كوبونات"
+msgstr "Kupon yok"
+
+#: templates/admin/login.html:2 templates/admin/login.html:10
+#, fuzzy
+msgid "تسجيل دخول الأدمن"
+msgstr "Admin Girişi Yap"
+
+#: templates/admin/login.html:21 templates/shop/admin_users.html:27
+#: templates/shop/my.html:16 templates/shop/register.html:38
+msgid "البريد الإلكتروني"
+msgstr "mail adresi"
+
+#: templates/admin/login.html:22 templates/shop/login.html:46
+#: templates/shop/register.html:44
+msgid "كلمة المرور"
+msgstr "şifre"
+
+#: templates/admin/login.html:23
+msgid "دخول"
+msgstr "Giriş"
+
+#: templates/admin/login.html:27
+msgid "هذه الصفحة مخصصة للإدارة فقط."
+msgstr "Bu panel yünetim için"
+
+#: templates/admin/special_offer_form.html:2
+#, fuzzy
+msgid "عرض خاص"
+msgstr "Özel indirim"
+
+#: templates/admin/special_offer_form.html:5
+#, fuzzy
+msgid "تعديل عرض"
+msgstr "Düzenle"
+
+#: templates/admin/special_offer_form.html:5
+#: templates/admin/special_offers_list.html:7
+#, fuzzy
+msgid "إضافة عرض"
+msgstr "Ödeme Ekle"
+
+#: templates/admin/special_offer_form.html:11
+#, fuzzy
+msgid "عنوان العرض"
+msgstr "Satış türü"
+
+#: templates/admin/special_offer_form.html:15
+#, fuzzy
+msgid "نوع العرض"
+msgstr "Satış türü"
+
+#: templates/admin/special_offer_form.html:18
+#: templates/shop/partials/special_offer_card.html:55
+msgid "هدية"
+msgstr "Hediye"
+
+#: templates/admin/special_offer_form.html:19
+#, fuzzy
+msgid "خصم على المنتجين"
+msgstr "İki ürüne indirim"
+
+#: templates/admin/special_offer_form.html:20
+msgid "خصم على منتج ثالث"
+msgstr "3. ürün indirimli"
+
+#: templates/admin/special_offer_form.html:25
+#, fuzzy
+msgid "ملاحظة مختصرة"
+msgstr "NOT"
+
+#: templates/admin/special_offer_form.html:30
+#, fuzzy
+msgid "المنتج الأول"
+msgstr "Ürünler"
+
+#: templates/admin/special_offer_form.html:41
+#, fuzzy
+msgid "المنتج الثاني"
+msgstr "Taksit ürünleri"
+
+#: templates/admin/special_offer_form.html:52
+msgid "المنتج الثالث (هدية/خصم)"
+msgstr ""
+
+#: templates/admin/special_offer_form.html:54
+#, fuzzy
+msgid "-- لا يوجد --"
+msgstr "Bulunmadı"
+
+#: templates/admin/special_offer_form.html:64
+msgid "قيمة الخصم (ثابت)"
+msgstr "İndirim değeri (sbabit)"
+
+#: templates/admin/special_offer_form.html:67
+msgid "مثال: 5 (يعني يطرح 5 من مجموع المنتجين أو من المنتج الثالث حسب النوع)"
+msgstr ""
+
+#: templates/admin/special_offer_form.html:71
+msgid "بداية العرض"
+msgstr "Başlangıç"
+
+#: templates/admin/special_offer_form.html:77
+msgid "نهاية العرض"
+msgstr "Bitiş"
+
+#: templates/admin/special_offer_form.html:83
+#, fuzzy
+msgid "الستوك الإجمالي"
+msgstr "Toplam stok"
+
+#: templates/admin/special_offer_form.html:89
+#: templates/client/client_view.html:64 templates/customers/view.html:202
+#: templates/customers/view.html:258
+#: templates/installments/close_invoice.html:37
+#: templates/installments/invoice_list.html:40 templates/shop/ledger.html:165
+#: templates/shop/ledger.html:233
+msgid "المتبقي"
+msgstr "Kalan"
+
+#: templates/admin/special_offer_form.html:98
+#, fuzzy
+msgid "فعّال"
+msgstr "Aktif"
+
+#: templates/admin/special_offer_form.html:106
+#: templates/admin/special_offers_list.html:40
+#, fuzzy
+msgid "موقوف"
+msgstr "pasif"
+
+#: templates/admin/special_offers_list.html:2
+#: templates/admin/special_offers_list.html:6 templates/shop/about.html:22
+#: templates/shop/home.html:288 templates/shop/special_offers.html:4
+#: templates/shop/special_offers.html:14
+#, fuzzy
+msgid "العروض الخاصة"
+msgstr "Özellik İsmi AR"
+
+#: templates/admin/special_offers_list.html:16 templates/shop/contact.html:67
+#: templates/shop/my.html:72 templates/shop/register.html:41
+#, fuzzy
+msgid "العنوان"
+msgstr "Başlık"
+
+#: templates/admin/categories/properties/list.html:33
+#: templates/admin/special_offers_list.html:17
+#: templates/invoices/_old_general_invoice.html:29
+#: templates/invoices/cash_invoice.html:30
+#: templates/invoices/installments_invoice.html:29
+#: templates/invoices/mixed_invoice.html:33
+#: templates/invoices/mixed_invoice.html:101
+msgid "النوع"
+msgstr "Type"
+
+#: templates/admin/special_offers_list.html:20
+#, fuzzy
+msgid "الستوك"
+msgstr "Stok"
+
+#: templates/admin/special_offers_list.html:35
+#, fuzzy
+msgid "ساري"
+msgstr "Geçerli"
+
+#: templates/admin/special_offers_list.html:37
+msgid "سابق/غير فعال"
+msgstr "pasif/süresi doldu"
+
+#: templates/admin/special_offers_list.html:69
+#, fuzzy
+msgid "إخفاء"
+msgstr "Sakla"
+
+#: templates/admin/special_offers_list.html:75
+msgid "استرجاع"
+msgstr "Geri getir"
+
+#: templates/admin/special_offers_list.html:81
+#, fuzzy
+msgid "لا يوجد عروض"
+msgstr "İndirim Bulunmadı"
 
 #: templates/admin/users.html:7
 msgid "إدارة حسابات الموقع"
@@ -401,14 +1284,9 @@ msgstr "Yeni istekler"
 msgid "البريد"
 msgstr "mail adresi"
 
-#: templates/admin/users.html:38 templates/admin/users_pending.html:40
-#: templates/shop/admin_users.html:36
-msgid "تفعيل"
-msgstr "aktif et"
-
 #: templates/admin/users.html:41 templates/admin/users.html:96
 #: templates/admin/users_manage.html:88 templates/admin/users_pending.html:43
-#: templates/shop/admin_users.html:39
+#: templates/shop/admin_users.html:44
 msgid "حظر"
 msgstr "engelle"
 
@@ -424,12 +1302,6 @@ msgstr "Hesaplar"
 msgid "الدور"
 msgstr "Rol"
 
-#: templates/admin/users.html:67 templates/admin/users_manage.html:31
-#: templates/customers/view.html:67 templates/products/list.html:47
-#: templates/shop/ledger.html:50
-msgid "الحالة"
-msgstr "Durum"
-
 #: templates/admin/users.html:68 templates/admin/users_manage.html:32
 msgid "ربط الزبون"
 msgstr "Müşteri Bağla"
@@ -437,15 +1309,6 @@ msgstr "Müşteri Bağla"
 #: templates/admin/users.html:82
 msgid "ID الزبون"
 msgstr "Müşteri İD"
-
-#: templates/admin/categories/main_categories/add.html:32
-#: templates/admin/categories/properties/add.html:61
-#: templates/admin/categories/properties/edit.html:70
-#: templates/admin/categories/sub_categories/add.html:47
-#: templates/admin/users.html:83 templates/admin/users_manage.html:65
-#: templates/products/add.html:88
-msgid "حفظ"
-msgstr "Kaydet"
 
 #: templates/admin/users.html:89 templates/admin/users_manage.html:76
 msgid "إزالة أدمن"
@@ -463,17 +1326,17 @@ msgstr "Hesap Bulunmadı"
 msgid "Customer ID"
 msgstr "Customer ID"
 
-#: templates/admin/users_manage.html:50 templates/shop/admin_users.html:57
-#: templates/shop/my.html:17
+#: templates/admin/users_manage.html:50 templates/shop/admin_users.html:62
+#: templates/shop/my.html:22
 msgid "مفعّل"
 msgstr "Aktif"
 
-#: templates/admin/users_manage.html:52 templates/shop/my.html:15
+#: templates/admin/users_manage.html:52 templates/shop/my.html:20
 msgid "قيد المراجعة"
 msgstr "değerlendirmede"
 
-#: templates/admin/users_manage.html:54 templates/shop/admin_users.html:70
-#: templates/shop/my.html:19
+#: templates/admin/users_manage.html:54 templates/shop/admin_users.html:75
+#: templates/shop/my.html:24
 msgid "محظور"
 msgstr "engelli"
 
@@ -489,7 +1352,7 @@ msgstr "Bağı kparmak için boş bırakın"
 msgid "إلغاء الحظر"
 msgstr "bloku kaldır"
 
-#: templates/admin/users_pending.html:52 templates/shop/admin_users.html:48
+#: templates/admin/users_pending.html:52 templates/shop/admin_users.html:53
 msgid "لا يوجد طلبات حالياً"
 msgstr "istek yoktur"
 
@@ -498,46 +1361,82 @@ msgstr "istek yoktur"
 msgid "إضافة تصنيف رئيسي"
 msgstr "Kategori Ekle"
 
-#: templates/admin/categories/main_categories/add.html:12
-#: templates/admin/categories/main_categories/edit.html:13
-msgid "اسم التصنيف"
-msgstr "Kategori adı"
+#: templates/admin/categories/main_categories/add.html:9
+msgid ""
+"التصنيفات الرئيسية أصبحت ثابتة بالنظام. لا يمكن إضافة قسم جديد من هذه "
+"الصفحة."
+msgstr ""
 
-#: templates/admin/categories/main_categories/add.html:16
-#: templates/admin/categories/main_categories/edit.html:21
-msgid "اسم التصنيف (تركي)"
-msgstr "Alt kategori adı"
+#: templates/admin/categories/main_categories/add.html:13
+#: templates/admin/categories/main_categories/edit.html:13
+msgid "الرجوع إلى قائمة الأقسام"
+msgstr ""
 
 #: templates/admin/categories/main_categories/edit.html:2
 #: templates/admin/categories/main_categories/edit.html:6
 msgid "تعديل تصنيف رئيسي"
 msgstr "Kategori Düzenle"
 
-#: templates/admin/categories/main_categories/edit.html:40
-#: templates/admin/categories/sub_categories/edit.html:53
-#: templates/customers/edit.html:61 templates/payments/edit_cash_debt.html:21
-#: templates/payments/edit_general_payment.html:37
-msgid "حفظ التعديلات"
-msgstr "Değişiklikleri Kaydet"
+#: templates/admin/categories/main_categories/edit.html:9
+msgid "التصنيفات الرئيسية أصبحت ثابتة بالنظام. لا يمكن تعديلها من هذه الصفحة."
+msgstr ""
+
+#: templates/admin/categories/main_categories/list.html:2
+#, fuzzy
+msgid "إدارة التصنيفات الرئيسية"
+msgstr "📁 Ana Kategoriler"
 
 #: templates/admin/categories/main_categories/list.html:9
 msgid "📁 التصنيفات الرئيسية"
 msgstr "📁 Ana Kategoriler"
 
-#: templates/admin/categories/main_categories/list.html:13
-msgid "+ إضافة تصنيف رئيسي"
-msgstr "Kategori Ekle +"
+#: templates/admin/categories/main_categories/list.html:10
+msgid "هذه الأقسام ثابتة بالنظام وتُستخدم كأساس للتصنيفات الفرعية والمنتجات."
+msgstr ""
 
-#: templates/admin/categories/main_categories/list.html:24
-#: templates/admin/categories/sub_categories/add.html:22
-#: templates/admin/categories/sub_categories/edit.html:28
-#: templates/admin/categories/sub_categories/list.html:51
+#: templates/admin/categories/main_categories/list.html:15
+#, fuzzy
+msgid "إدارة التصنيفات الفرعية"
+msgstr "Alt Kategoriler"
+
+#: templates/admin/categories/main_categories/list.html:20
+msgid "الأقسام الرئيسية لم تعد قابلة للإضافة أو الحذف من الواجهة. الإدارة الفعلية أصبحت عبر التصنيفات الفرعية."
+msgstr ""
+
+#: templates/admin/categories/main_categories/list.html:29
+#, fuzzy
+msgid "القسم الثابت"
+msgstr "Bölüm sabit"
+
+#: templates/admin/categories/main_categories/list.html:30
+#: templates/admin/categories/main_categories/list.html:73
+#, fuzzy
+msgid "الاسم (تركي)"
+msgstr "Ad (TR)"
+
+#: templates/admin/categories/main_categories/list.html:31
+#: templates/admin/categories/main_categories/list.html:74
+#: templates/admin/categories/sub_categories/add.html:29
+#: templates/admin/categories/sub_categories/edit.html:36
+#: templates/admin/categories/sub_categories/list.html:50
 msgid "Code Prefix"
 msgstr "Code Prefix"
 
-#: templates/admin/categories/main_categories/list.html:50
-msgid "لا يوجد تصنيفات"
-msgstr "Kategori yok"
+#: templates/admin/categories/main_categories/list.html:32
+msgid "Department Key"
+msgstr "Bölüm anahtarı"
+
+#: templates/admin/categories/main_categories/list.html:54
+msgid "ثابت"
+msgstr "Sabit"
+
+#: templates/admin/categories/main_categories/list.html:65
+msgid "السجلات الموجودة حاليًا في قاعدة البيانات (Legacy)"
+msgstr "veri setindeki değerle (legacy)"
+
+#: templates/admin/categories/main_categories/list.html:75
+msgid "Department"
+msgstr "Department"
 
 #: templates/admin/categories/properties/add.html:3
 #: templates/admin/categories/properties/add.html:8
@@ -597,13 +1496,6 @@ msgstr "التصنيفات الفرعية (اختياري إذا كانت Global
 msgid "اضغط Ctrl لاختيار أكثر من عنصر"
 msgstr "Birden fazla seçmek için Ctrl bas"
 
-#: templates/admin/categories/properties/add.html:64
-#: templates/admin/categories/properties/edit.html:81
-#: templates/admin/categories/properties/values.html:68
-#: templates/customers/add.html:44
-msgid "رجوع"
-msgstr "Geri"
-
 #: templates/admin/categories/properties/edit.html:3
 #: templates/admin/categories/properties/edit.html:9
 msgid "تعديل خاصية"
@@ -620,11 +1512,6 @@ msgstr "🎛️ Ürün Özellikleri"
 #: templates/admin/categories/properties/list.html:13
 msgid "+ إضافة خاصية"
 msgstr "Özellik Ekle +"
-
-#: templates/admin/categories/properties/list.html:33
-#: templates/invoices/general_invoice.html:28
-msgid "النوع"
-msgstr "Type"
 
 #: templates/admin/categories/properties/list.html:34
 msgid "النطاق"
@@ -683,34 +1570,35 @@ msgid "لا توجد قيم بعد."
 msgstr "Değer Eklenmedi Daha"
 
 #: templates/admin/categories/sub_categories/add.html:2
-#: templates/admin/categories/sub_categories/add.html:6
-#: templates/admin/categories/sub_categories/list.html:12
+#: templates/admin/categories/sub_categories/add.html:5
+#: templates/admin/categories/sub_categories/list.html:15
 msgid "إضافة تصنيف فرعي"
 msgstr "Alt kategori ekle"
 
-#: templates/admin/categories/sub_categories/add.html:13
-#: templates/admin/categories/sub_categories/edit.html:12
+#: templates/admin/categories/sub_categories/add.html:9
+#: templates/admin/categories/sub_categories/edit.html:9
+#, fuzzy
+msgid "القسم الحالي:"
+msgstr "Var Olan Değerler"
+
+#: templates/admin/categories/sub_categories/add.html:19
+#: templates/admin/categories/sub_categories/edit.html:19
 msgid "اسم التصنيف الفرعي"
 msgstr "Alt kategori adı"
 
-#: templates/admin/categories/sub_categories/add.html:17
-#: templates/admin/categories/sub_categories/edit.html:20
+#: templates/admin/categories/sub_categories/add.html:24
+#: templates/admin/categories/sub_categories/edit.html:28
 msgid "اسم التصنيف الفرعي (تركي)"
 msgstr "Alt kategori adı"
 
-#: templates/admin/categories/sub_categories/add.html:26
+#: templates/admin/categories/sub_categories/add.html:33
 msgid "مثال: FRD"
 msgstr "Ör: FRD"
 
-#: templates/admin/categories/sub_categories/add.html:33
-#: templates/admin/categories/sub_categories/edit.html:39
-msgid "التصنيف الرئيسي"
-msgstr "Ana kategori"
-
-#: templates/admin/categories/sub_categories/add.html:37
-#: templates/products/add.html:32 templates/products/add.html:43
-#: templates/products/edit.html:35 templates/products/edit.html:48
-#: templates/products/edit.html:130
+#: templates/admin/categories/sub_categories/add.html:42
+#: templates/products/add.html:28 templates/products/add.html:39
+#: templates/products/edit.html:29 templates/products/edit.html:42
+#: templates/products/edit.html:118
 msgid "-- اختر --"
 msgstr "SEÇ"
 
@@ -719,26 +1607,31 @@ msgstr "SEÇ"
 msgid "تعديل تصنيف فرعي"
 msgstr "Alt kategoriyi düzenle"
 
-#: templates/admin/categories/sub_categories/list.html:18
-#: templates/products/list.html:61
-msgid "فلترة حسب التصنيف:"
-msgstr "Kategoriye göre filtrele:"
+#: templates/admin/categories/sub_categories/edit.html:56
+#: templates/customers/edit.html:61 templates/payments/edit_cash_debt.html:21
+#: templates/payments/edit_general_payment.html:47 templates/shop/my.html:80
+msgid "حفظ التعديلات"
+msgstr "Değişiklikleri Kaydet"
 
-#: templates/admin/categories/sub_categories/list.html:24
+#: templates/admin/categories/sub_categories/list.html:10
+msgid "إدارة التصنيفات الفرعية أصبحت مرتبطة مباشرة بالقسم الثابت."
+msgstr "Alt kategory yinetimi sabit bölümlerle bağlı kalmıştır"
+
+#: templates/admin/categories/sub_categories/list.html:21
+#: templates/products/add.html:8
+msgid "القسم:"
+msgstr "Bölüm:"
+
+#: templates/admin/categories/sub_categories/list.html:27
 #: templates/products/list.html:67
 msgid "— الكل —"
 msgstr "— Hepsi —"
 
-#: templates/admin/categories/sub_categories/list.html:37
+#: templates/admin/categories/sub_categories/list.html:36
 msgid "مسح الفلتر"
 msgstr "Filtreyi temizle"
 
-#: templates/admin/categories/sub_categories/list.html:50
-#: templates/products/list.html:45
-msgid "التصنيف"
-msgstr "Kategori"
-
-#: templates/admin/categories/sub_categories/list.html:100
+#: templates/admin/categories/sub_categories/list.html:91
 msgid "لا يوجد تصنيفات فرعية"
 msgstr "Alt kategori yok"
 
@@ -758,8 +1651,8 @@ msgstr "Müşteri"
 msgid "طباعة الفاتورة"
 msgstr "Faturayı yazdır"
 
-#: templates/client/client_view.html:31 templates/customers/view.html:48
-#: templates/shop/ledger.html:38
+#: templates/client/client_view.html:31 templates/customers/view.html:56
+#: templates/shop/ledger.html:92
 msgid "منتجات التقسيط"
 msgstr "Taksit ürünleri"
 
@@ -767,16 +1660,15 @@ msgstr "Taksit ürünleri"
 msgid "المنتجات بالتقسيط"
 msgstr "Taksit ürünleri"
 
-#: templates/client/client_view.html:53 templates/products/add.html:3
-#: templates/products/add.html:7 templates/products/list.html:17
-#: templates/products/list.html:22
+#: templates/client/client_view.html:53 templates/products/add.html:2
+#: templates/products/add.html:4 templates/products/list.html:16
+#: templates/products/list.html:21
 msgid "إضافة منتج"
 msgstr "Ürün ekle"
 
 #: templates/client/client_view.html:61 templates/client/client_view.html:91
-#: templates/customers/view.html:62 templates/sales/profits.html:113
-#: templates/sales/quick.html:50 templates/shop/ledger.html:45
-#: templates/shop/product_detail.html:113
+#: templates/sales/profits.html:113 templates/sales/quick.html:50
+#: templates/shop/ledger.html:99
 msgid "المنتج"
 msgstr "Ürün"
 
@@ -784,33 +1676,30 @@ msgstr "Ürün"
 msgid "السعر الإجمالي"
 msgstr "Toplam Fiyat"
 
-#: templates/client/client_view.html:63 templates/customers/view.html:65
-#: templates/shop/ledger.html:48
+#: templates/client/client_view.html:63 templates/customers/view.html:73
+#: templates/installments/add.html:46 templates/shop/ledger.html:102
 msgid "القسط الشهري"
 msgstr "Aylık Taksit"
-
-#: templates/client/client_view.html:64 templates/customers/view.html:122
-#: templates/installments/close_invoice.html:35
-#: templates/installments/invoice_list.html:39 templates/shop/ledger.html:80
-#: templates/shop/ledger.html:143
-msgid "المتبقي"
-msgstr "Kalan"
 
 #: templates/client/client_view.html:83 templates/payments/add_cash_debt.html:4
 msgid "إضافة دين نقدي"
 msgstr "Nakit borç ekle"
 
-#: templates/client/client_view.html:92 templates/customers/view.html:174
-#: templates/products/list.html:49 templates/sales/quick.html:51
-#: templates/shop/ledger.html:117
+#: templates/client/client_view.html:92 templates/products/list.html:48
+#: templates/sales/quick.html:51 templates/shop/ledger.html:205
+#: templates/shop/partials/special_offer_card.html:112
 msgid "السعر"
 msgstr "Fiyat"
 
-#: templates/client/client_view.html:93 templates/customers/view.html:121
-#: templates/installments/close_invoice.html:34
-#: templates/installments/invoice_list.html:38
-#: templates/invoices/general_invoice.html:27 templates/sales/profits.html:118
-#: templates/shop/ledger.html:79
+#: templates/client/client_view.html:93 templates/customers/view.html:201
+#: templates/installments/close_invoice.html:36
+#: templates/installments/invoice_list.html:39
+#: templates/invoices/_old_general_invoice.html:28
+#: templates/invoices/cash_invoice.html:29
+#: templates/invoices/installments_invoice.html:28
+#: templates/invoices/mixed_invoice.html:32
+#: templates/invoices/mixed_invoice.html:100 templates/sales/profits.html:118
+#: templates/shop/ledger.html:164
 msgid "التاريخ"
 msgstr "Tarih"
 
@@ -846,11 +1735,12 @@ msgstr "Bilgileri Güncelle"
 msgid "تعديل بيانات الزبون:"
 msgstr "Bilgileri Güncelle"
 
-#: templates/customers/edit.html:29
+#: templates/customers/edit.html:29 templates/shop/contact.html:109
+#: templates/shop/my.html:65 templates/shop/register.html:35
 msgid "رقم الهاتف"
 msgstr "TEL"
 
-#: templates/customers/edit.html:49 templates/sales/add.html:16
+#: templates/customers/edit.html:49 templates/sales/add.html:17
 #: templates/sales/profits.html:130
 msgid "تقسيط"
 msgstr "Taksit"
@@ -872,18 +1762,23 @@ msgid "زبائن دفتر"
 msgstr "Defter Müşterileri"
 
 #: templates/customers/view.html:12
-#: templates/installments/close_invoice.html:19
-#: templates/installments/invoice_list.html:19
+#: templates/installments/close_invoice.html:21
+#: templates/installments/invoice_list.html:20
 msgid "الزبون:"
 msgstr "Müşteri"
 
-#: templates/customers/view.html:13 templates/installments/invoice_list.html:20
-#: templates/invoices/general_invoice.html:18
+#: templates/customers/view.html:13 templates/installments/invoice_list.html:21
+#: templates/invoices/_old_general_invoice.html:19
+#: templates/invoices/cash_invoice.html:20
+#: templates/invoices/installments_invoice.html:19
+#: templates/invoices/mixed_invoice.html:19
 msgid "ID:"
 msgstr "ID"
 
 #: templates/customers/view.html:16
-#: templates/installments/close_invoice.html:20
+#: templates/installments/close_invoice.html:22
+#: templates/invoices/cash_invoice.html:19
+#: templates/invoices/mixed_invoice.html:18
 msgid "الهاتف:"
 msgstr "TEL"
 
@@ -896,312 +1791,537 @@ msgid "تعديل المعلومات"
 msgstr "Bilgileri Düzenle"
 
 #: templates/customers/view.html:27
-msgid "عرض الفاتورة العامة"
-msgstr "Genel Fatura"
+#, fuzzy
+msgid "عرض الفاتورة"
+msgstr "Fatura numarası:"
 
-#: templates/customers/view.html:33 templates/sales/quick.html:14
+#: templates/customers/view.html:34 templates/customers/view.html:40
+#: templates/invoices/cash_invoice.html:94
+#: templates/invoices/mixed_invoice.html:188 templates/sales/quick.html:14
 msgid "طباعة"
 msgstr "Çıkart"
 
-#: templates/customers/view.html:40
+#: templates/customers/view.html:48
 msgid "حذف الزبون"
 msgstr "Müşteri Sil"
 
-#: templates/customers/view.html:52
-msgid "+ إضافة منتج تقسيط"
-msgstr "Taksitli Ürün Ekle"
+#: templates/customers/view.html:60
+msgid "+ إضافة تقسيط (كود واحد أو أكثر)"
+msgstr "Taksitli ürün ekle + (1 yada daha fazla)"
 
-#: templates/customers/view.html:63 templates/shop/ledger.html:46
+#: templates/customers/view.html:70
+#, fuzzy
+msgid "العقد / المنتج"
+msgstr "Ürün"
+
+#: templates/customers/view.html:71 templates/shop/ledger.html:100
 msgid "السعر الكلي"
 msgstr "Toplam Fiyat"
 
-#: templates/customers/view.html:64 templates/shop/ledger.html:47
+#: templates/customers/view.html:72 templates/installments/add.html:38
+#: templates/shop/ledger.html:101
 msgid "السلفة"
 msgstr "Peşinat"
 
-#: templates/customers/view.html:66 templates/customers/view.html:175
-#: templates/payments/add_cash_debt.html:48 templates/shop/ledger.html:49
-#: templates/shop/ledger.html:118
+#: templates/customers/view.html:74 templates/installments/add.html:19
+#: templates/payments/add_cash_debt.html:68 templates/shop/ledger.html:103
+#: templates/shop/ledger.html:206
 msgid "تاريخ الإضافة"
 msgstr "Ekleme Tarihi"
 
-#: templates/customers/view.html:83
+#: templates/customers/view.html:91
 msgid "مسدد بالكامل"
 msgstr "Ödendi"
 
-#: templates/customers/view.html:85 templates/shop/ledger.html:66
+#: templates/customers/view.html:93 templates/shop/ledger.html:127
 msgid "غير مسدد"
 msgstr "Ödenmedi"
 
-#: templates/customers/view.html:92 templates/installments/add_payment.html:3
+#: templates/customers/view.html:100 templates/installments/add_payment.html:3
 msgid "إضافة دفعة"
 msgstr "Ödeme Ekle"
 
-#: templates/customers/view.html:105
+#: templates/customers/view.html:108
+msgid "مواصفات"
+msgstr "Özellikler"
+
+#: templates/customers/view.html:121
 msgid "فاتورة الإغلاق"
 msgstr "Kapatma Faturası"
 
-#: templates/customers/view.html:115
+#: templates/customers/view.html:133
+msgid "مواصفات منتجات العقد"
+msgstr "Ayrıntılar"
+
+#: templates/customers/view.html:146 templates/products/list.html:47
+#: templates/sales/quick.html:52
+msgid "الكمية"
+msgstr "miktar"
+
+#: templates/customers/view.html:147 templates/shop/product_detail.html:174
+#, fuzzy
+msgid "المواصفات"
+msgstr "Özellikler"
+
+#: templates/customers/view.html:161
+#, fuzzy
+msgid "خاصية"
+msgstr "Özellik Düzenle"
+
+#: templates/customers/view.html:167
+#, fuzzy
+msgid "لا يوجد مواصفات"
+msgstr "Özellik Bulunmadı"
+
+#: templates/customers/view.html:176
+#, fuzzy
+msgid "لا يوجد منتجات مرتبطة بهذا العقد"
+msgstr "Taksitli Ürün Bulunmadı"
+
+#: templates/customers/view.html:182 templates/shop/layout.html:78
+#: templates/shop/layout.html:153 templates/shop/products.html:130
+#, fuzzy
+msgid "إغلاق"
+msgstr "Kapat"
+
+#: templates/customers/view.html:195
 msgid "الدفعات:"
 msgstr "Ödemeler:"
 
-#: templates/customers/view.html:120
-#: templates/installments/close_invoice.html:33
-#: templates/installments/invoice_list.html:37
-#: templates/invoices/general_invoice.html:30 templates/shop/ledger.html:78
+#: templates/customers/view.html:200 templates/customers/view.html:256
+#: templates/installments/close_invoice.html:35
+#: templates/installments/invoice_list.html:38
+#: templates/invoices/_old_general_invoice.html:31
+#: templates/invoices/cash_invoice.html:32
+#: templates/invoices/installments_invoice.html:31
+#: templates/invoices/mixed_invoice.html:35
+#: templates/invoices/mixed_invoice.html:103 templates/shop/ledger.html:163
 msgid "المبلغ"
 msgstr "Tutar"
 
-#: templates/customers/view.html:134
+#: templates/customers/view.html:214 templates/shop/ledger.html:177
 msgid "لا يوجد دفعات"
 msgstr "Ödeme Bulunmadı"
 
-#: templates/customers/view.html:149
+#: templates/customers/view.html:230
 msgid "لا يوجد منتجات تقسيط لهذا الزبون."
 msgstr "Taksitli Ürün Bulunmadı"
 
-#: templates/customers/view.html:158
+#: templates/customers/view.html:239
 msgid "+ إضافة دين نقدي"
 msgstr "Nakit Borç Ekle +"
 
-#: templates/customers/view.html:162
+#: templates/customers/view.html:244
 msgid "+ إضافة دفعة عامة"
 msgstr "Genel Ödeme Ekle"
 
-#: templates/customers/view.html:173 templates/shop/ledger.html:116
-msgid "اسم الدين"
-msgstr "Borç Adı"
+#: templates/customers/view.html:255
+#: templates/invoices/_old_general_invoice.html:30
+#: templates/invoices/cash_invoice.html:31
+#: templates/invoices/installments_invoice.html:30
+#: templates/invoices/mixed_invoice.html:34
+#: templates/invoices/mixed_invoice.html:102
+#: templates/shop/product_detail.html:167
+msgid "الوصف"
+msgstr "Açıklama"
 
-#: templates/customers/view.html:203 templates/invoices/general_invoice.html:41
-msgid "دفعة عامة"
-msgstr "Genel Ödeme"
+#: templates/customers/view.html:257
+#, fuzzy
+msgid "تاريخ الحركة"
+msgstr "Satın alma tarihi:"
 
-#: templates/customers/view.html:223
+#: templates/customers/view.html:311
 msgid "لا يوجد ديون أو دفعات ضمن هذا الزبون"
 msgstr "Nakit Borç Veya Ödeme Bulunmadı"
+
+#: templates/customers/view.html:321 templates/invoices/cash_invoice.html:84
+#, fuzzy
+msgid "المتبقي الحالي:"
+msgstr "Son kalan:"
+
+#: templates/installments/add.html:3
+#, fuzzy
+msgid "إضافة تقسيط"
+msgstr "Taksit ürünü ekle"
+
+#: templates/installments/add.html:9
+#, fuzzy
+msgid "إضافة عقد تقسيط"
+msgstr "Taksit ürünü ekle"
+
+#: templates/installments/add.html:11
+msgid "أدخل كود منتج واحد أو عدة أكواد وسيتم دمجهم ضمن عقد واحد تلقائياً."
+msgstr "1 veya aha fazla ürün kodu gir"
+
+#: templates/installments/add.html:30
+#, fuzzy
+msgid "السعر الكلي (لجميع المنتجات)"
+msgstr "Toplam fiyat (Tüm ürünler için)"
+
+#: templates/installments/add.html:57
+msgid "أكواد المنتجات ضمن العقد"
+msgstr "ürünlerün kodları"
+
+#: templates/installments/add.html:66
+#, fuzzy
+msgid "أدخل كود المنتج"
+msgstr "Ürün kodu gir"
+
+#: templates/installments/add.html:84
+#, fuzzy
+msgid "إضافة كود آخر"
+msgstr "Başka kod ekle"
+
+#: templates/installments/add.html:89
+#, fuzzy
+msgid "حفظ العقد"
+msgstr "kaydet"
 
 #: templates/installments/add_payment.html:7
 msgid "إضافة دفعة على المنتج:"
 msgstr "Ürün Ödemesi Ekle"
 
 #: templates/installments/add_payment.html:12
-#: templates/payments/add_general_payment.html:20
+#: templates/payments/add_general_payment.html:19
 #: templates/payments/edit_general_payment.html:19
 msgid "المبلغ:"
 msgstr "Tutar"
 
 #: templates/installments/add_payment.html:17
-#: templates/payments/edit_general_payment.html:29
+#: templates/payments/edit_general_payment.html:39
 msgid "تاريخ الدفع:"
 msgstr "Ödeme Tarihi"
 
 #: templates/installments/add_payment.html:21
-#: templates/payments/add_general_payment.html:33
+#: templates/payments/add_general_payment.html:44
 msgid "إضافة الدفعة"
 msgstr "Ödemeyi Ekle"
 
 #: templates/installments/add_payment.html:24
-#: templates/installments/add_product.html:47
 msgid "رجوع لصفحة الزبون"
 msgstr "Müşteri Sayfasaına Dön"
 
-#: templates/installments/add_product.html:3
-msgid "إضافة منتج تقسيط"
-msgstr "Taksit ürünü ekle"
+#: templates/installments/close_invoice.html:4
+#: templates/installments/invoice_list.html:3
+#: templates/invoices/_old_general_invoice.html:3
+#: templates/invoices/cash_invoice.html:3
+#: templates/invoices/installments_invoice.html:3
+#: templates/invoices/mixed_invoice.html:3
+msgid "ar"
+msgstr "tr"
 
-#: templates/installments/add_product.html:7
-msgid "إضافة منتج تقسيط للزبون رقم:"
-msgstr "Sayılı Müşteriye Taksitli Ürün Ekle"
+#: templates/installments/close_invoice.html:7
+msgid "فاتورة إغلاق القسط -"
+msgstr "Taksit Kapatma Faturası -"
 
-#: templates/installments/add_product.html:12
-#: templates/payments/add_cash_debt.html:17
-msgid "كود المنتج"
-msgstr "Ürün kodu"
+#: templates/installments/close_invoice.html:18
+#: templates/installments/invoice_list.html:17
+#: templates/invoices/_old_general_invoice.html:15
+#: templates/invoices/cash_invoice.html:15
+#: templates/invoices/installments_invoice.html:15
+#: templates/invoices/mixed_invoice.html:15 templates/shop/about.html:11
+#: templates/shop/contact.html:11 templates/shop/home.html:26
+#: templates/shop/layout.html:32 templates/shop/layout.html:33
+#: templates/shop/login.html:16
+msgid "معرض بكّور"
+msgstr "Bakkour Home"
 
-#: templates/installments/add_product.html:14
-#: templates/payments/add_cash_debt.html:21
-msgid "مثال: ELE-FRD-000123"
-msgstr "Ör: ELE-FRD-000123"
+#: templates/installments/close_invoice.html:19
+msgid "فاتورة إغلاق القسط"
+msgstr "Taksit Kapatma Faturası"
 
-#: templates/installments/add_product.html:19
-#: templates/payments/add_cash_debt.html:28 templates/products/add.html:19
-#: templates/products/edit.html:20 templates/shop/home.html:172
-msgid "اسم المنتج"
-msgstr "Ürün adı"
+#: templates/installments/close_invoice.html:24
+#: templates/installments/invoice_list.html:28 templates/sales/add.html:10
+msgid "المنتج:"
+msgstr "Ürün:"
 
-#: templates/installments/add_product.html:25
-msgid "السعر الإجمالي:"
-msgstr "Fiyat"
-
-#: templates/installments/add_product.html:30
+#: templates/installments/close_invoice.html:25
 #: templates/installments/invoice_list.html:29
+msgid "السعر الكلي:"
+msgstr "Toplam fiyat:"
+
+#: templates/installments/close_invoice.html:26
+msgid "تاريخ الشراء:"
+msgstr "Satın alma tarihi:"
+
+#: templates/installments/close_invoice.html:30
+msgid "تفاصيل الدفعات"
+msgstr "Ödeme detayları"
+
+#: templates/installments/close_invoice.html:46
+#: templates/installments/invoice_list.html:48
+#: templates/invoices/mixed_invoice.html:126
+msgid "سلفة"
+msgstr "Peşinat"
+
+#: templates/installments/close_invoice.html:57
+msgid "تم سداد كامل الأقساط"
+msgstr "Tüm taksitler ödendi"
+
+#: templates/installments/close_invoice.html:62
+msgid "توقيع الزبون"
+msgstr "Müşteri imzası"
+
+#: templates/installments/close_invoice.html:65
+msgid "ختم المعرض"
+msgstr "Mağaza kaşesi"
+
+#: templates/installments/invoice_list.html:6
+msgid "فاتورة التقسيط -"
+msgstr "Taksit Faturası -"
+
+#: templates/installments/invoice_list.html:18
+#: templates/invoices/installments_invoice.html:16
+msgid "فاتورة تقسيط"
+msgstr "Taksit Faturası"
+
+#: templates/installments/invoice_list.html:30
 msgid "السلفة:"
 msgstr "Ön Ödeme"
 
-#: templates/installments/add_product.html:35
-msgid "القسط الشهري:"
-msgstr "Aylık Ödemesi"
-
-#: templates/installments/add_product.html:40
-#: templates/installments/invoice_list.html:30
+#: templates/installments/invoice_list.html:31
 #: templates/payments/edit_cash_debt.html:16
 msgid "تاريخ الإضافة:"
 msgstr "Eklenme tarihi:"
 
-#: templates/installments/add_product.html:44
-msgid "إضافة المنتج"
-msgstr "Ürünü ekle"
-
-#: templates/installments/close_invoice.html:2
-#: templates/installments/invoice_list.html:2
-#: templates/invoices/general_invoice.html:2
-msgid "ar"
-msgstr "tr"
-
-#: templates/installments/close_invoice.html:5
-msgid "فاتورة إغلاق القسط -"
-msgstr "Taksit Kapatma Faturası -"
-
-#: templates/installments/close_invoice.html:16
-#: templates/installments/invoice_list.html:16
-#: templates/invoices/general_invoice.html:14
-msgid "معرض بكّور"
-msgstr "Bakkour Mağazası"
-
-#: templates/installments/close_invoice.html:17
-msgid "فاتورة إغلاق القسط"
-msgstr "Taksit Kapatma Faturası"
-
-#: templates/installments/close_invoice.html:22
-#: templates/installments/invoice_list.html:27 templates/sales/add.html:9
-msgid "المنتج:"
-msgstr "Ürün:"
-
-#: templates/installments/close_invoice.html:23
-#: templates/installments/invoice_list.html:28
-msgid "السعر الكلي:"
-msgstr "Toplam fiyat:"
-
-#: templates/installments/close_invoice.html:24
-msgid "تاريخ الشراء:"
-msgstr "Satın alma tarihi:"
-
-#: templates/installments/close_invoice.html:28
-msgid "تفاصيل الدفعات"
-msgstr "Ödeme detayları"
-
-#: templates/installments/close_invoice.html:44
-#: templates/installments/invoice_list.html:47
-msgid "سلفة"
-msgstr "Peşinat"
-
-#: templates/installments/close_invoice.html:55
-msgid "تم سداد كامل الأقساط"
-msgstr "Tüm taksitler ödendi"
-
-#: templates/installments/close_invoice.html:60
-msgid "توقيع الزبون"
-msgstr "Müşteri imzası"
-
-#: templates/installments/close_invoice.html:63
-msgid "ختم المعرض"
-msgstr "Mağaza kaşesi"
-
-#: templates/installments/invoice_list.html:5
-msgid "فاتورة التقسيط -"
-msgstr "Taksit Faturası -"
-
-#: templates/installments/invoice_list.html:17
-msgid "فاتورة تقسيط"
-msgstr "Taksit Faturası"
-
-#: templates/installments/invoice_list.html:32 templates/shop/ledger.html:73
+#: templates/installments/invoice_list.html:33 templates/shop/ledger.html:158
 msgid "الدفعات"
 msgstr "Ödemeler"
 
-#: templates/installments/invoice_list.html:64
+#: templates/installments/invoice_list.html:65
 msgid "المتبقي النهائي:"
 msgstr "Son kalan:"
 
-#: templates/invoices/general_invoice.html:5
+#: templates/invoices/_old_general_invoice.html:6
 msgid "فاتورة -"
 msgstr "Fatura -"
 
-#: templates/invoices/general_invoice.html:15
+#: templates/invoices/_old_general_invoice.html:16
+#: templates/invoices/mixed_invoice.html:16
 msgid "فاتورة زبون"
 msgstr "Müşteri Faturası"
 
-#: templates/invoices/general_invoice.html:17
+#: templates/invoices/_old_general_invoice.html:18
+#: templates/invoices/cash_invoice.html:18
+#: templates/invoices/installments_invoice.html:18
+#: templates/invoices/mixed_invoice.html:17
 msgid "الاسم:"
 msgstr "İsim:"
 
-#: templates/invoices/general_invoice.html:22
+#: templates/invoices/_old_general_invoice.html:23
 msgid "حركات الحساب (ديون + دفعات)"
 msgstr "Hesap hareketleri (borç + ödemeler)"
 
-#: templates/invoices/general_invoice.html:29
-msgid "الوصف"
-msgstr "Açıklama"
-
-#: templates/invoices/general_invoice.html:31
+#: templates/invoices/_old_general_invoice.html:32
+#: templates/invoices/installments_invoice.html:32
 msgid "الرصيد بعد الحركة"
-msgstr "Hareket sonrası bakiye"
+msgstr "İşlemden sonrası bakiye"
 
-#: templates/invoices/general_invoice.html:40
+#: templates/invoices/_old_general_invoice.html:41
+#: templates/invoices/cash_invoice.html:55
+#: templates/invoices/mixed_invoice.html:57
 msgid "دين نقدي"
 msgstr "Nakit borç"
 
-#: templates/invoices/general_invoice.html:42
+#: templates/invoices/_old_general_invoice.html:43
+#: templates/invoices/installments_invoice.html:41
+#: templates/invoices/mixed_invoice.html:125
 msgid "منتج تقسيط"
 msgstr "Taksit ürünü"
 
-#: templates/invoices/general_invoice.html:43
-msgid "دفعة تقسيط"
-msgstr "Taksit ödemesi"
-
-#: templates/invoices/general_invoice.html:55
+#: templates/invoices/_old_general_invoice.html:59
+#: templates/invoices/cash_invoice.html:72
+#: templates/invoices/mixed_invoice.html:74
 msgid "إجمالي الديون النقدية:"
 msgstr "Toplam nakit borçlar:"
 
-#: templates/invoices/general_invoice.html:56
+#: templates/invoices/_old_general_invoice.html:60
+#: templates/invoices/installments_invoice.html:55
+#: templates/invoices/mixed_invoice.html:143
 msgid "إجمالي التقسيط:"
 msgstr "Toplam taksit:"
 
-#: templates/invoices/general_invoice.html:57
+#: templates/invoices/_old_general_invoice.html:61
 msgid "إجمالي الديون:"
 msgstr "Toplam borç:"
 
-#: templates/invoices/general_invoice.html:61
+#: templates/invoices/_old_general_invoice.html:65
 msgid "إجمالي الدفعات العامة:"
 msgstr "Toplam genel ödemeler:"
 
-#: templates/invoices/general_invoice.html:62
+#: templates/invoices/_old_general_invoice.html:66
+#: templates/invoices/installments_invoice.html:60
+#: templates/invoices/mixed_invoice.html:151
 msgid "إجمالي دفعات التقسيط:"
 msgstr "Toplam taksit ödemeleri:"
 
-#: templates/invoices/general_invoice.html:63
+#: templates/invoices/_old_general_invoice.html:67
+#: templates/invoices/installments_invoice.html:61
 msgid "إجمالي المدفوع:"
 msgstr "Toplam ödenen:"
 
-#: templates/invoices/general_invoice.html:68
+#: templates/invoices/_old_general_invoice.html:72
+#: templates/invoices/installments_invoice.html:66
 msgid "الصافي النهائي (المتبقي):"
 msgstr "Net kalan (bakiye):"
 
+#: templates/invoices/cash_invoice.html:6
+#, fuzzy
+msgid "فاتورة ديون نقدية -"
+msgstr "Nakit Borç Defteri"
+
+#: templates/invoices/cash_invoice.html:16
+#, fuzzy
+msgid "فاتورة ديون نقدية"
+msgstr "Nakit Borç Defteri"
+
+#: templates/invoices/cash_invoice.html:24
+#, fuzzy
+msgid "حركات الديون النقدية"
+msgstr "Nakit borçlar"
+
+#: templates/invoices/cash_invoice.html:33
+#: templates/invoices/mixed_invoice.html:36
+#: templates/invoices/mixed_invoice.html:104
+#, fuzzy
+msgid "المتبقي بعد الحركة"
+msgstr "İşlem sonrası bakiye"
+
+#: templates/invoices/cash_invoice.html:56
+#: templates/invoices/mixed_invoice.html:58
+#, fuzzy
+msgid "دفعة"
+msgstr "Genel Ödeme"
+
+#: templates/invoices/cash_invoice.html:77
+#, fuzzy
+msgid "إجمالي الدفعات:"
+msgstr "Toplam ödenen:"
+
+#: templates/invoices/installments_invoice.html:6
+#, fuzzy
+msgid "فاتورة تقسيط -"
+msgstr "Taksit Faturası -"
+
+#: templates/invoices/installments_invoice.html:23
+#, fuzzy
+msgid "حركات التقسيط"
+msgstr "Taksit hareketleri"
+
+#: templates/invoices/installments_invoice.html:59
+#: templates/invoices/mixed_invoice.html:147
+#, fuzzy
+msgid "إجمالي الدفعة الأولى:"
+msgstr "Toplam peşinat ödemesi:"
+
+#: templates/invoices/mixed_invoice.html:6
+#, fuzzy
+msgid "فاتورة مختلطة -"
+msgstr "karışık Faturas -"
+
+#: templates/invoices/mixed_invoice.html:78
+#, fuzzy
+msgid "إجمالي دفعات الديون النقدية:"
+msgstr "Toplam nakit borçlar ödemlelri:"
+
+#: templates/invoices/mixed_invoice.html:82
+#, fuzzy
+msgid "متبقي الديون النقدية:"
+msgstr "Toplam nakit borçlar kalan:"
+
+#: templates/invoices/mixed_invoice.html:95
+#, fuzzy
+msgid "التقسيط"
+msgstr "Taksit"
+
+#: templates/invoices/mixed_invoice.html:127
+#, fuzzy
+msgid "قسط"
+msgstr "Taksit ödeme"
+
+#: templates/invoices/mixed_invoice.html:155
+#, fuzzy
+msgid "متبقي التقسيط:"
+msgstr "kalan taksit:"
+
+#: templates/invoices/mixed_invoice.html:169
+#, fuzzy
+msgid "إجمالي الديون الكلي:"
+msgstr "Toplam nakit borçlar:"
+
+#: templates/invoices/mixed_invoice.html:173
+#, fuzzy
+msgid "إجمالي المدفوع الكلي:"
+msgstr "Toplam ödenen:"
+
+#: templates/invoices/mixed_invoice.html:177
+#, fuzzy
+msgid "المتبقي النهائي (الصافي):"
+msgstr "Son kalan:"
+
 #: templates/payments/add_cash_debt.html:10
 msgid "إضافة دين نقدي للزبون رقم:"
-msgstr "Müşteri numarası için nakit borç ekle:"
+msgstr "Numaralı Müşteri için nakit borç ekle:"
 
-#: templates/payments/add_cash_debt.html:38
+#: templates/payments/add_cash_debt.html:17
+#, fuzzy
+msgid "طريقة الإضافة"
+msgstr "Ekleme Tarihi"
+
+#: templates/payments/add_cash_debt.html:19
+msgid "من منتج مسجل (بكود)"
+msgstr "kayıtılı üründen"
+
+#: templates/payments/add_cash_debt.html:20
+msgid "دين يدوي (بدون منتج)"
+msgstr "manuel borç (ürün kayıtlı değil)"
+
+#: templates/payments/add_cash_debt.html:27
+msgid "كود المنتج"
+msgstr "Ürün kodu"
+
+#: templates/payments/add_cash_debt.html:31
+msgid "مثال: ELE-FRD-000123"
+msgstr "Ör: ELE-FRD-000123"
+
+#: templates/payments/add_cash_debt.html:36 templates/products/add.html:15
+#: templates/products/edit.html:16
+msgid "اسم المنتج"
+msgstr "Ürün adı"
+
+#: templates/payments/add_cash_debt.html:45 templates/shop/ledger.html:204
+msgid "اسم الدين"
+msgstr "Borç Adı"
+
+#: templates/payments/add_cash_debt.html:46
+msgid "مثال: تركيب / أجرة / قطعة غير مسجلة"
+msgstr "başka"
+
+#: templates/payments/add_cash_debt.html:50
+#, fuzzy
+msgid "كود اختياري"
+msgstr "kod (isteğe bağlı)"
+
+#: templates/payments/add_cash_debt.html:51
+#, fuzzy
+msgid "اختياري"
+msgstr "isteğe bağlı"
+
+#: templates/payments/add_cash_debt.html:55
+msgid "رأس المال (مهم للأرباح)"
+msgstr "alış fiyatı"
+
+#: templates/payments/add_cash_debt.html:62
 msgid "سعر البيع (دين نقدي)"
 msgstr "Satış fiyatı (nakit borç)"
 
-#: templates/payments/add_cash_debt.html:57
+#: templates/payments/add_cash_debt.html:77
 msgid "إضافة الدين"
 msgstr "Borç ekle"
 
-#: templates/payments/add_cash_debt.html:64
-#: templates/payments/add_general_payment.html:40
-#: templates/payments/edit_general_payment.html:44
+#: templates/payments/add_cash_debt.html:84
+#: templates/payments/add_general_payment.html:51
+#: templates/payments/edit_general_payment.html:54
 msgid "الرجوع لصفحة الزبون"
 msgstr "Müşteri sayfasına dön"
 
@@ -1214,10 +2334,25 @@ msgid "إضافة دفعة عامة للزبون:"
 msgstr "Müşteri için genel ödeme ekle:"
 
 #: templates/payments/add_general_payment.html:25
+#: templates/payments/edit_general_payment.html:30
+#, fuzzy
+msgid "سبب الدفعة (اختياري):"
+msgstr "Ödeme tarihi (isteğe bağlı):"
+
+#: templates/payments/add_general_payment.html:29
+#: templates/payments/edit_general_payment.html:35
+msgid "مثال: دفعة على الدين / تسوية / دفعة عامة"
+msgstr "Başka"
+
+#: templates/payments/add_general_payment.html:31
+msgid "إذا تركته فارغاً سيتم تسجيلها كـ \"دفعة عامة\"."
+msgstr "Boş Bırakılırsa genel ödeme olarak geçecek"
+
+#: templates/payments/add_general_payment.html:36
 msgid "تاريخ الدفع (اختياري):"
 msgstr "Ödeme tarihi (isteğe bağlı):"
 
-#: templates/payments/add_general_payment.html:28
+#: templates/payments/add_general_payment.html:39
 msgid "اترك التاريخ فارغاً إذا أردت استخدام تاريخ اليوم."
 msgstr "Bugünün tarihini kullanmak istiyorsan tarihi boş bırak."
 
@@ -1241,136 +2376,153 @@ msgstr "Genel ödemeyi düzenle"
 msgid "تعديل دفعة عامة للزبون:"
 msgstr "Müşteri için genel ödemeyi düzenle:"
 
-#: templates/products/add.html:11
-msgid "القسم:"
-msgstr "Bölüm:"
-
-#: templates/products/add.html:23 templates/products/edit.html:24
+#: templates/products/add.html:20 templates/products/edit.html:21
 msgid "اسم المنتج (تركي)"
-msgstr "Ürün adı"
+msgstr "Ürün adı (TR)"
 
-#: templates/products/add.html:30 templates/products/edit.html:33
+#: templates/products/add.html:26 templates/products/edit.html:27
+#: templates/shop/partials/products_filters.html:23
 msgid "التصنيف الفرعي"
 msgstr "Alt kategori"
 
-#: templates/products/add.html:41 templates/products/edit.html:46
+#: templates/products/add.html:37 templates/products/edit.html:40
+#: templates/shop/product_detail.html:90
 msgid "الماركة"
 msgstr "Marka"
 
-#: templates/products/add.html:53 templates/products/edit.html:60
+#: templates/products/add.html:49 templates/products/edit.html:54
 #: templates/sales/profits.html:116
 msgid "رأس المال"
 msgstr "Maliyet"
 
-#: templates/products/add.html:57 templates/products/edit.html:65
+#: templates/products/add.html:53 templates/products/edit.html:58
 msgid "سعر البيع النقدي"
 msgstr "Nakit satış fiyatı"
 
-#: templates/products/add.html:64 templates/products/edit.html:114
+#: templates/products/add.html:60 templates/products/edit.html:104
 msgid "خصائص المنتج"
 msgstr "Ürün özellikleri"
 
-#: templates/products/add.html:66
+#: templates/products/add.html:62
 msgid "اختر التصنيف الفرعي لعرض الخصائص."
 msgstr "Özellikleri görmek için alt kategoriyi seç."
 
-#: templates/products/edit.html:3 templates/products/edit.html:7
+#: templates/products/edit.html:2 templates/products/edit.html:4
 msgid "تعديل منتج"
 msgstr "Ürünü düzenle"
 
-#: templates/products/edit.html:12
+#: templates/products/edit.html:8
 msgid "كود المنتج:"
 msgstr "Ürün kodu:"
 
-#: templates/products/edit.html:14
+#: templates/products/edit.html:10
 msgid "Barcode:"
 msgstr "Barkod:"
 
-#: templates/products/edit.html:149
+#: templates/products/edit.html:135
 msgid "لا توجد خصائص لهذا التصنيف."
 msgstr "Bu kategori için özellik yok."
 
-#: templates/products/edit.html:218
+#: templates/products/edit.html:173
 msgid "طباعة لزقة الباركود"
 msgstr "Barkod etiketini yazdır"
 
-#: templates/products/edit.html:221
+#: templates/products/edit.html:176
 msgid "حفظ التعديل"
 msgstr "Değişikliği kaydet"
 
-#: templates/products/list.html:11
+#: templates/products/edit.html:281
+msgid "اجعلها أساسية"
+msgstr "Başa al"
+
+#: templates/products/list.html:10
 msgid "إدارة المنتجات -"
 msgstr "Ürün Yönetimi -"
 
-#: templates/products/list.html:12
+#: templates/products/list.html:11
 msgid "عدد النتائج:"
 msgstr "Sonuç sayısı:"
 
-#: templates/products/list.html:41
+#: templates/products/list.html:40
 msgid "Serial"
 msgstr "Seri"
 
-#: templates/products/list.html:48 templates/sales/quick.html:52
-msgid "الكمية"
-msgstr "Adet"
+#: templates/products/list.html:44
+#: templates/shop/partials/filters_panel.html:13
+msgid "التصنيف"
+msgstr "Kategori"
 
-#: templates/products/list.html:50
+#: templates/products/list.html:49
 msgid "باركود"
 msgstr "Barkod"
+
+#: templates/products/list.html:50
+#, fuzzy
+msgid "المقاسات"
+msgstr "Bedenler"
+
+#: templates/products/list.html:61
+msgid "فلترة حسب التصنيف:"
+msgstr "Kategoriye göre filtrele:"
 
 #: templates/products/list.html:78
 msgid "مسح"
 msgstr "Temizle"
 
-#: templates/products/list.html:138
+#: templates/products/list.html:140 templates/shop/product_detail.html:271
 msgid "متوفر"
 msgstr "Mevcut"
 
-#: templates/products/list.html:140
+#: templates/products/list.html:142 templates/shop/product_detail.html:274
 msgid "غير متوفر"
 msgstr "Mevcut değil"
 
-#: templates/products/list.html:148
+#: templates/products/list.html:150
 msgid "-"
 msgstr "-"
 
-#: templates/products/list.html:154
+#: templates/products/list.html:156
 msgid "+"
 msgstr "+"
 
-#: templates/products/list.html:200
+#: templates/products/list.html:192
+#, fuzzy
+msgid "فتح / إغلاق"
+msgstr "Kapat / Aç"
+
+#: templates/products/list.html:261
 msgid "لا يوجد منتجات"
 msgstr "Ürün yok"
 
-#: templates/sales/add.html:2 templates/sales/add.html:5
+#: templates/sales/add.html:3 templates/sales/add.html:6
 msgid "تسجيل بيع"
 msgstr "Satış kaydı"
 
-#: templates/sales/add.html:12 templates/sales/profits.html:114
+#: templates/sales/add.html:13 templates/sales/profits.html:114
 msgid "نوع البيع"
 msgstr "Satış türü"
 
-#: templates/sales/add.html:14 templates/sales/profits.html:128
+#: templates/sales/add.html:15 templates/sales/profits.html:128
 msgid "نقدي"
 msgstr "Nakit"
 
-#: templates/sales/add.html:15
+#: templates/sales/add.html:16
 msgid "دين"
 msgstr "Borç"
 
-#: templates/sales/add.html:21 templates/sales/profits.html:115
+#: templates/sales/add.html:22 templates/sales/profits.html:115
 msgid "سعر البيع"
 msgstr "Satış fiyatı"
 
-#: templates/sales/add.html:30
+#: templates/sales/add.html:31
 msgid "الزبون (اختياري)"
 msgstr "Müşteri (isteğe bağlı)"
 
-#: templates/sales/add.html:32
+#: templates/sales/add.html:33
 msgid "— بدون —"
 msgstr "— Yok —"
 
-#: templates/sales/add.html:40
+#: templates/sales/add.html:41
 msgid "تسجيل البيع"
 msgstr "Satışı kaydet"
 
@@ -1486,277 +2638,905 @@ msgstr "Parça sayısı:"
 msgid "المجموع:"
 msgstr "Genel toplam:"
 
-#: templates/shop/admin_users.html:2 templates/shop/admin_users.html:5
+#: templates/shop/about.html:2 templates/shop/about.html:12
+#: templates/shop/layout.html:123
+msgid "من نحن"
+msgstr "Biz"
+
+#: templates/shop/about.html:14
+msgid "نقدّم أجهزة منزلية ومنتجات مختارة بعناية مع خيارات دفع مرنة (نقدي/تقسيط) "
+"وخدمة متابعة للزبائن."
+msgstr Esnek ödeme seçenekleriyle (nakit/taksit) özenle seçilmiş ev aletleri ve ürünleri sunuyoruz."
+"ve müşteri takip hizmeti de sağlıyoruz."
+
+#: templates/shop/about.html:19 templates/shop/contact.html:23
+#, fuzzy
+msgid "تصفّح المنتجات"
+msgstr "Ürünlere Göz at"
+
+#: templates/shop/about.html:29
+msgid "ضمان وخدمة"
+msgstr "Garanti & Servis"
+
+#: templates/shop/about.html:33
+msgid "توصيل وتركيب"
+msgstr "Teslimat ve kurulum"
+
+#: templates/shop/about.html:37
+#, fuzzy
+msgid "تقسيط مرن"
+msgstr "Esnek taksitler"
+
+#: templates/shop/about.html:56
+msgid "منتجات مختارة"
+msgstr "Seçilen ürünler"
+
+#: templates/shop/about.html:57
+msgid "نختار القطع بعناية ونركّز على الجودة مقابل السعر."
+msgstr "Ürünlerimizi özenle seçiyor ve fiyat yerine kaliteye odaklanıyoruz."
+
+#: templates/shop/about.html:62
+msgid "دعم سريع"
+msgstr "Hızlı Destek"
+
+#: templates/shop/about.html:63
+msgid "تواصل معنا بأي وقت عبر واتساب للاستفسار أو الحجز."
+msgstr "Sorularınız veya rezervasyonlarınız için dilediğiniz zaman WhatsApp üzerinden bizimle iletişime geçebilirsiniz."
+
+#: templates/shop/about.html:68
+msgid "شفافية بالتعامل"
+msgstr "İşlemlerde şeffaflık"
+
+#: templates/shop/about.html:69
+msgid "سعر واضح، عروض واضحة، ودفترك متاح للعرض بعد ربط الحساب."
+msgstr "Net fiyat, net teklifler ve hesabınızı bağladıktan sonra kitabınız görüntülenebilir hale gelir."
+
+#: templates/shop/about.html:78
+msgid "بدك تسأل عن منتج أو تحجز؟"
+msgstr "Bir ürün hakkında bilgi almak veya rezervasyon yaptırmak mı istiyorsunuz?"
+
+#: templates/shop/about.html:79
+msgid "راسلنا على واتساب وبنبعتلك كل التفاصيل بسرعة."
+msgstr "Bize WhatsApp üzerinden mesaj gönderin, tüm detayları size hızlıca ileteceğiz."
+
+#: templates/shop/about.html:83
+#, fuzzy
+msgid "تواصل عبر واتساب"
+msgstr "iletişime geç"
+
+#: templates/shop/admin_users.html:3 templates/shop/admin_users.html:6
 msgid "موافقة حسابات المشترين"
 msgstr "Müşteri onayılamaları"
 
-#: templates/shop/admin_users.html:19
+#: templates/shop/admin_users.html:20
 msgid "طلبات جديدة"
 msgstr "Yeni istekler"
 
-#: templates/shop/admin_users.html:26 templates/shop/login.html:21
-#: templates/shop/register.html:25
-msgid "البريد الإلكتروني"
-msgstr "mail adresi"
-
-#: templates/shop/home.html:3
-msgid "الصفحة الرئيسية"
-msgstr "Ana kategori"
-
-#: templates/shop/home.html:10
-msgid "أفضل الأدوات المنزلية بأفضل الأسعار"
-msgstr "En kaliteli ev aletleri, uygun fiyatlarla."
-
-#: templates/shop/home.html:11
-msgid "استكشف منتجاتنا والعروض المتاحة. الأسعار تظهر بعد تسجيل الدخول."
-msgstr "Ürünlerimizi keşfedin. Fiyatlar girişten sonra görünür."
-
-#: templates/shop/home.html:13
-msgid "استعرض المنتجات"
-msgstr "Ürünleri göster"
-
-#: templates/shop/home.html:14
+#: templates/shop/contact.html:2 templates/shop/contact.html:12
+#: templates/shop/layout.html:128
 msgid "تواصل معنا"
 msgstr "iletişime geç"
 
-#: templates/shop/home.html:21 templates/shop/home.html:170
-#: templates/shop/product_detail.html:20 templates/shop/product_detail.html:52
-msgid "صورة"
-msgstr "img"
+#: templates/shop/contact.html:14
+msgid ""
+"استفسار عن منتج؟ حجز عرض؟ أو بدك مساعدة بموضوع التقسيط؟ اكتب لنا، أو روح "
+"مباشرة على واتساب."
+msgstr ""
+"Bir ürün hakkında bilgi mi almak istiyorsunuz? Bir kampanya mı rezerve etmek istiyorsunuz? Ya da taksit planları konusunda yardıma mı ihtiyacınız var? Bize yazın veya doğrudan WhatsApp üzerinden iletişime geçin."
 
-#: templates/shop/home.html:29
-msgid "الأقسام"
-msgstr "Bölümler"
+#: templates/shop/contact.html:20
+msgid "واتساب مباشر"
+msgstr "WhatsApp"
 
-#: templates/shop/home.html:92 templates/shop/home.html:141
-#: templates/shop/home.html:173 templates/shop/products.html:98
-msgid "السعر يظهر بعد تسجيل الدخول"
-msgstr "Fiyatlar giriş yaptıktan sonra görünür"
+#: templates/shop/contact.html:30
+msgid "رد سريع خلال الدوام"
+msgstr "Mesai ssatlerinde hızlı dönüş"
 
-#: templates/shop/layout.html:7
+#: templates/shop/contact.html:34
+msgid "تأكيد وتفاصيل واضحة"
+msgstr "Onay ve net detaylar"
+
+#: templates/shop/contact.html:53
+#, fuzzy
+msgid "معلومات التواصل"
+msgstr "İletişim Bilgileri"
+
+#: templates/shop/contact.html:59
+msgid "واتساب"
+msgstr "WhatsApp"
+
+#: templates/shop/contact.html:60
+msgid "راسلنا للحجز والاستفسار"
+msgstr "Rezervasyon veya bilgi almak için bizimle iletişime geçin."
+
+#: templates/shop/contact.html:68
+msgid "حلب/اعزاز الحارة الشرقية شارع امروء القيس جانب بنك الدم"
+msgstr "Halep/Azaz, Doğu Mahallesi, İmru' el-Kays Caddesi, Kan Bankası'nın yanında"
+
+#: templates/shop/contact.html:75
+#, fuzzy
+msgid "ساعات العمل"
+msgstr "Mesai saatleri"
+
+#: templates/shop/contact.html:76
+msgid "السبت: 08.00 - 22.00"
+msgstr "Cmt 08.00 - 22.00"
+
+#: templates/shop/contact.html:77
+msgid "الاحد: 08.00 - 22.00"
+msgstr "pazar 08.00 - 22.00"
+
+#: templates/shop/contact.html:78
+msgid "الاثنين: 08.00 - 22.00"
+msgstr "pat 08.00 - 22.00"
+
+#: templates/shop/contact.html:79
+msgid "الثلاثاء: 08.00 - 22.00"
+msgstr "salı 08.00 - 22.00"
+
+#: templates/shop/contact.html:80
+msgid "الاربعاء: 08.00 - 22.00"
+msgstr "çam 08.00 - 22.00"
+
+#: templates/shop/contact.html:81
+msgid "الخميس: 08.00 - 22.00"
+msgstr "per 08.00 - 22.00"
+
+#: templates/shop/contact.html:82
+msgid "الجمعة: بعد الصلاة - 20.00"
+msgstr "cuma namazdan sonra - 20.00"
+
+#: templates/shop/contact.html:91
+msgid "فتح واتساب"
+msgstr "WhatsApp aç"
+
+#: templates/shop/contact.html:100
+msgid "أرسل رسالة"
+msgstr "mesaj gönder"
+
+#: templates/shop/contact.html:101
+msgid "اكتب التفاصيل، ونحن بنتواصل معك."
+msgstr "Bilgileri not edin, biz sizinle iletişime geçeceğiz."
+
+#: templates/shop/contact.html:106
+#, fuzzy
+msgid "اسمك"
+msgstr "Adınız"
+
+#: templates/shop/contact.html:110
+#, fuzzy
+msgid "رقم للتواصل"
+msgstr "Tel numaranız"
+
+#: templates/shop/contact.html:114
+#, fuzzy
+msgid "الرسالة"
+msgstr "İleti"
+
+#: templates/shop/contact.html:116
+msgid "مثال: بدي أحجز عرض، أو استفسار عن منتج كوده..."
+msgstr "Örnek: Bir teklif rezervasyonu yapmak veya bir ürün kodu hakkında bilgi almak istiyorum..."
+
+#: templates/shop/contact.html:121
+#, fuzzy
+msgid "إرسال"
+msgstr "Maliyet"
+
+#: templates/shop/contact.html:127
+msgid "إرسال عبر واتساب"
+msgstr "WhatsApp üzerinden gönder"
+
+#: templates/shop/coupons.html:9 templates/shop/layout.html:53
+#: templates/shop/layout.html:86 templates/shop/layout.html:134
+#: templates/shop/my.html:3 templates/shop/my.html:9
+msgid "حسابي"
+msgstr "Hesabım"
+
+#: templates/shop/coupons.html:16 templates/shop/my.html:118
+msgid "كوبوناتي"
+msgstr "Kuponlarım"
+
+#: templates/shop/coupons.html:25 templates/shop/coupons.html:55
+msgid "خصم ثابت"
+msgstr "SAbit indirim"
+
+#: templates/shop/coupons.html:30 templates/shop/coupons.html:64
+#: templates/shop/ledger.html:69
+msgid "نسخ"
+msgstr "Kopyala"
+
+#: templates/shop/coupons.html:40
+#, fuzzy
+msgid "لا يوجد كوبونات لديك بعد."
+msgstr "kupon bulunmamaktadır"
+
+#: templates/shop/coupons.html:47
+msgid "كوبونات متاحة حالياً"
+msgstr "Aktif Kupounlar"
+
+#: templates/shop/coupons.html:58
+#: templates/shop/partials/special_offer_card.html:65
+msgid "باقي"
+msgstr "Kalan"
+
+#: templates/shop/coupons.html:73
+#, fuzzy
+msgid "لا يوجد كوبونات حالياً."
+msgstr "istek yoktur"
+
+#: templates/shop/home.html:25
+msgid "كل ما يحتاجه مطبخك تحت سقف واحد."
+msgstr "Mutfağınız için gereken her şey tek çatı altında."
+
+#: templates/shop/home.html:27
+msgid "اكتشف"
+msgstr "keşfedin"
+
+#: templates/shop/home.html:44
+msgid "لمسة أناقة بتلمع على كل سفرة."
+msgstr "Her masa düzeninde kendini gösteren bir zarafet dokunuşu."
+
+#: templates/shop/home.html:45
+msgid "مختارات قوية"
+msgstr "Güçlü seçimler"
+
+#: templates/shop/home.html:46
+#, fuzzy
+msgid "تسوّق الآن"
+msgstr "Şimdi alışveriş yap"
+
+#: templates/shop/home.html:63
+msgid "راحة بيتك تبدأ من عنا."
+msgstr "Evinizin konforu bizimle başlar."
+
+#: templates/shop/home.html:64
+msgid "من اجود انواع القماش"
+msgstr "En kaliteli kumaş türlerinden üretilmiştir."
+
+#: templates/shop/home.html:65
+msgid "القي نظرة"
+msgstr "Bir göz at"
+
+#: templates/shop/home.html:86 templates/shop/partials/filters_panel.html:15
+#: templates/shop/partials/products_filters.html:14
+#: templates/shop/partials/products_filters.html:25
+#: templates/shop/products.html:30
+#, fuzzy
+msgid "الكل"
+msgstr "— Hepsi —"
+
+#: templates/shop/home.html:99
+msgid "مختارات اليوم"
+msgstr "Bugünün seçimleri"
+
+#: templates/shop/home.html:100
+#, fuzzy
+msgid "عرض المنتجات"
+msgstr "Ürünleri göster"
+
+#: templates/shop/home.html:134 templates/shop/home.html:221
+#: templates/shop/home.html:269 templates/shop/product_detail.html:99
+#: templates/shop/products.html:89 templates/shop/products.html:98
+msgid "$"
+msgstr "$"
+
+#: templates/shop/home.html:138 templates/shop/home.html:273
+#: templates/shop/home.html:365 templates/shop/offers.html:75
+#: templates/shop/product_detail.html:113 templates/shop/products.html:104
+#, fuzzy
+msgid "سجّل دخول لرؤية السعر"
+msgstr "fiyatı görmek için Giriş yap"
+
+#: templates/shop/home.html:145
+#, fuzzy
+msgid "لا يوجد منتجات حالياً."
+msgstr "Ürün bulunmamaktadır"
+
+#: templates/shop/home.html:157 templates/shop/home.html:160
+#, fuzzy
+msgid "قسم الشاشات"
+msgstr "Ekran bölümü"
+
+#: templates/shop/home.html:174 templates/shop/layout.html:118
+#: templates/shop/offers.html:2 templates/shop/offers.html:8
+#, fuzzy
+msgid "العروض"
+msgstr "teklifler"
+
+#: templates/shop/home.html:175
+#, fuzzy
+msgid "الأسبوعية"
+msgstr "Haftalık"
+
+#: templates/shop/home.html:179
+#, fuzzy
+msgid "اكتشف العروض"
+msgstr "teklifleri keşfedin"
+
+#: templates/shop/home.html:278 templates/shop/home.html:370
+#: templates/shop/offers.html:80 templates/shop/products.html:109
+#, fuzzy
+msgid "عرض التفاصيل"
+msgstr "detayların göster"
+
+#: templates/shop/home.html:289 templates/shop/home.html:307
+#: templates/shop/home.html:323
+#, fuzzy
+msgid "عرض الكل"
+msgstr "Hepsini göster"
+
+#: templates/shop/home.html:299
+#, fuzzy
+msgid "لا يوجد عروض خاصة حالياً."
+msgstr "Şu an özel teklif bulunmamaktadır"
+
+#: templates/shop/home.html:306
+#, fuzzy
+msgid "عروض اليوم"
+msgstr "Bu gün teklifleri"
+
+#: templates/shop/home.html:314
+#, fuzzy
+msgid "لا توجد عروض حالياً."
+msgstr "istek yoktur"
+
+#: templates/shop/home.html:322 templates/shop/home.html:348
+msgid "قريباً"
+msgstr "Yakında"
+
+#: templates/shop/home.html:346
+msgid "يبدأ"
+msgstr "Başlar"
+
+#: templates/shop/home.html:357 templates/shop/my.html:172
+#: templates/shop/offers.html:70
+msgid "ل.س"
+msgstr "SL"
+
+#: templates/shop/home.html:360
+#, fuzzy
+msgid "السعر سيظهر عند بدء العرض"
+msgstr "Teklif başladığında fiyat görüntülenir"
+
+#: templates/shop/home.html:376
+#, fuzzy
+msgid "لا توجد عروض قادمة."
+msgstr "Değer Eklenmedi Daha"
+
+#: templates/shop/home.html:386
+msgid "جرب وخذ"
+msgstr "Deneyip al"
+
+#: templates/shop/home.html:387
+msgid "تجربة المنتج قبل اخذه."
+msgstr "Ürünü almadan deneyin."
+
+#: templates/shop/home.html:392
+msgid "ضمان وكفالة"
+msgstr "Garanti ve Teminat"
+
+#: templates/shop/home.html:393
+msgid "راحة بالك أهم شي."
+msgstr "En önemli şey sizin huzurunuzdur."
+
+#: templates/shop/home.html:398
+#, fuzzy
+msgid "دفع مرن"
+msgstr "Genel Ödeme"
+
+#: templates/shop/home.html:399
+msgid "نقدي أو تقسيط حسب الاتفاق."
+msgstr "Anlaşmaya göre nakit veya taksitler halinde ödeme."
+
+#: templates/shop/layout.html:8
 msgid "المعرض"
 msgstr "Mağaza"
 
-#: templates/shop/layout.html:36
+#: templates/shop/layout.html:26 templates/shop/layout.html:77
+#, fuzzy
+msgid "القائمة"
+msgstr "Liste"
+
+#: templates/shop/layout.html:41 templates/shop/layout.html:98
 msgid "اللغة"
 msgstr "Dil"
 
-#: templates/shop/layout.html:39
+#: templates/shop/layout.html:45 templates/shop/layout.html:100
 msgid "العربية"
 msgstr "AR"
 
-#: templates/shop/layout.html:40
+#: templates/shop/layout.html:46 templates/shop/layout.html:101
 msgid "التركية"
 msgstr "TR"
 
-#: templates/shop/layout.html:45
-msgid "خروج"
-msgstr "Çıkış Yap"
-
-#: templates/shop/layout.html:47 templates/shop/login.html:2
-#: templates/shop/login.html:10
+#: templates/shop/layout.html:53 templates/shop/layout.html:90
+#: templates/shop/login.html:4 templates/shop/login.html:18
+#: templates/shop/login.html:65 templates/shop/product_detail.html:114
 msgid "تسجيل الدخول"
 msgstr "Giriş Yap"
 
-#: templates/shop/layout.html:58
-msgid "BEKKUR Home"
-msgstr "BEKKUR Home"
+#: templates/shop/layout.html:64
+msgid "ابحث عن أي شيء…"
+msgstr "Bul"
 
-#: templates/shop/layout.html:62
-msgid "ابحث عن منتج..."
-msgstr "ürüne ara"
+#: templates/shop/layout.html:64 templates/shop/layout.html:65
+#: templates/shop/partials/filters_panel.html:7
+#: templates/shop/partials/products_filters.html:6
+#, fuzzy
+msgid "بحث"
+msgstr "Ara"
 
-#: templates/shop/layout.html:67 templates/shop/my.html:72
-msgid "لوحة الإدارة"
-msgstr "Yönetim"
+#: templates/shop/layout.html:91 templates/shop/login.html:70
+#: templates/shop/register.html:2 templates/shop/register.html:12
+msgid "إنشاء حساب"
+msgstr "Hesap Oluştur"
 
-#: templates/shop/layout.html:70
-msgid "صفحتي"
-msgstr "Sayfam"
-
-#: templates/shop/layout.html:73 templates/shop/products.html:4
+#: templates/shop/layout.html:113 templates/shop/offers.html:9
+#: templates/shop/product_detail.html:9 templates/shop/products.html:2
 #: templates/shop/products.html:8
 msgid "المنتجات"
 msgstr "Ürünler"
 
-#: templates/shop/layout.html:74
-msgid "تواصل / شكاوي"
-msgstr "letişim / Şikayetler"
-
-#: templates/shop/layout.html:89
+#: templates/shop/layout.html:166
 msgid "جميع الحقوق محفوظة"
 msgstr "Tüm hakları saklıdır ©"
 
-#: templates/shop/layout.html:91
-msgid "التواصل"
-msgstr "İletişim"
-
-#: templates/shop/layout.html:92
-msgid "الشكاوي"
-msgstr "şikayetler"
-
-#: templates/shop/ledger.html:2 templates/shop/ledger.html:8
-#: templates/shop/my.html:42
-msgid "دفترِي"
+#: templates/shop/ledger.html:3 templates/shop/ledger.html:9
+#: templates/shop/my.html:88
+#, fuzzy
+msgid "دفتري"
 msgstr "Sayfam"
 
-#: templates/shop/ledger.html:9
+#: templates/shop/ledger.html:10 templates/shop/ledger.html:40
 msgid "عرض فقط"
 msgstr "sadece görüntüleme"
 
-#: templates/shop/ledger.html:15 templates/shop/my.html:63
-msgid "لم يتم ربط حسابك بصفحة دفتر بعد. تواصل معنا لربطه."
+#: templates/shop/ledger.html:16 templates/shop/my.html:108
+#, fuzzy
+msgid "لم يتم ربط حسابك بالدفتر بعد. تواصل معنا لربطه."
 msgstr "Hesabınız henüz defter sayfasına bağlanmadı."
 
-#: templates/shop/ledger.html:17
+#: templates/shop/ledger.html:18
 msgid "حسابك قيد المراجعة. ستظهر صفحتك بعد التفعيل."
 msgstr "Hesabınız inceleniyor. Aktivasyondan sonra sayfanız açılacaktır."
 
-#: templates/shop/ledger.html:19
+#: templates/shop/ledger.html:20
 msgid "تعذر العثور على الدفتر المرتبط. تواصل معنا."
 msgstr "Sayfanız Bulunmdaı, lütfen bizimle iletişime geç"
 
-#: templates/shop/ledger.html:64
+#: templates/shop/ledger.html:39
+msgid "الدفع عبر شام كاش"
+msgstr "Sham Cash aracılığıyla ödeme"
+
+#: templates/shop/ledger.html:44
+msgid ""
+"حوّل القسط على حساب شام كاش الظاهر بالصورة، ثم اضغط زر (ادفع لهذا العقد) "
+"لإرسال إشعار عبر واتساب."
+msgstr ""
+"Taksiti resimde gösterilen Sham Cash hesabına aktarın, ardından (Bu sözleşme için ödeme yap) düğmesine basın."
+"WhatsApp üzerinden bildirim göndermek için."
+
+#: templates/shop/ledger.html:56
+msgid "فتح الصورة"
+msgstr "ımg aç"
+
+#: templates/shop/ledger.html:63
+msgid "عنوان/رقم المحفظة"
+msgstr "Cüzdan adresi/numarası"
+
+#: templates/shop/ledger.html:74
+#, fuzzy
+msgid "غير متوفر حالياً"
+msgstr "Mevcut değil"
+
+#: templates/shop/ledger.html:79
+msgid "يفضل كتابة (ID الزبون) ضمن سبب التحويل."
+msgstr "Para transferi nedeni kısmına (Müşteri ID) yazılması tercih edilir."
+
+#: templates/shop/ledger.html:83
+msgid "ملاحظة: يتم تحديث الدفتر بعد تأكيد الإدارة."
+msgstr "Not: Kayıt defteri, idare tarafından onaylandıktan sonra güncellenir."
+
+#: templates/shop/ledger.html:125
 msgid "مسدد"
 msgstr "Ödendi"
 
-#: templates/shop/ledger.html:102
+#: templates/shop/ledger.html:147
+msgid "ادفع لهذا العقد"
+msgstr "Bu sözleşme için ödeme yapın"
+
+#: templates/shop/ledger.html:190
 msgid "لا يوجد منتجات تقسيط"
 msgstr "Taksitli Ürün yok"
 
-#: templates/shop/ledger.html:139
+#: templates/shop/ledger.html:229
 msgid "المدفوع"
 msgstr "Ödemeler"
 
-#: templates/shop/ledger.html:148
+#: templates/shop/ledger.html:238
 msgid "لا يوجد ديون نقدية"
 msgstr "Nakit borç yok"
 
-#: templates/shop/login.html:22 templates/shop/register.html:26
-msgid "كلمة المرور"
-msgstr "şifre"
+#: templates/shop/login.html:19
+msgid "أهلاً فيك! سجل دخولك وكمل تصفح المنتجات."
+msgstr "Hoş geldiniz! Giriş yapın ve ürünlere göz atmaya devam edin."
 
-#: templates/shop/login.html:24
-msgid "دخول"
-msgstr "Giriş"
+#: templates/shop/login.html:40
+#, fuzzy
+msgid "رقم الهاتف أو البريد"
+msgstr "TEL / mail adresi"
 
-#: templates/shop/login.html:28
+#: templates/shop/login.html:42
+msgid "name@email.com"
+msgstr "name@email.com"
+
+#: templates/shop/login.html:49
+msgid "إظهار/إخفاء"
+msgstr "Göster/gizle"
+
+#: templates/shop/login.html:58
+msgid "تذكرني"
+msgstr "Hatırla beni"
+
+#: templates/shop/login.html:61
+#, fuzzy
+msgid "نسيت كلمة المرور؟"
+msgstr "şifreyi Unuttum"
+
+#: templates/shop/login.html:69
 msgid "ما عندك حساب؟"
 msgstr "Hesabım Yok"
 
-#: templates/shop/login.html:29 templates/shop/register.html:2
-msgid "إنشاء حساب"
-msgstr "Hesap Oluştur"
+#: templates/shop/login.html:79
+msgid "بالاستمرار أنت توافق على سياسة الاستخدام."
+msgstr "Devam ederek Kullanım Şartlarını kabul etmiş oluyorsunuz."
 
-#: templates/shop/my.html:4 templates/shop/my.html:8
-msgid "حسابي"
-msgstr "Hesabım"
-
-#: templates/shop/my.html:11
-msgid "الإيميل"
-msgstr "mail adresi"
-
-#: templates/shop/my.html:13
+#: templates/shop/my.html:18
 msgid "حالة الحساب"
 msgstr "Hesap durumu"
 
-#: templates/shop/my.html:27
+#: templates/shop/my.html:32
 msgid "حسابك قيد المراجعة. الأسعار مخفية لحين التفعيل."
 msgstr "Hesabınız inceleniyor. Fiyatlar henüz görüntülenmiyor"
 
-#: templates/shop/my.html:31
+#: templates/shop/my.html:36
 msgid "حسابك محظور. تواصل معنا لحل المشكلة."
 msgstr "Hesabınız geçici olarak engellendi. Destek için bizimle iletişime geçin."
 
-#: templates/shop/my.html:35
+#: templates/shop/my.html:40
 msgid "حسابك مفعل. يمكنك رؤية الأسعار."
 msgstr "Aktifsiniz, fiyatları görebilirsiniz"
 
-#: templates/shop/my.html:45
+#: templates/shop/my.html:47
+#, fuzzy
+msgid "تعديل معلوماتي"
+msgstr "Bilgileri Düzenle"
+
+#: templates/shop/my.html:58 templates/shop/register.html:32
+#, fuzzy
+msgid "النسبة"
+msgstr "Peşinat"
+
+#: templates/shop/my.html:91
 msgid "سيظهر دفترُك هنا بعد تفعيل الحساب وربطه من الإدارة."
 msgstr "Hesap aktif edildikten sonra defteriniz burada görünecektir"
 
-#: templates/shop/my.html:55
+#: templates/shop/my.html:100
 msgid "عرض تفاصيل الدفتر"
 msgstr "Sayfa detaylarını göster"
 
-#: templates/shop/my.html:59
+#: templates/shop/my.html:104
 msgid "عرض فقط — لا يمكن التعديل أو الحذف."
 msgstr "Sadece görüntüleme — düzenleme veya silme yapılamaz."
 
-#: templates/shop/product_detail.html:83
-msgid "سجّل دخول لعرض السعر"
-msgstr "fiyatı görmek için Giriş yap"
+#: templates/shop/my.html:119
+msgid "للحجز عبر واتساب/انستا"
+msgstr "WhatsApp/Instagram üzerinden rezervasyon yapabilirsiniz."
 
-#: templates/shop/product_detail.html:93
-msgid "الخيارات"
-msgstr "Seçenekler"
+#: templates/shop/my.html:124
+msgid "ستظهر الكوبونات وتفعيلها بعد تفعيل الحساب."
+msgstr "Kuponlar, hesap etkinleştirildikten sonra görünecek ve aktif hale gelecektir."
 
-#: templates/shop/product_detail.html:105
-msgid "اختر الخيار لعرض مواصفاته"
-msgstr "Özellikleri görmek için alt kategoriyi seç."
+#: templates/shop/my.html:130
+msgid "أدخل كود كوبون الانستا/الواتس"
+msgstr "Instagram/WhatsApp kupon kodunu girin"
 
-#: templates/shop/product_detail.html:119
+#: templates/shop/my.html:136
 #, fuzzy
-msgid "لا يوجد وصف لهذا المنتج"
-msgstr "Bu ürün için açıklama kısmı yok."
+msgid "إضافة الكوبون"
+msgstr "Kupon Ekle"
 
-#: templates/shop/product_detail.html:127
-msgid "مواصفات"
-msgstr "Özellikler"
+#: templates/shop/my.html:142
+msgid "بعد الإضافة سيظهر الكوبون هنا باسمك، وتقدر تستخدمه عند الحجز عبر واتساب."
+msgstr "Kuponu ekledikten sonra, adınız da burada görünecektir ve WhatsApp üzerinden rezervasyon yaparken kullanabilirsiniz."
 
-#: templates/shop/product_detail.html:144
+#: templates/shop/my.html:156
 #, fuzzy
-msgid "لا توجد مواصفات مسجّلة لهذا المنتج"
-msgstr "Bu ürünün kayıtlı özellikleri bulunmadı"
+msgid "الصلاحية"
+msgstr "Geçerlilik"
 
-#: templates/shop/product_detail.html:155
+#: templates/shop/my.html:177
+msgid "حتى"
+msgstr "'ye kadar"
+
+#: templates/shop/my.html:181
 #, fuzzy
-msgid "اسأل عن المنتج على واتساب"
+msgid "متبقي"
+msgstr "Kalan"
+
+#: templates/shop/my.html:181
+#, fuzzy
+msgid "يوم"
+msgstr "Gün"
+
+#: templates/shop/my.html:184 templates/shop/my.html:196
+msgid "منتهي"
+msgstr "Geçersiz"
+
+#: templates/shop/my.html:187
+#, fuzzy
+msgid "بدون نهاية"
+msgstr "limitsiz"
+
+#: templates/shop/my.html:198
+msgid "جاهز للاستخدام"
+msgstr "Kullanıma hazır"
+
+#: templates/shop/my.html:210
+msgid "ما عندك كوبونات لسا. إذا عندك كوبون انستا/واتس دخله فوق 😉"
+msgstr "Henüz hiç kuponunuz yok mu? Eğer Instagram/WhatsApp kuponunuz varsa, yukarıya girin 😉"
+
+#: templates/shop/my.html:219
+msgid "لوحة الإدارة"
+msgstr "Yönetim"
+
+#: templates/shop/offers.html:14
+#, fuzzy
+msgid "لا توجد عروض فعّالة حالياً."
+msgstr "Aktif Teklif yoktur"
+
+#: templates/shop/offers.html:56
+msgid "ينتهي خلال"
+msgstr "Şu tarihte sona erer:"
+
+#: templates/shop/offers.html:59
+#, fuzzy
+msgid "عرض مستمر"
+msgstr "Devam ediyor"
+
+#: templates/shop/product_detail.html:69
+#, fuzzy
+msgid "خيارات أخرى"
+msgstr "Başka Seçenekler"
+
+#: templates/shop/product_detail.html:104 templates/shop/products.html:90
+msgid "ابتداءً من"
+msgstr "Başlangıç"
+
+#: templates/shop/product_detail.html:122
+msgid "المقاسات المتوفرة"
+msgstr "Mevcut bedenler"
+
+#: templates/shop/product_detail.html:154
+#, fuzzy
+msgid "اسأل عبر واتساب"
 msgstr "Whatsapp üzerinden Ürünü sor"
 
-#: templates/shop/product_detail.html:158
-msgid "اسأل عن المنتج"
-msgstr "Ürünü sor"
-
-#: templates/shop/product_detail.html:161
+#: templates/shop/product_detail.html:159
 msgid "رجوع للمنتجات"
 msgstr "Ürünlere dön"
 
-#: templates/shop/products.html:16
-msgid "all"
-msgstr "tümü"
-
-#: templates/shop/products.html:38
+#: templates/shop/product_detail.html:263
+#: templates/shop/product_detail.html:265
 #, fuzzy
-msgid "عرض القسم:"
-msgstr "Bölüm:"
+msgid "المحدد حاليًا"
+msgstr "Götdrilrn"
 
-#: templates/shop/products.html:116
-msgid "لا يوجد منتجات لعرضها حاليًا"
-msgstr "Görünecek ürün bulunmadı"
+#: templates/shop/partials/products_filters.html:42
+#: templates/shop/products.html:13
+#, fuzzy
+msgid "الترتيب"
+msgstr "sıralama"
 
-#: templates/shop/register.html:10
-msgid "إنشاء حساب مشتري"
-msgstr "Hesap Oluştur"
+#: templates/shop/partials/products_filters.html:45
+#: templates/shop/products.html:16
+#, fuzzy
+msgid "الأحدث"
+msgstr "En yeni"
 
-#: templates/shop/register.html:21
+#: templates/shop/products.html:23
+#, fuzzy
+msgid "فلترة"
+msgstr "Filterle"
+
+#: templates/shop/products.html:118
+#, fuzzy
+msgid "لا توجد منتجات مطابقة."
+msgstr "ürün bulunmamaktadır"
+
+#: templates/shop/products.html:129
+#, fuzzy
+msgid "الفلترة"
+msgstr "Filtreleme"
+
+#: templates/shop/register.html:23
 msgid "بعد التسجيل، حسابك سيكون قيد المراجعة ولن تظهر الأسعار حتى يتم تفعيله."
-msgstr ""
-"Kayıt olduktan sonra hesabınız inceleme aşamasında olacaktır ve aktif "
-"edilene kadar fiyatlar görüntülenmeyecektir."
+msgstr "Kayıt işleminden sonra hesabınız inceleme altına alınacak ve hesabınız aktif hale getirilene kadar fiyatlar görüntülenmeyecektir."
 
-#: templates/shop/register.html:27
+#: templates/shop/register.html:47
 msgid "تأكيد كلمة المرور"
 msgstr "Şifreyi onayla"
 
-#: templates/shop/register.html:29
+#: templates/shop/register.html:50
 msgid "إنشاء الحساب"
 msgstr "Hesap Oluştur"
 
-#: templates/shop/register.html:33
+#: templates/shop/register.html:56
 msgid "رجوع لتسجيل الدخول"
 msgstr "Giriş sayfasına dön"
+
+#: templates/shop/special_offers.html:19
+msgid "عروض سارية"
+msgstr "Geçerli teklifler"
+
+#: templates/shop/special_offers.html:28
+#, fuzzy
+msgid "لا يوجد عروض سارية حالياً."
+msgstr "Geçerli teklif bulunmamaktadır"
+
+#: templates/shop/special_offers.html:34
+#, fuzzy
+msgid "عروض سابقة"
+msgstr "Bölüm:"
+
+#: templates/shop/special_offers.html:39
+#, fuzzy
+msgid "لا يوجد عروض سابقة."
+msgstr "Hesap Bulunmadı"
+
+#: templates/shop/partials/filters_panel.html:9
+#, fuzzy
+msgid "اكتب اسم المنتج..."
+msgstr "Ürün adı"
+
+#: templates/shop/partials/filters_panel.html:16
+#, fuzzy
+msgid "برادات"
+msgstr "Tekstil"
+
+#: templates/shop/partials/filters_panel.html:17
+#, fuzzy
+msgid "غسالات"
+msgstr "TEL"
+
+#: templates/shop/partials/filters_panel.html:18
+msgid "أفران"
+msgstr "Fırın"
+
+#: templates/shop/partials/filters_panel.html:19
+msgid "أجهزة صغيرة"
+msgstr "Küçük aletler"
+
+#: templates/shop/partials/filters_panel.html:20
+#, fuzzy
+msgid "مكيفات"
+msgstr "Satış"
+
+#: templates/shop/partials/filters_panel.html:21
+msgid "تلفزيونات"
+msgstr "Ekran"
+
+#: templates/shop/partials/filters_panel.html:29
+#: templates/shop/partials/products_filters.html:38
+#, fuzzy
+msgid "عروض فقط"
+msgstr "sadece görüntüleme"
+
+#: templates/shop/partials/filters_panel.html:34
+#: templates/shop/partials/products_filters.html:52
+msgid "تطبيق"
+msgstr "Uygula"
+
+#: templates/shop/partials/filters_panel.html:35
+#: templates/shop/partials/products_filters.html:53
+msgid "إعادة ضبط"
+msgstr "Sıfırla"
+
+#: templates/shop/partials/filters_panel.html:41
+#: templates/shop/partials/products_filters.html:59
+msgid "الأسعار مخفية للضيوف."
+msgstr "Fiyatlar misafirlerden gizlenmiştir."
+
+#: templates/shop/partials/filters_panel.html:42
+#: templates/shop/partials/products_filters.html:60
+#, fuzzy
+msgid "سجّل دخول"
+msgstr "Giriş Yap"
+
+#: templates/shop/partials/products_filters.html:8
+#, fuzzy
+msgid "اكتب اسم/كود المنتج..."
+msgstr "Ürün kodu"
+
+#: templates/shop/partials/products_filters.html:44
+#, fuzzy
+msgid "افتراضي"
+msgstr "Sayfam"
+
+#: templates/shop/partials/products_filters.html:46
+#, fuzzy
+msgid "السعر: الأقل أولاً"
+msgstr "Toplam Fiyat"
+
+#: templates/shop/partials/products_filters.html:47
+#, fuzzy
+msgid "السعر: الأعلى أولاً"
+msgstr "Toplam Fiyat"
+
+#: templates/shop/partials/special_offer_card.html:58
+#, fuzzy
+msgid "خصم ثابت على المنتجين"
+msgstr "Ürün özellikleri"
+
+#: templates/shop/partials/special_offer_card.html:60
+msgid "خصم على المنتج الثالث"
+msgstr "Üçüncü üründe indirim"
+
+#: templates/shop/partials/special_offer_card.html:75
+#, fuzzy
+msgid "تفاصيل العرض"
+msgstr "Ödeme detayları"
+
+#: templates/shop/partials/special_offer_card.html:99
+#, fuzzy
+msgid "المجموع"
+msgstr "Genel toplam:"
+
+#: templates/shop/partials/special_offer_card.html:103
+#: templates/shop/partials/special_offer_card.html:121
+msgid "بعد الخصم"
+msgstr "İndirimden sonra"
+
+#: templates/shop/partials/special_offer_card.html:108
+#, fuzzy
+msgid "الهدية"
+msgstr "Adet"
+
+#: templates/shop/partials/special_offer_card.html:117
+#, fuzzy
+msgid "سعر المنتج الثالث"
+msgstr "Ürünleri göster"
+
+#: templates/shop/partials/special_offer_card.html:127
+#, fuzzy
+msgid "سجّل دخول لرؤية الأسعار"
+msgstr "fiyatı görmek için Giriş yap"
+
+#: templates/shop/partials/special_offer_card.html:132
+msgid "فتح المنتج الأول"
+msgstr "İlk ürünü açın"
+
+#: templates/shop/partials/special_offer_card.html:133
+#, fuzzy
+msgid "فتح المنتج الثاني"
+msgstr "İkinci ürünü açın"
+
+#: templates/shop/partials/special_offer_card.html:136
+#, fuzzy
+msgid "عرض الهدية"
+msgstr "Hediyeyi Göster"
+
+#: templates/shop/partials/special_offer_card.html:141
+msgid "حجز عبر واتساب"
+msgstr "WhatsApp aracılığıyla rezervasyon yapın"
+
+#: utils/admin_auth.py:26
+msgid "سجّل دخول كأدمن أولاً."
+msgstr "Öncelikle yönetici olarak giriş yapın."
+
+#: utils/admin_auth.py:32
+msgid "ليس لديك صلاحية للدخول للأدمن."
+msgstr "Yönetici paneline erişiminiz yok."
 
 #~ msgid " كهربائيات"
 #~ msgstr "Elektrik"
@@ -1799,4 +3579,85 @@ msgstr "Giriş sayfasına dön"
 
 #~ msgid "لا يوجد صور حالياً — سيتم إضافتها لاحقاً"
 #~ msgstr "img Bulunmadı"
+
+#~ msgid "اسم التصنيف"
+#~ msgstr "Kategori adı"
+
+#~ msgid "اسم التصنيف (تركي)"
+#~ msgstr "Alt kategori adı"
+
+#~ msgid "+ إضافة تصنيف رئيسي"
+#~ msgstr "Kategori Ekle +"
+
+#~ msgid "لا يوجد تصنيفات"
+#~ msgstr "Kategori yok"
+
+#~ msgid "التصنيف الرئيسي"
+#~ msgstr "Ana kategori"
+
+#~ msgid "عرض الفاتورة العامة"
+#~ msgstr "Genel Fatura"
+
+#~ msgid "+ إضافة منتج تقسيط"
+#~ msgstr "Taksitli Ürün Ekle"
+
+#~ msgid "إضافة منتج تقسيط للزبون رقم:"
+#~ msgstr "Sayılı Müşteriye Taksitli Ürün Ekle"
+
+#~ msgid "السعر الإجمالي:"
+#~ msgstr "Fiyat"
+
+#~ msgid "القسط الشهري:"
+#~ msgstr "Aylık Ödemesi"
+
+#~ msgid "الصفحة الرئيسية"
+#~ msgstr "Ana sayfa"
+
+#~ msgid "أفضل الأدوات المنزلية بأفضل الأسعار"
+#~ msgstr "En kaliteli ev aletleri, uygun fiyatlarla."
+
+#~ msgid "استكشف منتجاتنا والعروض المتاحة. الأسعار تظهر بعد تسجيل الدخول."
+#~ msgstr "Ürünlerimizi keşfedin. Fiyatlar girişten sonra görünür."
+
+#~ msgid "صورة"
+#~ msgstr "img"
+
+#~ msgid "خروج"
+#~ msgstr "Çıkış Yap"
+
+#~ msgid "BEKKUR Home"
+#~ msgstr "BEKKUR Home"
+
+#~ msgid "ابحث عن منتج..."
+#~ msgstr "ürün Bul"
+
+#~ msgid "صفحتي"
+#~ msgstr "Sayfam"
+
+#~ msgid "تواصل / شكاوي"
+#~ msgstr "İletişim / Şikayetler"
+
+#~ msgid "الشكاوي"
+#~ msgstr "şikayetler"
+
+#~ msgid "الخيارات"
+#~ msgstr "Seçenekler"
+
+#~ msgid "اختر الخيار لعرض مواصفاته"
+#~ msgstr "Özellikleri görmek için alt kategoriyi seç."
+
+#~ msgid "لا يوجد وصف لهذا المنتج"
+#~ msgstr "Bu ürün için açıklama kısmı yok."
+
+#~ msgid "لا توجد مواصفات مسجّلة لهذا المنتج"
+#~ msgstr "Bu ürünün kayıtlı özellikleri bulunmadı"
+
+#~ msgid "all"
+#~ msgstr "tümü"
+
+#~ msgid "لا يوجد منتجات لعرضها حاليًا"
+#~ msgstr "Görünecek ürün bulunmadı"
+
+#~ msgid "إنشاء حساب مشتري"
+#~ msgstr "Hesap Oluştur"
 
