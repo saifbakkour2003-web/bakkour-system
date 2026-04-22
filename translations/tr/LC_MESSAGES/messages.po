@@ -375,27 +375,22 @@ msgid "خصم المنتج الثالث يحتاج قيمة خصم ثابتة"
 msgstr "Ürün indirimi için sabit bir indirim değeri gereklidir."
 
 #: routes/admin/special_offers.py:93
-#, fuzzy
 msgid "تم إنشاء العرض ✅"
 msgstr "indirim oluşturuldu ✅"
 
 #: routes/admin/special_offers.py:134
-#, fuzzy
 msgid "تم حفظ التعديل ✅"
 msgstr "Değişikliği kaydedildi ✅"
 
 #: routes/admin/special_offers.py:143
-#, fuzzy
 msgid "تم تحديث حالة العرض"
 msgstr "İndirim durumu güncellendi"
 
 #: routes/admin/special_offers.py:156
-#, fuzzy
 msgid "تم إخفاء العرض ✅"
 msgstr "indirim kaldırıldı ✅"
 
 #: routes/admin/special_offers.py:168
-#, fuzzy
 msgid "تمت إعادة العرض ✅"
 msgstr "İndirim açıldı ✅"
 
@@ -434,12 +429,12 @@ msgid "كل الحقول مطلوبة"
 msgstr "Tüm alanlar doldurulmalı"
 
 #: routes/admin/sub_categories.py:130
-#, fuzzy
+
 msgid "تمت إضافة التصنيف الفرعي بنجاح ✅"
 msgstr "Alt kategori başarıyla eklendi ✅"
 
 #: routes/admin/sub_categories.py:188
-#, fuzzy
+
 msgid "تم تعديل التصنيف الفرعي بنجاح ✅"
 msgstr "Alt kategoriyi düzenlendi ✅"
 
@@ -452,7 +447,7 @@ msgid "لا يمكن حذف تصنيف يحتوي خصائص ❌"
 msgstr "Özellikli Kategory silinemez ❌"
 
 #: routes/admin/sub_categories.py:217
-#, fuzzy
+
 msgid "تم حذف التصنيف الفرعي 🗑️"
 msgstr "Alt kategori silindi 🗑️"
 
@@ -495,12 +490,12 @@ msgstr ""
 "görünecektir"
 
 #: routes/shop/account.py:74
-#, fuzzy
+
 msgid "تم تحديث معلوماتك ✅"
 msgstr "Bilgileriniz güncellendi ✅"
 
 #: routes/shop/account.py:84
-#, fuzzy
+
 msgid "حسابك قيد المراجعة. ستتمكن من استخدام الكوبونات بعد التفعيل."
 msgstr "Hesabınız inceleniyor. Aktivasyondan sonra sayfanız açılacaktır."
 
@@ -537,7 +532,7 @@ msgid "صار خطأ أثناء إضافة الكوبون. جرّب مرة ثا�
 msgstr "hata oldu, Tekrar dene"
 
 #: routes/shop/account.py:142
-#, fuzzy
+
 msgid "تم إضافة الكوبون لحسابك ✅ "
 msgstr "Kupon hesapınıza eklendi ✅"
 
@@ -562,7 +557,7 @@ msgid "تم تسجيل الدخول بنجاح ✅"
 msgstr "Giriş Başarıyla yapıldı ✅"
 
 #: routes/shop/auth.py:141
-#, fuzzy
+
 msgid "يرجى تعبئة جميع الحقول المطلوبة"
 msgstr "lütfen Tüm alanları doldurun"
 
@@ -649,13 +644,13 @@ msgid "الرئيسية"
 msgstr "Ana Sayfa"
 
 #: templates/layout_new.html:35
-#, fuzzy
+
 msgid "أدمن"
 msgstr "Admin"
 
 #: templates/layout_new.html:38 templates/shop/layout.html:87
 #: templates/shop/my.html:11
-#, fuzzy
+
 msgid "تسجيل الخروج"
 msgstr "çıkış yap"
 
@@ -698,12 +693,10 @@ msgid "إدارة المنتجات"
 msgstr "Ürün Yönetimi"
 
 #: templates/layout_new.html:142
-#, fuzzy
 msgid "إدارة العروض الخاصة"
 msgstr "Özel indirimler yönetimi"
 
 #: templates/layout_new.html:145
-#, fuzzy
 msgid "إدارة الكوبونات"
 msgstr "Kupon Yönetimi"
 
@@ -909,7 +902,6 @@ msgid "لا يوجد ماركات"
 msgstr "Marka Bulunmadı"
 
 #: templates/admin/coupon_claims.html:3 templates/admin/coupon_claims.html:9
-#, fuzzy
 msgid "مستلمو الكوبون"
 msgstr "Kupon alanları"
 
@@ -929,7 +921,6 @@ msgid "تصفير المستلمين"
 msgstr "Kupon alanları sıfırla"
 
 #: templates/admin/coupon_claims.html:32
-#, fuzzy
 msgid "المستخدم"
 msgstr "Kullancı"
 
@@ -951,32 +942,26 @@ msgid "الحالة"
 msgstr "Durum"
 
 #: templates/admin/coupon_claims.html:54 templates/shop/my.html:193
-#, fuzzy
 msgid "مستخدم"
 msgstr "Kullanıldı"
 
 #: templates/admin/coupon_claims.html:59
-#, fuzzy
 msgid "غير مستخدم"
 msgstr "Kullanılmadı"
 
 #: templates/admin/coupon_claims.html:66
-#, fuzzy
 msgid "لا يوجد مستلمون لهذا الكوبون بعد."
 msgstr "alan yok daha"
 
 #: templates/admin/coupon_form.html:3
-#, fuzzy
 msgid "كوبون"
 msgstr "Kupon"
 
 #: templates/admin/coupon_form.html:6
-#, fuzzy
 msgid "تعديل كوبون"
 msgstr "Kuponu düzenle"
 
 #: templates/admin/coupon_form.html:6 templates/admin/coupons_list.html:9
-#, fuzzy
 msgid "إضافة كوبون"
 msgstr "Kupon Ekle"
 
@@ -989,17 +974,14 @@ msgid "قيمة الخصم (مبلغ ثابت)"
 msgstr "indirim miktarı (sabit sayı)"
 
 #: templates/admin/coupon_form.html:24
-#, fuzzy
 msgid "عنوان اختياري"
 msgstr "Başlık (isteğe bağlı)"
 
 #: templates/admin/coupon_form.html:29
-#, fuzzy
 msgid "وصف اختياري"
 msgstr "Açıklama (isteğe bağlı)"
 
 #: templates/admin/coupon_form.html:34
-#, fuzzy
 msgid "حد الاستخدام (اختياري)"
 msgstr "Kullanım sınırı (isteğe bağlı)"
 
@@ -1016,7 +998,6 @@ msgid "إذا فعلته + usage_limit=5 => أول 5 أشخاص يسجلوا د�
 msgstr "Eğer bunu + usage_limit=5 olarak ayarlarsanız, giriş yapan ilk 5 kişi bu özelliği alır."
 
 #: templates/admin/coupon_form.html:53
-#, fuzzy
 msgid "بداية"
 msgstr "Başlangıç"
 
@@ -1025,7 +1006,6 @@ msgid "نهاية"
 msgstr "Bitiş"
 
 #: templates/admin/coupon_form.html:68 templates/admin/coupons_list.html:59
-#, fuzzy
 msgid "فعال"
 msgstr "Aktif"
 
@@ -1040,28 +1020,23 @@ msgstr "Kaydet"
 
 #: templates/admin/coupons_list.html:3 templates/admin/coupons_list.html:8
 #: templates/shop/coupons.html:2 templates/shop/coupons.html:8
-#, fuzzy
 msgid "الكوبونات"
 msgstr "Kuponlar"
 
 #: templates/admin/coupons_list.html:19 templates/shop/my.html:155
-#, fuzzy
 msgid "الخصم"
 msgstr "İndirim"
 
 #: templates/admin/coupons_list.html:20
-#, fuzzy
 msgid "الاستخدام"
 msgstr "Kullanım"
 
 #: templates/admin/coupons_list.html:21
 #: templates/admin/special_offers_list.html:19
-#, fuzzy
 msgid "الوقت"
 msgstr "Zaman"
 
 #: templates/admin/coupons_list.html:23
-#, fuzzy
 msgid "المستلمين"
 msgstr "Alanlar"
 
@@ -1070,13 +1045,11 @@ msgid "Auto"
 msgstr "Oto"
 
 #: templates/admin/coupons_list.html:61
-#, fuzzy
 msgid "متوقف"
 msgstr "pasif"
 
 #: templates/admin/coupons_list.html:77
 #: templates/admin/special_offers_list.html:61
-#, fuzzy
 msgid "إيقاف"
 msgstr "Durudur"
 
@@ -1087,12 +1060,10 @@ msgid "تفعيل"
 msgstr "aktif et"
 
 #: templates/admin/coupons_list.html:84
-#, fuzzy
 msgid "لا يوجد كوبونات"
 msgstr "Kupon yok"
 
 #: templates/admin/login.html:2 templates/admin/login.html:10
-#, fuzzy
 msgid "تسجيل دخول الأدمن"
 msgstr "Admin Girişi Yap"
 
@@ -1115,28 +1086,23 @@ msgid "هذه الصفحة مخصصة للإدارة فقط."
 msgstr "Bu panel yünetim için"
 
 #: templates/admin/special_offer_form.html:2
-#, fuzzy
 msgid "عرض خاص"
 msgstr "Özel indirim"
 
 #: templates/admin/special_offer_form.html:5
-#, fuzzy
 msgid "تعديل عرض"
 msgstr "Düzenle"
 
 #: templates/admin/special_offer_form.html:5
 #: templates/admin/special_offers_list.html:7
-#, fuzzy
 msgid "إضافة عرض"
 msgstr "Ödeme Ekle"
 
 #: templates/admin/special_offer_form.html:11
-#, fuzzy
 msgid "عنوان العرض"
 msgstr "Satış türü"
 
 #: templates/admin/special_offer_form.html:15
-#, fuzzy
 msgid "نوع العرض"
 msgstr "Satış türü"
 
@@ -1146,7 +1112,6 @@ msgid "هدية"
 msgstr "Hediye"
 
 #: templates/admin/special_offer_form.html:19
-#, fuzzy
 msgid "خصم على المنتجين"
 msgstr "İki ürüne indirim"
 
@@ -1155,17 +1120,14 @@ msgid "خصم على منتج ثالث"
 msgstr "3. ürün indirimli"
 
 #: templates/admin/special_offer_form.html:25
-#, fuzzy
 msgid "ملاحظة مختصرة"
 msgstr "NOT"
 
 #: templates/admin/special_offer_form.html:30
-#, fuzzy
 msgid "المنتج الأول"
 msgstr "Ürünler"
 
 #: templates/admin/special_offer_form.html:41
-#, fuzzy
 msgid "المنتج الثاني"
 msgstr "Taksit ürünleri"
 
@@ -1174,7 +1136,6 @@ msgid "المنتج الثالث (هدية/خصم)"
 msgstr ""
 
 #: templates/admin/special_offer_form.html:54
-#, fuzzy
 msgid "-- لا يوجد --"
 msgstr "Bulunmadı"
 
@@ -1195,7 +1156,6 @@ msgid "نهاية العرض"
 msgstr "Bitiş"
 
 #: templates/admin/special_offer_form.html:83
-#, fuzzy
 msgid "الستوك الإجمالي"
 msgstr "Toplam stok"
 
@@ -1209,13 +1169,11 @@ msgid "المتبقي"
 msgstr "Kalan"
 
 #: templates/admin/special_offer_form.html:98
-#, fuzzy
 msgid "فعّال"
 msgstr "Aktif"
 
 #: templates/admin/special_offer_form.html:106
 #: templates/admin/special_offers_list.html:40
-#, fuzzy
 msgid "موقوف"
 msgstr "pasif"
 
@@ -1223,13 +1181,11 @@ msgstr "pasif"
 #: templates/admin/special_offers_list.html:6 templates/shop/about.html:22
 #: templates/shop/home.html:288 templates/shop/special_offers.html:4
 #: templates/shop/special_offers.html:14
-#, fuzzy
 msgid "العروض الخاصة"
 msgstr "Özellik İsmi AR"
 
 #: templates/admin/special_offers_list.html:16 templates/shop/contact.html:67
 #: templates/shop/my.html:72 templates/shop/register.html:41
-#, fuzzy
 msgid "العنوان"
 msgstr "Başlık"
 
@@ -1244,12 +1200,10 @@ msgid "النوع"
 msgstr "Type"
 
 #: templates/admin/special_offers_list.html:20
-#, fuzzy
 msgid "الستوك"
 msgstr "Stok"
 
 #: templates/admin/special_offers_list.html:35
-#, fuzzy
 msgid "ساري"
 msgstr "Geçerli"
 
@@ -1258,7 +1212,6 @@ msgid "سابق/غير فعال"
 msgstr "pasif/süresi doldu"
 
 #: templates/admin/special_offers_list.html:69
-#, fuzzy
 msgid "إخفاء"
 msgstr "Sakla"
 
@@ -1267,7 +1220,6 @@ msgid "استرجاع"
 msgstr "Geri getir"
 
 #: templates/admin/special_offers_list.html:81
-#, fuzzy
 msgid "لا يوجد عروض"
 msgstr "İndirim Bulunmadı"
 
@@ -1382,7 +1334,6 @@ msgid "التصنيفات الرئيسية أصبحت ثابتة بالنظام.
 msgstr ""
 
 #: templates/admin/categories/main_categories/list.html:2
-#, fuzzy
 msgid "إدارة التصنيفات الرئيسية"
 msgstr "📁 Ana Kategoriler"
 
@@ -1395,7 +1346,6 @@ msgid "هذه الأقسام ثابتة بالنظام وتُستخدم كأسا
 msgstr ""
 
 #: templates/admin/categories/main_categories/list.html:15
-#, fuzzy
 msgid "إدارة التصنيفات الفرعية"
 msgstr "Alt Kategoriler"
 
@@ -1404,13 +1354,11 @@ msgid "الأقسام الرئيسية لم تعد قابلة للإضافة أ�
 msgstr ""
 
 #: templates/admin/categories/main_categories/list.html:29
-#, fuzzy
 msgid "القسم الثابت"
 msgstr "Bölüm sabit"
 
 #: templates/admin/categories/main_categories/list.html:30
 #: templates/admin/categories/main_categories/list.html:73
-#, fuzzy
 msgid "الاسم (تركي)"
 msgstr "Ad (TR)"
 
@@ -1577,7 +1525,6 @@ msgstr "Alt kategori ekle"
 
 #: templates/admin/categories/sub_categories/add.html:9
 #: templates/admin/categories/sub_categories/edit.html:9
-#, fuzzy
 msgid "القسم الحالي:"
 msgstr "Var Olan Değerler"
 
@@ -1791,7 +1738,6 @@ msgid "تعديل المعلومات"
 msgstr "Bilgileri Düzenle"
 
 #: templates/customers/view.html:27
-#, fuzzy
 msgid "عرض الفاتورة"
 msgstr "Fatura numarası:"
 
@@ -1810,7 +1756,6 @@ msgid "+ إضافة تقسيط (كود واحد أو أكثر)"
 msgstr "Taksitli ürün ekle + (1 yada daha fazla)"
 
 #: templates/customers/view.html:70
-#, fuzzy
 msgid "العقد / المنتج"
 msgstr "Ürün"
 
@@ -1859,28 +1804,23 @@ msgid "الكمية"
 msgstr "miktar"
 
 #: templates/customers/view.html:147 templates/shop/product_detail.html:174
-#, fuzzy
 msgid "المواصفات"
 msgstr "Özellikler"
 
 #: templates/customers/view.html:161
-#, fuzzy
 msgid "خاصية"
 msgstr "Özellik Düzenle"
 
 #: templates/customers/view.html:167
-#, fuzzy
 msgid "لا يوجد مواصفات"
 msgstr "Özellik Bulunmadı"
 
 #: templates/customers/view.html:176
-#, fuzzy
 msgid "لا يوجد منتجات مرتبطة بهذا العقد"
 msgstr "Taksitli Ürün Bulunmadı"
 
 #: templates/customers/view.html:182 templates/shop/layout.html:78
 #: templates/shop/layout.html:153 templates/shop/products.html:130
-#, fuzzy
 msgid "إغلاق"
 msgstr "Kapat"
 
@@ -1926,7 +1866,6 @@ msgid "الوصف"
 msgstr "Açıklama"
 
 #: templates/customers/view.html:257
-#, fuzzy
 msgid "تاريخ الحركة"
 msgstr "Satın alma tarihi:"
 
@@ -1935,17 +1874,14 @@ msgid "لا يوجد ديون أو دفعات ضمن هذا الزبون"
 msgstr "Nakit Borç Veya Ödeme Bulunmadı"
 
 #: templates/customers/view.html:321 templates/invoices/cash_invoice.html:84
-#, fuzzy
 msgid "المتبقي الحالي:"
 msgstr "Son kalan:"
 
 #: templates/installments/add.html:3
-#, fuzzy
 msgid "إضافة تقسيط"
 msgstr "Taksit ürünü ekle"
 
 #: templates/installments/add.html:9
-#, fuzzy
 msgid "إضافة عقد تقسيط"
 msgstr "Taksit ürünü ekle"
 
@@ -1954,7 +1890,6 @@ msgid "أدخل كود منتج واحد أو عدة أكواد وسيتم دم�
 msgstr "1 veya aha fazla ürün kodu gir"
 
 #: templates/installments/add.html:30
-#, fuzzy
 msgid "السعر الكلي (لجميع المنتجات)"
 msgstr "Toplam fiyat (Tüm ürünler için)"
 
@@ -1963,17 +1898,14 @@ msgid "أكواد المنتجات ضمن العقد"
 msgstr "ürünlerün kodları"
 
 #: templates/installments/add.html:66
-#, fuzzy
 msgid "أدخل كود المنتج"
 msgstr "Ürün kodu gir"
 
 #: templates/installments/add.html:84
-#, fuzzy
 msgid "إضافة كود آخر"
 msgstr "Başka kod ekle"
 
 #: templates/installments/add.html:89
-#, fuzzy
 msgid "حفظ العقد"
 msgstr "kaydet"
 
@@ -2166,96 +2098,78 @@ msgid "الصافي النهائي (المتبقي):"
 msgstr "Net kalan (bakiye):"
 
 #: templates/invoices/cash_invoice.html:6
-#, fuzzy
 msgid "فاتورة ديون نقدية -"
 msgstr "Nakit Borç Defteri"
 
 #: templates/invoices/cash_invoice.html:16
-#, fuzzy
 msgid "فاتورة ديون نقدية"
 msgstr "Nakit Borç Defteri"
 
 #: templates/invoices/cash_invoice.html:24
-#, fuzzy
 msgid "حركات الديون النقدية"
 msgstr "Nakit borçlar"
 
 #: templates/invoices/cash_invoice.html:33
 #: templates/invoices/mixed_invoice.html:36
 #: templates/invoices/mixed_invoice.html:104
-#, fuzzy
 msgid "المتبقي بعد الحركة"
 msgstr "İşlem sonrası bakiye"
 
 #: templates/invoices/cash_invoice.html:56
 #: templates/invoices/mixed_invoice.html:58
-#, fuzzy
 msgid "دفعة"
 msgstr "Genel Ödeme"
 
 #: templates/invoices/cash_invoice.html:77
-#, fuzzy
 msgid "إجمالي الدفعات:"
 msgstr "Toplam ödenen:"
 
 #: templates/invoices/installments_invoice.html:6
-#, fuzzy
 msgid "فاتورة تقسيط -"
 msgstr "Taksit Faturası -"
 
 #: templates/invoices/installments_invoice.html:23
-#, fuzzy
 msgid "حركات التقسيط"
 msgstr "Taksit hareketleri"
 
 #: templates/invoices/installments_invoice.html:59
 #: templates/invoices/mixed_invoice.html:147
-#, fuzzy
 msgid "إجمالي الدفعة الأولى:"
 msgstr "Toplam peşinat ödemesi:"
 
 #: templates/invoices/mixed_invoice.html:6
-#, fuzzy
 msgid "فاتورة مختلطة -"
 msgstr "karışık Faturas -"
 
 #: templates/invoices/mixed_invoice.html:78
-#, fuzzy
 msgid "إجمالي دفعات الديون النقدية:"
 msgstr "Toplam nakit borçlar ödemlelri:"
 
 #: templates/invoices/mixed_invoice.html:82
-#, fuzzy
 msgid "متبقي الديون النقدية:"
 msgstr "Toplam nakit borçlar kalan:"
 
 #: templates/invoices/mixed_invoice.html:95
-#, fuzzy
 msgid "التقسيط"
 msgstr "Taksit"
 
 #: templates/invoices/mixed_invoice.html:127
-#, fuzzy
 msgid "قسط"
 msgstr "Taksit ödeme"
 
 #: templates/invoices/mixed_invoice.html:155
-#, fuzzy
 msgid "متبقي التقسيط:"
 msgstr "kalan taksit:"
 
 #: templates/invoices/mixed_invoice.html:169
-#, fuzzy
 msgid "إجمالي الديون الكلي:"
 msgstr "Toplam nakit borçlar:"
 
 #: templates/invoices/mixed_invoice.html:173
-#, fuzzy
 msgid "إجمالي المدفوع الكلي:"
 msgstr "Toplam ödenen:"
 
 #: templates/invoices/mixed_invoice.html:177
-#, fuzzy
 msgid "المتبقي النهائي (الصافي):"
 msgstr "Son kalan:"
 
@@ -2264,7 +2178,6 @@ msgid "إضافة دين نقدي للزبون رقم:"
 msgstr "Numaralı Müşteri için nakit borç ekle:"
 
 #: templates/payments/add_cash_debt.html:17
-#, fuzzy
 msgid "طريقة الإضافة"
 msgstr "Ekleme Tarihi"
 
@@ -2298,12 +2211,10 @@ msgid "مثال: تركيب / أجرة / قطعة غير مسجلة"
 msgstr "başka"
 
 #: templates/payments/add_cash_debt.html:50
-#, fuzzy
 msgid "كود اختياري"
 msgstr "kod (isteğe bağlı)"
 
 #: templates/payments/add_cash_debt.html:51
-#, fuzzy
 msgid "اختياري"
 msgstr "isteğe bağlı"
 
@@ -2335,7 +2246,6 @@ msgstr "Müşteri için genel ödeme ekle:"
 
 #: templates/payments/add_general_payment.html:25
 #: templates/payments/edit_general_payment.html:30
-#, fuzzy
 msgid "سبب الدفعة (اختياري):"
 msgstr "Ödeme tarihi (isteğe bağlı):"
 
@@ -2457,7 +2367,6 @@ msgid "باركود"
 msgstr "Barkod"
 
 #: templates/products/list.html:50
-#, fuzzy
 msgid "المقاسات"
 msgstr "Bedenler"
 
@@ -2486,7 +2395,6 @@ msgid "+"
 msgstr "+"
 
 #: templates/products/list.html:192
-#, fuzzy
 msgid "فتح / إغلاق"
 msgstr "Kapat / Aç"
 
@@ -2650,7 +2558,6 @@ msgstr Esnek ödeme seçenekleriyle (nakit/taksit) özenle seçilmiş ev aletler
 "ve müşteri takip hizmeti de sağlıyoruz."
 
 #: templates/shop/about.html:19 templates/shop/contact.html:23
-#, fuzzy
 msgid "تصفّح المنتجات"
 msgstr "Ürünlere Göz at"
 
@@ -2663,7 +2570,6 @@ msgid "توصيل وتركيب"
 msgstr "Teslimat ve kurulum"
 
 #: templates/shop/about.html:37
-#, fuzzy
 msgid "تقسيط مرن"
 msgstr "Esnek taksitler"
 
@@ -2700,7 +2606,6 @@ msgid "راسلنا على واتساب وبنبعتلك كل التفاصيل �
 msgstr "Bize WhatsApp üzerinden mesaj gönderin, tüm detayları size hızlıca ileteceğiz."
 
 #: templates/shop/about.html:83
-#, fuzzy
 msgid "تواصل عبر واتساب"
 msgstr "iletişime geç"
 
@@ -2737,7 +2642,6 @@ msgid "تأكيد وتفاصيل واضحة"
 msgstr "Onay ve net detaylar"
 
 #: templates/shop/contact.html:53
-#, fuzzy
 msgid "معلومات التواصل"
 msgstr "İletişim Bilgileri"
 
@@ -2754,7 +2658,6 @@ msgid "حلب/اعزاز الحارة الشرقية شارع امروء الق�
 msgstr "Halep/Azaz, Doğu Mahallesi, İmru' el-Kays Caddesi, Kan Bankası'nın yanında"
 
 #: templates/shop/contact.html:75
-#, fuzzy
 msgid "ساعات العمل"
 msgstr "Mesai saatleri"
 
@@ -2799,17 +2702,14 @@ msgid "اكتب التفاصيل، ونحن بنتواصل معك."
 msgstr "Bilgileri not edin, biz sizinle iletişime geçeceğiz."
 
 #: templates/shop/contact.html:106
-#, fuzzy
 msgid "اسمك"
 msgstr "Adınız"
 
 #: templates/shop/contact.html:110
-#, fuzzy
 msgid "رقم للتواصل"
 msgstr "Tel numaranız"
 
 #: templates/shop/contact.html:114
-#, fuzzy
 msgid "الرسالة"
 msgstr "İleti"
 
@@ -2818,7 +2718,6 @@ msgid "مثال: بدي أحجز عرض، أو استفسار عن منتج كو
 msgstr "Örnek: Bir teklif rezervasyonu yapmak veya bir ürün kodu hakkında bilgi almak istiyorum..."
 
 #: templates/shop/contact.html:121
-#, fuzzy
 msgid "إرسال"
 msgstr "Maliyet"
 
@@ -2846,7 +2745,6 @@ msgid "نسخ"
 msgstr "Kopyala"
 
 #: templates/shop/coupons.html:40
-#, fuzzy
 msgid "لا يوجد كوبونات لديك بعد."
 msgstr "kupon bulunmamaktadır"
 
@@ -2860,7 +2758,6 @@ msgid "باقي"
 msgstr "Kalan"
 
 #: templates/shop/coupons.html:73
-#, fuzzy
 msgid "لا يوجد كوبونات حالياً."
 msgstr "istek yoktur"
 
@@ -2881,7 +2778,6 @@ msgid "مختارات قوية"
 msgstr "Güçlü seçimler"
 
 #: templates/shop/home.html:46
-#, fuzzy
 msgid "تسوّق الآن"
 msgstr "Şimdi alışveriş yap"
 
@@ -2901,7 +2797,6 @@ msgstr "Bir göz at"
 #: templates/shop/partials/products_filters.html:14
 #: templates/shop/partials/products_filters.html:25
 #: templates/shop/products.html:30
-#, fuzzy
 msgid "الكل"
 msgstr "— Hepsi —"
 
@@ -2910,7 +2805,6 @@ msgid "مختارات اليوم"
 msgstr "Bugünün seçimleri"
 
 #: templates/shop/home.html:100
-#, fuzzy
 msgid "عرض المنتجات"
 msgstr "Ürünleri göster"
 
@@ -2923,60 +2817,49 @@ msgstr "$"
 #: templates/shop/home.html:138 templates/shop/home.html:273
 #: templates/shop/home.html:365 templates/shop/offers.html:75
 #: templates/shop/product_detail.html:113 templates/shop/products.html:104
-#, fuzzy
 msgid "سجّل دخول لرؤية السعر"
 msgstr "fiyatı görmek için Giriş yap"
 
 #: templates/shop/home.html:145
-#, fuzzy
 msgid "لا يوجد منتجات حالياً."
 msgstr "Ürün bulunmamaktadır"
 
 #: templates/shop/home.html:157 templates/shop/home.html:160
-#, fuzzy
 msgid "قسم الشاشات"
 msgstr "Ekran bölümü"
 
 #: templates/shop/home.html:174 templates/shop/layout.html:118
 #: templates/shop/offers.html:2 templates/shop/offers.html:8
-#, fuzzy
 msgid "العروض"
 msgstr "teklifler"
 
 #: templates/shop/home.html:175
-#, fuzzy
 msgid "الأسبوعية"
 msgstr "Haftalık"
 
 #: templates/shop/home.html:179
-#, fuzzy
 msgid "اكتشف العروض"
 msgstr "teklifleri keşfedin"
 
 #: templates/shop/home.html:278 templates/shop/home.html:370
 #: templates/shop/offers.html:80 templates/shop/products.html:109
-#, fuzzy
 msgid "عرض التفاصيل"
 msgstr "detayların göster"
 
 #: templates/shop/home.html:289 templates/shop/home.html:307
 #: templates/shop/home.html:323
-#, fuzzy
 msgid "عرض الكل"
 msgstr "Hepsini göster"
 
 #: templates/shop/home.html:299
-#, fuzzy
 msgid "لا يوجد عروض خاصة حالياً."
 msgstr "Şu an özel teklif bulunmamaktadır"
 
 #: templates/shop/home.html:306
-#, fuzzy
 msgid "عروض اليوم"
 msgstr "Bu gün teklifleri"
 
 #: templates/shop/home.html:314
-#, fuzzy
 msgid "لا توجد عروض حالياً."
 msgstr "istek yoktur"
 
@@ -2994,12 +2877,10 @@ msgid "ل.س"
 msgstr "SL"
 
 #: templates/shop/home.html:360
-#, fuzzy
 msgid "السعر سيظهر عند بدء العرض"
 msgstr "Teklif başladığında fiyat görüntülenir"
 
 #: templates/shop/home.html:376
-#, fuzzy
 msgid "لا توجد عروض قادمة."
 msgstr "Değer Eklenmedi Daha"
 
@@ -3020,7 +2901,6 @@ msgid "راحة بالك أهم شي."
 msgstr "En önemli şey sizin huzurunuzdur."
 
 #: templates/shop/home.html:398
-#, fuzzy
 msgid "دفع مرن"
 msgstr "Genel Ödeme"
 
@@ -3033,7 +2913,6 @@ msgid "المعرض"
 msgstr "Mağaza"
 
 #: templates/shop/layout.html:26 templates/shop/layout.html:77
-#, fuzzy
 msgid "القائمة"
 msgstr "Liste"
 
@@ -3062,7 +2941,6 @@ msgstr "Bul"
 #: templates/shop/layout.html:64 templates/shop/layout.html:65
 #: templates/shop/partials/filters_panel.html:7
 #: templates/shop/partials/products_filters.html:6
-#, fuzzy
 msgid "بحث"
 msgstr "Ara"
 
@@ -3083,7 +2961,6 @@ msgstr "Tüm hakları saklıdır ©"
 
 #: templates/shop/ledger.html:3 templates/shop/ledger.html:9
 #: templates/shop/my.html:88
-#, fuzzy
 msgid "دفتري"
 msgstr "Sayfam"
 
@@ -3092,7 +2969,6 @@ msgid "عرض فقط"
 msgstr "sadece görüntüleme"
 
 #: templates/shop/ledger.html:16 templates/shop/my.html:108
-#, fuzzy
 msgid "لم يتم ربط حسابك بالدفتر بعد. تواصل معنا لربطه."
 msgstr "Hesabınız henüz defter sayfasına bağlanmadı."
 
@@ -3125,7 +3001,6 @@ msgid "عنوان/رقم المحفظة"
 msgstr "Cüzdan adresi/numarası"
 
 #: templates/shop/ledger.html:74
-#, fuzzy
 msgid "غير متوفر حالياً"
 msgstr "Mevcut değil"
 
@@ -3162,7 +3037,6 @@ msgid "أهلاً فيك! سجل دخولك وكمل تصفح المنتجات."
 msgstr "Hoş geldiniz! Giriş yapın ve ürünlere göz atmaya devam edin."
 
 #: templates/shop/login.html:40
-#, fuzzy
 msgid "رقم الهاتف أو البريد"
 msgstr "TEL / mail adresi"
 
@@ -3179,7 +3053,6 @@ msgid "تذكرني"
 msgstr "Hatırla beni"
 
 #: templates/shop/login.html:61
-#, fuzzy
 msgid "نسيت كلمة المرور؟"
 msgstr "şifreyi Unuttum"
 
@@ -3208,12 +3081,10 @@ msgid "حسابك مفعل. يمكنك رؤية الأسعار."
 msgstr "Aktifsiniz, fiyatları görebilirsiniz"
 
 #: templates/shop/my.html:47
-#, fuzzy
 msgid "تعديل معلوماتي"
 msgstr "Bilgileri Düzenle"
 
 #: templates/shop/my.html:58 templates/shop/register.html:32
-#, fuzzy
 msgid "النسبة"
 msgstr "Peşinat"
 
@@ -3242,7 +3113,6 @@ msgid "أدخل كود كوبون الانستا/الواتس"
 msgstr "Instagram/WhatsApp kupon kodunu girin"
 
 #: templates/shop/my.html:136
-#, fuzzy
 msgid "إضافة الكوبون"
 msgstr "Kupon Ekle"
 
@@ -3251,7 +3121,6 @@ msgid "بعد الإضافة سيظهر الكوبون هنا باسمك، وت�
 msgstr "Kuponu ekledikten sonra, adınız da burada görünecektir ve WhatsApp üzerinden rezervasyon yaparken kullanabilirsiniz."
 
 #: templates/shop/my.html:156
-#, fuzzy
 msgid "الصلاحية"
 msgstr "Geçerlilik"
 
@@ -3260,12 +3129,10 @@ msgid "حتى"
 msgstr "'ye kadar"
 
 #: templates/shop/my.html:181
-#, fuzzy
 msgid "متبقي"
 msgstr "Kalan"
 
 #: templates/shop/my.html:181
-#, fuzzy
 msgid "يوم"
 msgstr "Gün"
 
@@ -3274,7 +3141,6 @@ msgid "منتهي"
 msgstr "Geçersiz"
 
 #: templates/shop/my.html:187
-#, fuzzy
 msgid "بدون نهاية"
 msgstr "limitsiz"
 
@@ -3291,7 +3157,6 @@ msgid "لوحة الإدارة"
 msgstr "Yönetim"
 
 #: templates/shop/offers.html:14
-#, fuzzy
 msgid "لا توجد عروض فعّالة حالياً."
 msgstr "Aktif Teklif yoktur"
 
@@ -3300,12 +3165,10 @@ msgid "ينتهي خلال"
 msgstr "Şu tarihte sona erer:"
 
 #: templates/shop/offers.html:59
-#, fuzzy
 msgid "عرض مستمر"
 msgstr "Devam ediyor"
 
 #: templates/shop/product_detail.html:69
-#, fuzzy
 msgid "خيارات أخرى"
 msgstr "Başka Seçenekler"
 
@@ -3318,7 +3181,6 @@ msgid "المقاسات المتوفرة"
 msgstr "Mevcut bedenler"
 
 #: templates/shop/product_detail.html:154
-#, fuzzy
 msgid "اسأل عبر واتساب"
 msgstr "Whatsapp üzerinden Ürünü sor"
 
@@ -3328,34 +3190,28 @@ msgstr "Ürünlere dön"
 
 #: templates/shop/product_detail.html:263
 #: templates/shop/product_detail.html:265
-#, fuzzy
 msgid "المحدد حاليًا"
 msgstr "Götdrilrn"
 
 #: templates/shop/partials/products_filters.html:42
 #: templates/shop/products.html:13
-#, fuzzy
 msgid "الترتيب"
 msgstr "sıralama"
 
 #: templates/shop/partials/products_filters.html:45
 #: templates/shop/products.html:16
-#, fuzzy
 msgid "الأحدث"
 msgstr "En yeni"
 
 #: templates/shop/products.html:23
-#, fuzzy
 msgid "فلترة"
 msgstr "Filterle"
 
 #: templates/shop/products.html:118
-#, fuzzy
 msgid "لا توجد منتجات مطابقة."
 msgstr "ürün bulunmamaktadır"
 
 #: templates/shop/products.html:129
-#, fuzzy
 msgid "الفلترة"
 msgstr "Filtreleme"
 
@@ -3380,32 +3236,26 @@ msgid "عروض سارية"
 msgstr "Geçerli teklifler"
 
 #: templates/shop/special_offers.html:28
-#, fuzzy
 msgid "لا يوجد عروض سارية حالياً."
 msgstr "Geçerli teklif bulunmamaktadır"
 
 #: templates/shop/special_offers.html:34
-#, fuzzy
 msgid "عروض سابقة"
 msgstr "Bölüm:"
 
 #: templates/shop/special_offers.html:39
-#, fuzzy
 msgid "لا يوجد عروض سابقة."
 msgstr "Hesap Bulunmadı"
 
 #: templates/shop/partials/filters_panel.html:9
-#, fuzzy
 msgid "اكتب اسم المنتج..."
 msgstr "Ürün adı"
 
 #: templates/shop/partials/filters_panel.html:16
-#, fuzzy
 msgid "برادات"
 msgstr "Tekstil"
 
 #: templates/shop/partials/filters_panel.html:17
-#, fuzzy
 msgid "غسالات"
 msgstr "TEL"
 
@@ -3418,7 +3268,6 @@ msgid "أجهزة صغيرة"
 msgstr "Küçük aletler"
 
 #: templates/shop/partials/filters_panel.html:20
-#, fuzzy
 msgid "مكيفات"
 msgstr "Satış"
 
@@ -3428,7 +3277,6 @@ msgstr "Ekran"
 
 #: templates/shop/partials/filters_panel.html:29
 #: templates/shop/partials/products_filters.html:38
-#, fuzzy
 msgid "عروض فقط"
 msgstr "sadece görüntüleme"
 
@@ -3449,32 +3297,26 @@ msgstr "Fiyatlar misafirlerden gizlenmiştir."
 
 #: templates/shop/partials/filters_panel.html:42
 #: templates/shop/partials/products_filters.html:60
-#, fuzzy
 msgid "سجّل دخول"
 msgstr "Giriş Yap"
 
 #: templates/shop/partials/products_filters.html:8
-#, fuzzy
 msgid "اكتب اسم/كود المنتج..."
 msgstr "Ürün kodu"
 
 #: templates/shop/partials/products_filters.html:44
-#, fuzzy
 msgid "افتراضي"
 msgstr "Sayfam"
 
 #: templates/shop/partials/products_filters.html:46
-#, fuzzy
 msgid "السعر: الأقل أولاً"
 msgstr "Toplam Fiyat"
 
 #: templates/shop/partials/products_filters.html:47
-#, fuzzy
 msgid "السعر: الأعلى أولاً"
 msgstr "Toplam Fiyat"
 
 #: templates/shop/partials/special_offer_card.html:58
-#, fuzzy
 msgid "خصم ثابت على المنتجين"
 msgstr "Ürün özellikleri"
 
@@ -3483,12 +3325,10 @@ msgid "خصم على المنتج الثالث"
 msgstr "Üçüncü üründe indirim"
 
 #: templates/shop/partials/special_offer_card.html:75
-#, fuzzy
 msgid "تفاصيل العرض"
 msgstr "Ödeme detayları"
 
 #: templates/shop/partials/special_offer_card.html:99
-#, fuzzy
 msgid "المجموع"
 msgstr "Genel toplam:"
 
@@ -3498,17 +3338,14 @@ msgid "بعد الخصم"
 msgstr "İndirimden sonra"
 
 #: templates/shop/partials/special_offer_card.html:108
-#, fuzzy
 msgid "الهدية"
 msgstr "Adet"
 
 #: templates/shop/partials/special_offer_card.html:117
-#, fuzzy
 msgid "سعر المنتج الثالث"
 msgstr "Ürünleri göster"
 
 #: templates/shop/partials/special_offer_card.html:127
-#, fuzzy
 msgid "سجّل دخول لرؤية الأسعار"
 msgstr "fiyatı görmek için Giriş yap"
 
@@ -3517,12 +3354,10 @@ msgid "فتح المنتج الأول"
 msgstr "İlk ürünü açın"
 
 #: templates/shop/partials/special_offer_card.html:133
-#, fuzzy
 msgid "فتح المنتج الثاني"
 msgstr "İkinci ürünü açın"
 
 #: templates/shop/partials/special_offer_card.html:136
-#, fuzzy
 msgid "عرض الهدية"
 msgstr "Hediyeyi Göster"
 
