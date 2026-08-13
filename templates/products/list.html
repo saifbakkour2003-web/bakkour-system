@@ -1,317 +1,1051 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إدارة المنتجات') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 
-  <!-- ================= Header ================= -->
-  <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+<div class="container-fluid px-0 bk-products-admin">
+
+  <!-- =====================================================
+       PAGE HEADER
+       ===================================================== -->
+  <div class="bk-page-header mb-4">
+
     <div>
-      <h2 class="mb-1">📦 {{ _('إدارة المنتجات -') }} {{ _(dept_label) }}</h2>
-      <div class="text-muted">{{ _('عدد النتائج:') }} {{ products|length }}</div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-box-seam"></i>
+        {{ _('إدارة المخزون والمنتجات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('إدارة المنتجات') }}
+        <span class="bk-title-separator">—</span>
+        {{ _(dept_label) }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('عدد النتائج:') }}
+        <strong>{{ products|length }}</strong>
+      </div>
     </div>
 
-    {% if dept in ["electrical", "linens", "crystal"] %}
-      <a href="/products/{{ dept }}/add" class="btn btn-success">
-        ➕ {{ _('إضافة منتج') }}
-      </a>
-    {% else %}
-      <div class="dropdown">
-        <button class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
-          ➕ {{ _('إضافة منتج') }}
-        </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/products/electrical/add">⚡ {{ _('كهربائيات') }}</a></li>
-          <li><a class="dropdown-item" href="/products/linens/add">🧺 {{ _('بياضات') }}</a></li>
-          <li><a class="dropdown-item" href="/products/crystal/add">🍷 {{ _('بلوريات') }}</a></li>
-        </ul>
-      </div>
-    {% endif %}
+
+    <div class="d-flex flex-wrap gap-2">
+
+      {% if dept in ["electrical", "linens", "crystal"] %}
+
+        <a
+          href="/products/{{ dept }}/add"
+          class="btn btn-primary"
+        >
+          <i class="bi bi-plus-lg"></i>
+          {{ _('إضافة منتج') }}
+        </a>
+
+      {% else %}
+
+        <div class="dropdown">
+
+          <button
+            class="btn btn-primary dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            <i class="bi bi-plus-lg"></i>
+            {{ _('إضافة منتج') }}
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end">
+
+            <li>
+              <a
+                class="dropdown-item"
+                href="/products/electrical/add"
+              >
+                <i class="bi bi-lightning-charge me-1"></i>
+                {{ _('كهربائيات') }}
+              </a>
+            </li>
+
+            <li>
+              <a
+                class="dropdown-item"
+                href="/products/linens/add"
+              >
+                <i class="bi bi-bag me-1"></i>
+                {{ _('بياضات') }}
+              </a>
+            </li>
+
+            <li>
+              <a
+                class="dropdown-item"
+                href="/products/crystal/add"
+              >
+                <i class="bi bi-cup-straw me-1"></i>
+                {{ _('بلوريات') }}
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      {% endif %}
+
+    </div>
+
   </div>
 
-  <!-- ================= Table ================= -->
-  <div class="card shadow-sm">
-    <div class="table-responsive">
-      <table class="table table-hover mb-0 align-middle text-center">
 
-        <thead class="table-dark">
-          <tr>
-            <th>{{ _('#') }}</th>
-            <th>{{ _('Serial') }}</th>
-            <th>{{ _('الكود') }}</th>
-            <th class="text-start">{{ _('الاسم') }}</th>
-            <th>{{ _('القسم') }}</th>
-            <th>{{ _('التصنيف') }}</th>
-            <th>{{ _('الخصائص') }}</th>
-            <th>{{ _('الحالة') }}</th>
-            <th>{{ _('الكمية') }}</th>
-            <th>{{ _('السعر') }}</th>
-            <th>{{ _('باركود') }}</th>
-            <th>{{ _('المقاسات') }}</th>
-            <th class="col-actions">{{ _('إجراءات') }}</th>
-          </tr>
-        </thead>
+  <!-- =====================================================
+       FILTER BAR
+       ===================================================== -->
 
-        {% if dept in ["electrical", "linens", "crystal"] %}
-        <thead class="table-light">
-          <tr>
-            <th colspan="13">
-              <form method="GET" class="d-flex align-items-center gap-2 flex-wrap">
-                <input type="hidden" name="dept" value="{{ dept }}">
-                <span class="fw-bold">{{ _('فلترة حسب التصنيف:') }}</span>
+  {% if dept in ["electrical", "linens", "crystal"] %}
 
-                <select name="sub"
-                        class="form-select form-select-sm"
-                        style="max-width:240px"
-                        onchange="this.form.submit()">
-                  <option value="">{{ _('— الكل —') }}</option>
-                  {% for s in sub_categories %}
-                    <option value="{{ s.id }}" {% if selected_sub_id == s.id %}selected{% endif %}>
-                      {{ pick_lang(s.name, s.name_tr) }}
-                    </option>
-                  {% endfor %}
-                </select>
+    <div class="bk-products-filter mb-3">
 
-                {% if selected_sub_id %}
-                  <a href="{{ url_for('products.products_list', dept=dept) }}"
-                     class="btn btn-sm btn-outline-secondary">
-                    {{ _('مسح') }}
-                  </a>
+      <form
+        method="GET"
+        class="d-flex align-items-center gap-3 flex-wrap"
+      >
+
+        <input
+          type="hidden"
+          name="dept"
+          value="{{ dept }}"
+        >
+
+
+        <div class="bk-filter-icon">
+          <i class="bi bi-funnel"></i>
+        </div>
+
+
+        <div class="flex-grow-1">
+
+          <label class="bk-filter-label">
+            {{ _('فلترة حسب التصنيف') }}
+          </label>
+
+          <select
+            name="sub"
+            class="form-select form-select-sm bk-filter-select"
+            onchange="this.form.submit()"
+          >
+
+            <option value="">
+              {{ _('— كل التصنيفات —') }}
+            </option>
+
+            {% for s in sub_categories %}
+
+              <option
+                value="{{ s.id }}"
+                {% if selected_sub_id == s.id %}
+                  selected
                 {% endif %}
-              </form>
-            </th>
-          </tr>
-        </thead>
+              >
+                {{ pick_lang(s.name, s.name_tr) }}
+              </option>
+
+            {% endfor %}
+
+          </select>
+
+        </div>
+
+
+        {% if selected_sub_id %}
+
+          <a
+            href="{{ url_for('products.products_list', dept=dept) }}"
+            class="btn btn-outline-secondary btn-sm"
+          >
+            <i class="bi bi-x-lg"></i>
+            {{ _('مسح الفلتر') }}
+          </a>
+
         {% endif %}
 
-        <tbody>
-          {% for p in products %}
+      </form>
+
+    </div>
+
+  {% endif %}
+
+
+  <!-- =====================================================
+       PRODUCTS TABLE
+       ===================================================== -->
+
+  <div class="card bk-products-table-card">
+
+    <div class="table-responsive">
+
+      <table class="table table-hover align-middle text-center mb-0 bk-products-table">
+
+        <thead class="table-dark">
+
           <tr>
-            <td>
-              {{ loop.index }}
-              {% if p.is_discount_active %}
-                <span title="Ürün indirimde" style="color:#28a745;">★</span>
-              {% endif %}
-            </td>
 
-            <td class="fw-bold">{{ p.serial_no or "—" }}</td>
+            <th>#</th>
 
-            <td class="fw-bold text-primary">{{ p.code }}</td>
+            <th>
+              {{ _('Serial') }}
+            </th>
 
-            <td class="text-start">{{ pick_lang(p.name, p.name_tr) }}</td>
+            <th>
+              {{ _('الكود') }}
+            </th>
 
-            <td>
-              {% if p.department == "electrical" %}
-                <span class="dept-badge dept-electrical">⚡ {{ _('كهربائيات') }}</span>
-              {% elif p.department == "linens" %}
-                <span class="dept-badge dept-linens">🧺 {{ _('بياضات') }}</span>
-              {% elif p.department == "crystal" %}
-                <span class="dept-badge dept-crystal">🍷 {{ _('بلوريات') }}</span>
-              {% endif %}
-            </td>
+            <th class="text-start">
+              {{ _('الاسم') }}
+            </th>
 
-            <td>
-              <span class="badge bg-secondary">
-                {{ pick_lang(
-                    p.sub_category.main_category.name,
-                    p.sub_category.main_category.name_tr
-                ) }}
-              </span><br>
+            <th>
+              {{ _('القسم') }}
+            </th>
 
-              {% set shade = (p.sub_category.id % 3) + 1 %}
-              <span class="sub-badge sub-{{ p.department }}-{{ shade }}">
-                {{ pick_lang(
-                    p.sub_category.name,
-                    p.sub_category.name_tr
-                ) }}
-              </span>
-            </td>
+            <th>
+              {{ _('التصنيف') }}
+            </th>
 
-            <td class="text-muted">
-              {{ pick_lang(
-                  props_text_ar.get(p.id),
-                  props_text_tr.get(p.id)
-              ) or "—" }}
-            </td>
+            <th>
+              {{ _('الخصائص') }}
+            </th>
 
-            <td>
-              <form method="POST" action="{{ url_for('products.toggle_available', product_id=p.id) }}">
-                {% if p.is_available %}
-                  <button class="btn btn-sm btn-success">{{ _('متوفر') }}</button>
-                {% else %}
-                  <button class="btn btn-sm btn-danger">{{ _('غير متوفر') }}</button>
+            <th>
+              {{ _('الحالة') }}
+            </th>
+
+            <th>
+              {{ _('الكمية') }}
+            </th>
+
+            <th>
+              {{ _('السعر') }}
+            </th>
+
+            <th>
+              {{ _('باركود') }}
+            </th>
+
+            <th>
+              {{ _('المقاسات') }}
+            </th>
+
+            <th class="col-actions">
+              {{ _('إجراءات') }}
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          {% for p in products %}
+
+            <!-- =================================================
+                 PRODUCT MAIN ROW
+                 ================================================= -->
+            <tr class="bk-product-row">
+
+              <!-- Number -->
+              <td>
+
+                <div class="bk-product-index">
+
+                  {{ loop.index }}
+
+                  {% if p.is_discount_active %}
+
+                    <span
+                      class="bk-discount-star"
+                      title="{{ _('المنتج ضمن عرض') }}"
+                    >
+                      <i class="bi bi-star-fill"></i>
+                    </span>
+
+                  {% endif %}
+
+                </div>
+
+              </td>
+
+
+              <!-- Serial -->
+              <td>
+
+                <span class="bk-code-soft">
+                  {{ p.serial_no or "—" }}
+                </span>
+
+              </td>
+
+
+              <!-- Code -->
+              <td>
+
+                <span class="bk-product-code">
+                  {{ p.code }}
+                </span>
+
+              </td>
+
+
+              <!-- Name -->
+              <td class="text-start">
+
+                <div class="bk-product-name-cell">
+
+                  <div class="bk-product-mini-icon">
+                    <i class="bi bi-box"></i>
+                  </div>
+
+                  <div>
+
+                    <div class="bk-product-name-admin">
+                      {{ pick_lang(p.name, p.name_tr) }}
+                    </div>
+
+                    {% if p.brand_rel %}
+
+                      <div class="bk-product-brand-admin">
+                        {{ p.brand_rel.name }}
+                      </div>
+
+                    {% elif p.brand %}
+
+                      <div class="bk-product-brand-admin">
+                        {{ p.brand }}
+                      </div>
+
+                    {% endif %}
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- Department -->
+              <td>
+
+                {% if p.department == "electrical" %}
+
+                  <span class="dept-badge dept-electrical">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    {{ _('كهربائيات') }}
+                  </span>
+
+                {% elif p.department == "linens" %}
+
+                  <span class="dept-badge dept-linens">
+                    <i class="bi bi-bag-fill"></i>
+                    {{ _('بياضات') }}
+                  </span>
+
+                {% elif p.department == "crystal" %}
+
+                  <span class="dept-badge dept-crystal">
+                    <i class="bi bi-cup-straw"></i>
+                    {{ _('بلوريات') }}
+                  </span>
+
                 {% endif %}
-              </form>
-            </td>
 
-            <td>
-              <div class="d-flex justify-content-center gap-2">
-                <form method="POST" action="{{ url_for('products.stock_dec', product_id=p.id) }}">
-                  <button class="btn btn-sm btn-outline-secondary">{{ _('-') }}</button>
+              </td>
+
+
+              <!-- Category -->
+              <td>
+
+                <div class="bk-category-stack">
+
+                  {% if p.sub_category and p.sub_category.main_category %}
+
+                    <span class="bk-main-category">
+                      {{ pick_lang(
+                          p.sub_category.main_category.name,
+                          p.sub_category.main_category.name_tr
+                      ) }}
+                    </span>
+
+                  {% endif %}
+
+
+                  {% if p.sub_category %}
+
+                    {% set shade = (p.sub_category.id % 3) + 1 %}
+
+                    <span
+                      class="sub-badge sub-{{ p.department }}-{{ shade }}"
+                    >
+                      {{ pick_lang(
+                          p.sub_category.name,
+                          p.sub_category.name_tr
+                      ) }}
+                    </span>
+
+                  {% endif %}
+
+                </div>
+
+              </td>
+
+
+              <!-- Properties -->
+              <td>
+
+                <div class="bk-properties-text">
+
+                  {{ pick_lang(
+                      props_text_ar.get(p.id),
+                      props_text_tr.get(p.id)
+                  ) or "—" }}
+
+                </div>
+
+              </td>
+
+
+              <!-- Availability -->
+              <td>
+
+                <form
+                  method="POST"
+                  action="{{ url_for(
+                    'products.toggle_available',
+                    product_id=p.id
+                  ) }}"
+                >
+
+                  {% if p.is_available %}
+
+                    <button
+                      type="submit"
+                      class="bk-status-pill bk-status-available"
+                    >
+                      <span class="bk-status-dot"></span>
+                      {{ _('متوفر') }}
+                    </button>
+
+                  {% else %}
+
+                    <button
+                      type="submit"
+                      class="bk-status-pill bk-status-unavailable"
+                    >
+                      <span class="bk-status-dot"></span>
+                      {{ _('غير متوفر') }}
+                    </button>
+
+                  {% endif %}
+
                 </form>
 
-                <span class="fw-bold" style="min-width:32px">{{ p.stock_qty }}</span>
+              </td>
 
-                <form method="POST" action="{{ url_for('products.stock_inc', product_id=p.id) }}">
-                  <button class="btn btn-sm btn-outline-secondary">{{ _('+') }}</button>
-                </form>
-              </div>
-            </td>
 
-            <td>{{ "%.2f"|format(p.base_cash_price) }} $</td>
+              <!-- Stock -->
+              <td>
 
-            <td>
-              {% if p.barcode_image %}
-                <div class="actions-group">
-                  <button class="btn btn-sm btn-outline-primary"
-                          data-bs-toggle="modal"
-                          data-bs-target="#barcodeModal{{ p.id }}">
-                    👁️
+                <div class="bk-stock-control">
+
+                  <form
+                    method="POST"
+                    action="{{ url_for(
+                      'products.stock_dec',
+                      product_id=p.id
+                    ) }}"
+                  >
+                    <button
+                      class="bk-stock-btn"
+                      type="submit"
+                    >
+                      <i class="bi bi-dash"></i>
+                    </button>
+                  </form>
+
+
+                  <span class="bk-stock-value">
+                    {{ p.stock_qty }}
+                  </span>
+
+
+                  <form
+                    method="POST"
+                    action="{{ url_for(
+                      'products.stock_inc',
+                      product_id=p.id
+                    ) }}"
+                  >
+                    <button
+                      class="bk-stock-btn"
+                      type="submit"
+                    >
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </form>
+
+                </div>
+
+              </td>
+
+
+              <!-- Price -->
+              <td>
+
+                <div class="bk-price-admin">
+
+                  {% if p.variants and p.variants|length %}
+
+                    {% set min_variant_price =
+                      p.variants
+                      | map(attribute='base_cash_price')
+                      | min
+                    %}
+
+                    <div class="bk-price-main">
+                      {{ "%.2f"|format(min_variant_price) }}
+                      <span>$</span>
+                    </div>
+
+                    <div class="bk-price-note">
+                      {{ _('ابتداءً من') }}
+                    </div>
+
+                  {% else %}
+
+                    <div class="bk-price-main">
+
+                      {{ "%.2f"|format(p.base_cash_price) }}
+                      <span>$</span>
+
+                    </div>
+
+                  {% endif %}
+
+                </div>
+
+              </td>
+
+
+              <!-- Barcode -->
+              <td>
+
+                {% if p.barcode_image %}
+
+                  <div class="bk-table-actions">
+
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      type="button"
+                      title="{{ _('عرض الباركود') }}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#barcodeModal{{ p.id }}"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+
+
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      type="button"
+                      title="{{ _('طباعة الباركود') }}"
+                      data-image="{{ url_for(
+                        'static',
+                        filename='barcodes/' + p.barcode_image
+                      ) }}"
+                      data-value="{{ p.barcode_value }}"
+                      onclick="printBarcode(this)"
+                    >
+                      <i class="bi bi-printer"></i>
+                    </button>
+
+                  </div>
+
+                {% else %}
+
+                  <span class="text-muted">
+                    —
+                  </span>
+
+                {% endif %}
+
+              </td>
+
+
+              <!-- Variants -->
+              <td>
+
+                {% if p.variants and p.variants|length %}
+
+                  <button
+                    class="btn btn-sm btn-outline-secondary bk-variants-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#variantsRow{{ p.id }}"
+                    aria-expanded="false"
+                    aria-controls="variantsRow{{ p.id }}"
+                  >
+
+                    <i class="bi bi-rulers"></i>
+
+                    {{ p.variants|length }}
+
+                    <i class="bi bi-chevron-down bk-collapse-chevron"></i>
+
                   </button>
 
-                  <button class="btn btn-sm btn-outline-dark"
-                          data-image="{{ url_for('static', filename='barcodes/' + p.barcode_image) }}"
-                          data-value="{{ p.barcode_value }}"
-                          onclick="printBarcode(this)">
-                    🖨️
-                  </button>
+                {% else %}
+
+                  <span class="text-muted">
+                    —
+                  </span>
+
+                {% endif %}
+
+              </td>
+
+
+              <!-- Actions -->
+              <td class="col-actions">
+
+                <div class="bk-table-actions">
+
+                  <a
+                    href="{{ url_for(
+                      'products.edit_product',
+                      product_id=p.id
+                    ) }}"
+                    class="btn btn-sm btn-outline-secondary"
+                    title="{{ _('تعديل') }}"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+
+
+                  <form
+                    method="POST"
+                    action="{{ url_for(
+                      'products.delete_product',
+                      product_id=p.id
+                    ) }}"
+                    class="d-inline"
+                    onsubmit="return confirm('{{ _('متأكد من الحذف؟') }}')"
+                  >
+
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      type="submit"
+                      title="{{ _('حذف') }}"
+                    >
+                      <i class="bi bi-trash3"></i>
+                    </button>
+
+                  </form>
+
                 </div>
-              {% else %}
-                —
-              {% endif %}
-            </td>
 
-            <td>
-              {% if p.variants and p.variants|length %}
-                <button class="btn btn-sm btn-outline-secondary"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#variantsRow{{ p.id }}"
-                        aria-expanded="false"
-                        aria-controls="variantsRow{{ p.id }}">
-                  {{ _('فتح / إغلاق') }}
-                </button>
-              {% else %}
-                —
-              {% endif %}
-            </td>
+              </td>
 
-            <td class="col-actions">
-              <div class="actions-group">
-                <a href="{{ url_for('products.edit_product', product_id=p.id) }}"
-                   class="btn btn-sm btn-outline-primary">
-                  {{ _('تعديل') }}
-                </a>
+            </tr>
 
-                <form method="POST"
-                      action="{{ url_for('products.delete_product', product_id=p.id) }}"
-                      class="d-inline"
-                      onsubmit="return confirm('متأكد من الحذف؟')">
-                  <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
-                </form>
-              </div>
-            </td>
-          </tr>
 
-          {% if p.variants and p.variants|length %}
-          <tr class="collapse bg-light" id="variantsRow{{ p.id }}">
-            <td colspan="13" class="text-start">
-              <div class="p-2">
-                <div class="fw-bold mb-2">المقاسات والألوان والأسعار</div>
+            <!-- =================================================
+                 VARIANTS ROW
+                 ================================================= -->
 
-                <div class="table-responsive">
-                  <table class="table table-sm table-bordered align-middle mb-0">
-                    <thead>
-                      <tr>
-                        <th>المقاس</th>
-                        <th>اللون</th>
-                        <th>رأس المال</th>
-                        <th>سعر البيع</th>
-                        <th>الكمية</th>
-                        <th>الحالة</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for v in p.variants %}
-                        <tr>
-                          <td>{{ v.size }}</td>
-                          <td>{{ v.color or '—' }}</td>
-                          <td>{{ "%.2f"|format(v.capital_price) }}</td>
-                          <td>{{ "%.2f"|format(v.base_cash_price) }}</td>
-                          <td>{{ v.stock_qty }}</td>
-                          <td>
-                            {% if v.is_available %}
-                              <span class="badge bg-success">متوفر</span>
-                            {% else %}
-                              <span class="badge bg-secondary">غير متوفر</span>
-                            {% endif %}
-                          </td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </td>
-          </tr>
-          {% endif %}
+            {% if p.variants and p.variants|length %}
+
+              <tr
+                class="collapse bk-variants-row"
+                id="variantsRow{{ p.id }}"
+              >
+
+                <td
+                  colspan="13"
+                  class="p-0"
+                >
+
+                  <div class="bk-variants-panel">
+
+                    <div class="bk-variants-header">
+
+                      <div>
+
+                        <div class="bk-variants-title">
+                          <i class="bi bi-rulers"></i>
+                          {{ _('المقاسات والألوان والأسعار') }}
+                        </div>
+
+                        <div class="bk-variants-subtitle">
+                          {{ pick_lang(p.name, p.name_tr) }}
+                        </div>
+
+                      </div>
+
+
+                      <span class="bk-variant-count">
+                        {{ p.variants|length }}
+                        {{ _('خيار') }}
+                      </span>
+
+                    </div>
+
+
+                    <div class="table-responsive">
+
+                      <table
+                        class="table table-sm align-middle mb-0 bk-variants-table"
+                      >
+
+                        <thead>
+
+                          <tr>
+
+                            <th>
+                              {{ _('المقاس') }}
+                            </th>
+
+                            <th>
+                              {{ _('اللون') }}
+                            </th>
+
+                            <th>
+                              {{ _('رأس المال') }}
+                            </th>
+
+                            <th>
+                              {{ _('سعر البيع') }}
+                            </th>
+
+                            <th>
+                              {{ _('الكمية') }}
+                            </th>
+
+                            <th>
+                              {{ _('الحالة') }}
+                            </th>
+
+                          </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                          {% for v in p.variants %}
+
+                            <tr>
+
+                              <td>
+                                <span class="bk-variant-size">
+                                  {{ v.size }}
+                                </span>
+                              </td>
+
+
+                              <td>
+                                {{ v.color or '—' }}
+                              </td>
+
+
+                              <td>
+                                {{ "%.2f"|format(v.capital_price) }}
+                                $
+                              </td>
+
+
+                              <td>
+
+                                <strong>
+                                  {{ "%.2f"|format(v.base_cash_price) }}
+                                  $
+                                </strong>
+
+                              </td>
+
+
+                              <td>
+
+                                <span class="bk-variant-stock">
+                                  {{ v.stock_qty }}
+                                </span>
+
+                              </td>
+
+
+                              <td>
+
+                                {% if v.is_available %}
+
+                                  <span class="bk-small-status text-success">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    {{ _('متوفر') }}
+                                  </span>
+
+                                {% else %}
+
+                                  <span class="bk-small-status text-muted">
+                                    <i class="bi bi-dash-circle"></i>
+                                    {{ _('غير متوفر') }}
+                                  </span>
+
+                                {% endif %}
+
+                              </td>
+
+                            </tr>
+
+                          {% endfor %}
+
+                        </tbody>
+
+                      </table>
+
+                    </div>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            {% endif %}
+
 
           {% else %}
-          <tr>
-            <td colspan="13" class="text-muted py-4">{{ _('لا يوجد منتجات') }}</td>
-          </tr>
+
+            <tr>
+
+              <td
+                colspan="13"
+                class="py-5"
+              >
+
+                <div class="bk-empty-state">
+
+                  <div class="bk-empty-icon">
+                    <i class="bi bi-box-seam"></i>
+                  </div>
+
+                  <div class="bk-empty-title">
+                    {{ _('لا يوجد منتجات') }}
+                  </div>
+
+                  <div class="bk-empty-note">
+                    {{ _('لم يتم العثور على منتجات مطابقة للفلتر الحالي.') }}
+                  </div>
+
+                </div>
+
+              </td>
+
+            </tr>
+
           {% endfor %}
+
         </tbody>
 
       </table>
+
     </div>
+
   </div>
 
-  <!-- ================= Barcode Modals ================= -->
+
+  <!-- =====================================================
+       BARCODE MODALS
+       ===================================================== -->
+
   {% for p in products %}
+
     {% if p.barcode_image %}
-    <div class="modal fade" id="barcodeModal{{ p.id }}" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-center p-3">
-          <img src="{{ url_for('static', filename='barcodes/' + p.barcode_image) }}" style="max-width:200px">
-          <div class="fw-bold mt-2">{{ p.barcode_value }}</div>
+
+      <div
+        class="modal fade"
+        id="barcodeModal{{ p.id }}"
+        tabindex="-1"
+      >
+
+        <div class="modal-dialog modal-dialog-centered">
+
+          <div class="modal-content bk-barcode-modal">
+
+            <div class="modal-header border-0">
+
+              <div>
+
+                <h5 class="modal-title">
+                  {{ _('باركود المنتج') }}
+                </h5>
+
+                <div class="text-muted small">
+                  {{ pick_lang(p.name, p.name_tr) }}
+                </div>
+
+              </div>
+
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+
+            </div>
+
+
+            <div class="modal-body text-center pt-2 pb-4">
+
+              <div class="bk-barcode-box">
+
+                <img
+                  src="{{ url_for(
+                    'static',
+                    filename='barcodes/' + p.barcode_image
+                  ) }}"
+                  alt="Barcode"
+                >
+
+              </div>
+
+
+              <div class="bk-barcode-value mt-3">
+                {{ p.barcode_value }}
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
+
       </div>
-    </div>
+
     {% endif %}
+
   {% endfor %}
 
+
 </div>
+
 {% endblock %}
 
+
 {% block scripts %}
+
 {{ super() }}
+
 <script>
-function printBarcode(btn){
+
+function printBarcode(btn) {
+
   const img = btn.dataset.image;
   const val = btn.dataset.value;
 
-  const w = window.open('', '_blank');
+  const w =
+    window.open('', '_blank');
+
   w.document.write(`
+
     <html>
-    <head>
-      <meta charset="UTF-8">
-      <style>
-        body{text-align:center;font-family:Arial;margin-top:20px}
-        img{max-width:200px}
-      </style>
-    </head>
-    <body>
-      <div id="barcode-print-area">
+
+      <head>
+
+        <meta charset="UTF-8">
+
+        <style>
+
+          body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 25px;
+          }
+
+          img {
+            max-width: 220px;
+          }
+
+          .value {
+            margin-top: 10px;
+            font-size: 17px;
+            font-weight: bold;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+
         <img src="${img}">
-        <div style="font-weight:bold;margin-top:8px">${val}</div>
-      </div>
-      <script>
-        window.onload = function(){window.print();window.close();}
-      <\/script>
-    </body>
+
+        <div class="value">
+          ${val}
+        </div>
+
+        <script>
+
+          window.onload = function () {
+            window.print();
+            window.close();
+          }
+
+        <\/script>
+
+      </body>
+
     </html>
+
   `);
+
 }
+
+
+/* =========================================================
+   Variant arrow animation
+   ========================================================= */
+
+document
+  .querySelectorAll(".bk-variants-toggle")
+  .forEach((btn) => {
+
+    const targetSelector =
+      btn.getAttribute("data-bs-target");
+
+    if (!targetSelector) return;
+
+    const target =
+      document.querySelector(targetSelector);
+
+    if (!target) return;
+
+
+    target.addEventListener(
+      "show.bs.collapse",
+      () => {
+        btn.classList.add("opened");
+      }
+    );
+
+
+    target.addEventListener(
+      "hide.bs.collapse",
+      () => {
+        btn.classList.remove("opened");
+      }
+    );
+
+  });
+
 </script>
+
 {% endblock %}

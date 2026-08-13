@@ -1,406 +1,1387 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('تعديل منتج') }}{% endblock %}
+
 {% block content %}
-<h2 class="mb-4">{{ _('تعديل منتج') }}</h2>
 
-<form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm" style="max-width: 720px;">
-  <div class="mb-2 text-muted">
-    {{ _('كود المنتج:') }} <strong>{{ product.code }}</strong>
-    {% if product.barcode_value %}
-      — {{ _('Barcode:') }} <strong>{{ product.barcode_value }}</strong>
-    {% endif %}
-  </div>
+<div class="container-fluid px-0 bk-product-form-page">
 
-  <!-- الاسم -->
-  <div class="mb-3">
-    <label class="form-label">{{ _('اسم المنتج') }}</label>
-    <input type="text" name="name" class="form-control" value="{{ product.name }}" required>
-  </div>
+  <!-- Header -->
+  <div class="bk-page-header mb-4">
 
-  <div class="mb-3">
-    <label class="form-label">{{ _('اسم المنتج (تركي)') }}</label>
-    <input type="text" name="name_tr" class="form-control" value="{{ product.name_tr or '' }}">
-  </div>
+    <div>
 
-  <!-- التصنيف الفرعي -->
-  <div class="mb-3">
-    <label class="form-label">{{ _('التصنيف الفرعي') }}</label>
-    <select name="sub_category_id" class="form-select" id="subCategorySelect" required>
-      <option value="">{{ _('-- اختر --') }}</option>
-      {% for s in sub_categories %}
-        <option value="{{ s.id }}" {% if s.id == product.sub_category_id %}selected{% endif %}>
-          {{ pick_lang(s.name, s.name_tr) }}
-        </option>
-      {% endfor %}
-    </select>
-  </div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-pencil-square"></i>
+        {{ _('إدارة المنتجات') }}
+      </div>
 
-  <!-- الماركة -->
-  <div class="mb-3">
-    <label class="form-label">{{ _('الماركة') }}</label>
-    <select name="brand_id" class="form-select" required>
-      <option value="">{{ _('-- اختر --') }}</option>
-      {% for b in brands %}
-        <option value="{{ b.id }}" {% if b.id == product.brand_id %}selected{% endif %}>
-          {{ b.name }} ({{ b.code }})
-        </option>
-      {% endfor %}
-    </select>
-  </div>
+      <h2 class="bk-page-title mb-1">
+        {{ _('تعديل المنتج') }}
+      </h2>
 
-  <!-- الأسعار -->
-  <div class="row g-3 mb-3">
-    <div class="col-md-6">
-      <label class="form-label">{{ _('رأس المال') }}</label>
-      <input type="number" step="0.01" name="capital_price" class="form-control" value="{{ product.capital_price }}" required>
+      <div class="bk-page-subtitle">
+        {{ _('كود المنتج:') }}
+        <strong>{{ product.code }}</strong>
+
+        {% if product.barcode_value %}
+          —
+          {{ _('Barcode:') }}
+          <strong>{{ product.barcode_value }}</strong>
+        {% endif %}
+      </div>
+
     </div>
-    <div class="col-md-6">
-      <label class="form-label">{{ _('سعر البيع النقدي') }}</label>
-      <input type="number" step="0.01" name="base_cash_price" class="form-control" value="{{ product.base_cash_price }}" required>
-    </div>
+
+
+    <a
+      href="{{ url_for('products.products_list', dept=product.department) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
+
   </div>
 
-  <hr class="my-4">
 
-  <h5 class="mb-3">indirimler</h5>
+  <form
+    method="POST"
+    enctype="multipart/form-data"
+    class="bk-product-form"
+  >
 
-  <div class="form-check mb-2">
-    <input class="form-check-input"
-           type="checkbox"
-           name="is_discounted"
-           id="is_discounted"
-           {% if product.is_discounted %}checked{% endif %}>
-    <label class="form-check-label" for="is_discounted">
-      Bu ürün indirimde
-    </label>
-  </div>
+    <!-- Basic -->
+    <section class="card bk-form-section">
 
-  <div class="row g-3">
-    <div class="col-md-4">
-      <label class="form-label">indirimli fiyat</label>
-      <input type="number" step="0.01"
-             name="discount_price"
-             class="form-control"
-             value="{{ product.discount_price or '' }}">
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Başlangıç</label>
-      <input type="date"
-             name="discount_start"
-             class="form-control"
-             value="{{ product.discount_start.strftime('%Y-%m-%d') if product.discount_start }}">
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Bitiş</label>
-      <input type="date"
-             name="discount_end"
-             class="form-control"
-             value="{{ product.discount_end.strftime('%Y-%m-%d') if product.discount_end }}">
-    </div>
-  </div>
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-info-circle"></i>
+        </div>
 
-  <hr class="my-4">
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('المعلومات الأساسية') }}
+          </h3>
 
-  <h5 class="mb-3">{{ _('خصائص المنتج') }}</h5>
-  <div id="propertiesContainer" class="mb-3">
-    {% if initial_props and initial_props|length > 0 %}
-      {% for p in initial_props %}
-        <div class="mb-3">
+          <div class="bk-form-section-note">
+            {{ _('اسم المنتج والتصنيف والماركة') }}
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-md-6">
           <label class="form-label">
-            {{ pick_lang(p.name, p.name_tr) }}
-            {% if p.is_required %}<span class="text-danger">*</span>{% endif %}
+            {{ _('اسم المنتج') }}
           </label>
 
-          {% set saved = existing_map.get(p.id, '') %}
-
-          {% if p.input_type == 'select' %}
-            <select class="form-select" name="property_{{ p.id }}" {% if p.is_required %}required{% endif %}>
-              <option value="">{{ _('-- اختر --') }}</option>
-              {% for v in p.values %}
-                <option value="{{ v.value }}" {% if v.value == saved %}selected{% endif %}>
-                  {{ pick_lang(v.value, v.value_tr) }}
-                </option>
-              {% endfor %}
-            </select>
-          {% elif p.input_type == 'number' %}
-            <input type="number" class="form-control" name="property_{{ p.id }}"
-                   value="{{ saved }}" {% if p.is_required %}required{% endif %}>
-          {% else %}
-            <input type="text" class="form-control" name="property_{{ p.id }}"
-                   value="{{ saved }}" {% if p.is_required %}required{% endif %}>
-          {% endif %}
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            value="{{ product.name }}"
+            required
+          >
         </div>
-      {% endfor %}
-    {% else %}
-      <div class="text-muted">{{ _('لا توجد خصائص لهذا التصنيف.') }}</div>
-    {% endif %}
-  </div>
 
-  <div class="mb-3">
-    <label class="form-label">ürün açıklaması (AR)</label>
-    <textarea class="form-control" name="description" rows="3">{{ product.description if product else '' }}</textarea>
-  </div>
 
-  <div class="mb-3">
-    <label class="form-label">ürün açıklaması (TR)</label>
-    <textarea class="form-control" name="description_tr" rows="3">{{ product.description_tr if product else '' }}</textarea>
-  </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('اسم المنتج (تركي)') }}
+          </label>
 
-  <hr class="my-4">
+          <input
+            type="text"
+            name="name_tr"
+            class="form-control"
+            value="{{ product.name_tr or '' }}"
+          >
+        </div>
 
-  <!-- رفع صور جديدة ضمن نفس الحفظ -->
-  <h5 class="mb-3">ürün fotoğrafları</h5>
-  <div class="mb-3">
-    <label class="form-label">Yeni foto ekle</label>
-    <input class="form-control" type="file" name="images" multiple accept="image/*">
-    <div class="form-text">yeni fotoğraflar eskilerin yanına eklenecek</div>
-  </div>
 
-  {% if product.barcode_image %}
-    <hr>
-    <div id="barcode-print-area" class="text-center mt-4">
-      <img
-        src="{{ url_for('static', filename='barcodes/' + product.barcode_image) }}"
-        style="max-width:200px"
-        alt="Barcode">
-      <div class="fw-bold mt-2">
-        {{ product.barcode_value }}
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('التصنيف الفرعي') }}
+          </label>
+
+          <select
+            name="sub_category_id"
+            class="form-select"
+            id="subCategorySelect"
+            required
+          >
+
+            <option value="">
+              {{ _('-- اختر --') }}
+            </option>
+
+            {% for s in sub_categories %}
+
+              <option
+                value="{{ s.id }}"
+                {% if s.id == product.sub_category_id %}
+                  selected
+                {% endif %}
+              >
+                {{ pick_lang(s.name, s.name_tr) }}
+              </option>
+
+            {% endfor %}
+
+          </select>
+        </div>
+
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('الماركة') }}
+          </label>
+
+          <select
+            name="brand_id"
+            class="form-select"
+            required
+          >
+
+            <option value="">
+              {{ _('-- اختر --') }}
+            </option>
+
+            {% for b in brands %}
+
+              <option
+                value="{{ b.id }}"
+                {% if b.id == product.brand_id %}
+                  selected
+                {% endif %}
+              >
+                {{ b.name }} ({{ b.code }})
+              </option>
+
+            {% endfor %}
+
+          </select>
+        </div>
+
       </div>
+
+    </section>
+
+
+    <!-- Pricing -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('الأسعار') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('السعر الأساسي ورأس المال') }}
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('رأس المال') }}
+          </label>
+
+          <div class="input-group">
+
+            <input
+              type="number"
+              step="0.01"
+              name="capital_price"
+              class="form-control"
+              value="{{ product.capital_price }}"
+              required
+            >
+
+            <span class="input-group-text">$</span>
+
+          </div>
+        </div>
+
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('سعر البيع النقدي') }}
+          </label>
+
+          <div class="input-group">
+
+            <input
+              type="number"
+              step="0.01"
+              name="base_cash_price"
+              class="form-control"
+              value="{{ product.base_cash_price }}"
+              required
+            >
+
+            <span class="input-group-text">$</span>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Discount -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+
+        <div class="bk-form-section-icon">
+          <i class="bi bi-percent"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('الخصومات') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('إدارة السعر المخفض ومدة العرض') }}
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="bk-discount-switch mb-3">
+
+        <div>
+
+          <div class="fw-bold">
+            {{ _('هذا المنتج ضمن خصم') }}
+          </div>
+
+          <div class="text-muted small">
+            {{ _('فعّل الخيار لإظهار السعر المخفض في المتجر') }}
+          </div>
+
+        </div>
+
+
+        <div class="form-check form-switch m-0">
+
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="is_discounted"
+            id="is_discounted"
+            {% if product.is_discounted %}
+              checked
+            {% endif %}
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-md-4">
+
+          <label class="form-label">
+            {{ _('السعر بعد الخصم') }}
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            name="discount_price"
+            class="form-control"
+            value="{{ product.discount_price or '' }}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-4">
+
+          <label class="form-label">
+            {{ _('بداية الخصم') }}
+          </label>
+
+          <input
+            type="date"
+            name="discount_start"
+            class="form-control"
+            value="{{ product.discount_start.strftime('%Y-%m-%d') if product.discount_start }}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-4">
+
+          <label class="form-label">
+            {{ _('نهاية الخصم') }}
+          </label>
+
+          <input
+            type="date"
+            name="discount_end"
+            class="form-control"
+            value="{{ product.discount_end.strftime('%Y-%m-%d') if product.discount_end }}"
+          >
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Properties -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+
+        <div class="bk-form-section-icon">
+          <i class="bi bi-sliders"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('خصائص المنتج') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('الخصائص المرتبطة بالتصنيف الحالي') }}
+          </div>
+        </div>
+
+      </div>
+
+
+      <div
+        id="propertiesContainer"
+        class="row g-3"
+      >
+
+        {% if initial_props and initial_props|length > 0 %}
+
+          {% for p in initial_props %}
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+
+                {{ pick_lang(p.name, p.name_tr) }}
+
+                {% if p.is_required %}
+                  <span class="text-danger">*</span>
+                {% endif %}
+
+              </label>
+
+
+              {% set saved = existing_map.get(p.id, '') %}
+
+
+              {% if p.input_type == 'select' %}
+
+                <select
+                  class="form-select"
+                  name="property_{{ p.id }}"
+                  {% if p.is_required %}
+                    required
+                  {% endif %}
+                >
+
+                  <option value="">
+                    {{ _('-- اختر --') }}
+                  </option>
+
+
+                  {% for v in p.values %}
+
+                    <option
+                      value="{{ v.value }}"
+                      {% if v.value == saved %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ pick_lang(v.value, v.value_tr) }}
+                    </option>
+
+                  {% endfor %}
+
+                </select>
+
+
+              {% elif p.input_type == 'number' %}
+
+                <input
+                  type="number"
+                  class="form-control"
+                  name="property_{{ p.id }}"
+                  value="{{ saved }}"
+                  {% if p.is_required %}
+                    required
+                  {% endif %}
+                >
+
+
+              {% else %}
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="property_{{ p.id }}"
+                  value="{{ saved }}"
+                  {% if p.is_required %}
+                    required
+                  {% endif %}
+                >
+
+              {% endif %}
+
+            </div>
+
+          {% endfor %}
+
+
+        {% else %}
+
+          <div class="col-12">
+
+            <div class="bk-form-placeholder">
+              <i class="bi bi-sliders"></i>
+              {{ _('لا توجد خصائص لهذا التصنيف.') }}
+            </div>
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+    </section>
+
+
+    <!-- Description -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+
+        <div class="bk-form-section-icon">
+          <i class="bi bi-card-text"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('وصف المنتج') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('المعلومات الظاهرة للعميل') }}
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-lg-6">
+
+          <label class="form-label">
+            {{ _('وصف المنتج (عربي)') }}
+          </label>
+
+          <textarea
+            class="form-control"
+            name="description"
+            rows="5"
+          >{{ product.description or '' }}</textarea>
+
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+
+          <label class="form-label">
+            {{ _('وصف المنتج (تركي)') }}
+          </label>
+
+          <textarea
+            class="form-control"
+            name="description_tr"
+            rows="5"
+          >{{ product.description_tr or '' }}</textarea>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Variants -->
+    {% if product.department == "linens" %}
+
+      <section class="card bk-form-section">
+
+        <div class="bk-form-section-header">
+
+          <div class="bk-form-section-icon">
+            <i class="bi bi-rulers"></i>
+          </div>
+
+          <div class="flex-grow-1">
+
+            <h3 class="bk-form-section-title">
+              {{ _('المقاسات والأسعار') }}
+            </h3>
+
+            <div class="bk-form-section-note">
+              {{ _('إدارة المقاسات والكميات والأسعار لهذا المنتج') }}
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            onclick="addVariantRow()"
+          >
+            <i class="bi bi-plus-lg"></i>
+            {{ _('إضافة مقاس') }}
+          </button>
+
+        </div>
+
+
+        <div id="variantsContainer">
+
+          {% if variants and variants|length %}
+
+            {% for v in variants %}
+
+              <div class="variant-row bk-variant-editor-row">
+
+                <div class="row g-3 align-items-end">
+
+                  <div class="col-12 col-md-2">
+
+                    <label class="form-label">
+                      {{ _('المقاس') }}
+                    </label>
+
+                    <input
+                      type="text"
+                      name="variant_size[]"
+                      class="form-control"
+                      value="{{ v.size }}"
+                    >
+
+                  </div>
+
+
+                  <div class="col-12 col-md-2">
+
+                    <label class="form-label">
+                      {{ _('اللون') }}
+                    </label>
+
+                    <input
+                      type="text"
+                      name="variant_color[]"
+                      class="form-control"
+                      value="{{ v.color or '' }}"
+                    >
+
+                  </div>
+
+
+                  <div class="col-12 col-md-2">
+
+                    <label class="form-label">
+                      {{ _('رأس المال') }}
+                    </label>
+
+                    <input
+                      type="number"
+                      step="0.01"
+                      name="variant_capital_price[]"
+                      class="form-control"
+                      value="{{ v.capital_price }}"
+                    >
+
+                  </div>
+
+
+                  <div class="col-12 col-md-2">
+
+                    <label class="form-label">
+                      {{ _('سعر البيع') }}
+                    </label>
+
+                    <input
+                      type="number"
+                      step="0.01"
+                      name="variant_base_cash_price[]"
+                      class="form-control"
+                      value="{{ v.base_cash_price }}"
+                    >
+
+                  </div>
+
+
+                  <div class="col-12 col-md-2">
+
+                    <label class="form-label">
+                      {{ _('الكمية') }}
+                    </label>
+
+                    <input
+                      type="number"
+                      name="variant_stock_qty[]"
+                      class="form-control"
+                      value="{{ v.stock_qty }}"
+                    >
+
+                  </div>
+
+
+                  <div class="col-12 col-md-2">
+
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger w-100"
+                      onclick="this.closest('.variant-row').remove()"
+                    >
+                      <i class="bi bi-trash3"></i>
+                      {{ _('حذف') }}
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            {% endfor %}
+
+
+          {% else %}
+
+            <div class="variant-row bk-variant-editor-row">
+
+              <div class="row g-3 align-items-end">
+
+                <div class="col-12 col-md-2">
+
+                  <label class="form-label">
+                    {{ _('المقاس') }}
+                  </label>
+
+                  <input
+                    type="text"
+                    name="variant_size[]"
+                    class="form-control"
+                    placeholder="S / M / L"
+                  >
+
+                </div>
+
+
+                <div class="col-12 col-md-2">
+
+                  <label class="form-label">
+                    {{ _('اللون') }}
+                  </label>
+
+                  <input
+                    type="text"
+                    name="variant_color[]"
+                    class="form-control"
+                  >
+
+                </div>
+
+
+                <div class="col-12 col-md-2">
+
+                  <label class="form-label">
+                    {{ _('رأس المال') }}
+                  </label>
+
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="variant_capital_price[]"
+                    class="form-control"
+                  >
+
+                </div>
+
+
+                <div class="col-12 col-md-2">
+
+                  <label class="form-label">
+                    {{ _('سعر البيع') }}
+                  </label>
+
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="variant_base_cash_price[]"
+                    class="form-control"
+                  >
+
+                </div>
+
+
+                <div class="col-12 col-md-2">
+
+                  <label class="form-label">
+                    {{ _('الكمية') }}
+                  </label>
+
+                  <input
+                    type="number"
+                    name="variant_stock_qty[]"
+                    class="form-control"
+                    value="0"
+                  >
+
+                </div>
+
+
+                <div class="col-12 col-md-2">
+
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger w-100"
+                    onclick="this.closest('.variant-row').remove()"
+                  >
+                    <i class="bi bi-trash3"></i>
+                    {{ _('حذف') }}
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          {% endif %}
+
+        </div>
+
+      </section>
+
+    {% endif %}
+
+
+    <!-- Images -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+
+        <div class="bk-form-section-icon">
+          <i class="bi bi-images"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('صور المنتج') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('إضافة صور جديدة للمنتج') }}
+          </div>
+        </div>
+
+      </div>
+
+
+      <label class="bk-upload-box">
+
+        <div class="bk-upload-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+
+        <div class="bk-upload-title">
+          {{ _('إضافة صور جديدة') }}
+        </div>
+
+        <div class="bk-upload-note">
+          {{ _('الصور الجديدة ستضاف بجانب الصور الموجودة') }}
+        </div>
+
+        <input
+          class="form-control"
+          type="file"
+          name="images"
+          multiple
+          accept="image/*"
+        >
+
+      </label>
+
+    </section>
+
+
+    <!-- Barcode -->
+    {% if product.barcode_image %}
+
+      <section class="card bk-form-section">
+
+        <div class="bk-form-section-header">
+
+          <div class="bk-form-section-icon">
+            <i class="bi bi-upc-scan"></i>
+          </div>
+
+          <div>
+            <h3 class="bk-form-section-title">
+              {{ _('باركود المنتج') }}
+            </h3>
+
+            <div class="bk-form-section-note">
+              {{ _('معاينة وطباعة الباركود') }}
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="bk-edit-barcode">
+
+          <div id="barcode-print-area">
+
+            <img
+              src="{{ url_for('static', filename='barcodes/' + product.barcode_image) }}"
+              alt="Barcode"
+            >
+
+            <div class="bk-barcode-value">
+              {{ product.barcode_value }}
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            onclick="window.print()"
+            class="btn btn-dark"
+          >
+            <i class="bi bi-printer"></i>
+            {{ _('طباعة لزقة الباركود') }}
+          </button>
+
+        </div>
+
+      </section>
+
+    {% endif %}
+
+
+    <!-- Save -->
+    <div class="bk-form-submit-bar">
+
+      <div class="text-muted small">
+        <i class="bi bi-info-circle"></i>
+        {{ _('سيتم حفظ جميع التعديلات والصور الجديدة معاً') }}
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg"
+      >
+        <i class="bi bi-check2-circle"></i>
+        {{ _('حفظ التعديلات') }}
+      </button>
+
     </div>
+
+  </form>
+
+
+  <!-- Existing Images -->
+  {% if product.images and product.images|length %}
+
+    <section class="card bk-form-section mt-4">
+
+      <div class="bk-form-section-header">
+
+        <div class="bk-form-section-icon">
+          <i class="bi bi-images"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('الصور الحالية') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('إدارة الصورة الأساسية أو حذف صورة محددة') }}
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="bk-image-manager">
+
+        {% set primary_id =
+          product.images[0].id
+          if product.images and product.images|length
+          else None
+        %}
+
+
+        {% for img in product.images %}
+
+          <div class="bk-image-manager-card">
+
+            <div class="bk-image-manager-preview">
+
+              <img
+                src="{{ url_for('static', filename=img.image_path) }}"
+                alt="Product image"
+              >
+
+              {% if img.id == primary_id %}
+
+                <span class="bk-primary-image-badge">
+                  <i class="bi bi-star-fill"></i>
+                  {{ _('أساسية') }}
+                </span>
+
+              {% endif %}
+
+            </div>
+
+
+            <div class="bk-image-manager-actions">
+
+              <form
+                method="POST"
+                action="{{ url_for(
+                  'products.make_primary_product_image',
+                  product_id=product.id,
+                  image_id=img.id
+                ) }}"
+              >
+
+                <button
+                  type="submit"
+                  class="btn btn-outline-secondary btn-sm w-100"
+                  {% if img.id == primary_id %}
+                    disabled
+                  {% endif %}
+                >
+                  <i class="bi bi-star"></i>
+                  {{ _('اجعلها أساسية') }}
+                </button>
+
+              </form>
+
+
+              <form
+                method="POST"
+                action="{{ url_for(
+                  'products.delete_product_image',
+                  product_id=product.id,
+                  image_id=img.id
+                ) }}"
+                onsubmit="return confirm('{{ _('حذف هذه الصورة فقط؟') }}');"
+              >
+
+                <button
+                  type="submit"
+                  class="btn btn-outline-danger btn-sm w-100"
+                >
+                  <i class="bi bi-trash3"></i>
+                  {{ _('حذف') }}
+                </button>
+
+              </form>
+
+            </div>
+
+          </div>
+
+        {% endfor %}
+
+      </div>
+
+    </section>
+
   {% endif %}
 
-  <button type="button" onclick="window.print()" class="btn btn-dark mt-3">
-    🖨️ {{ _('طباعة لزقة الباركود') }}
-  </button>
+</div>
 
-  <button class="btn btn-primary w-100 mt-3">{{ _('حفظ التعديل') }}</button>
+{% endblock %}
 
-  {% if product.department == "linens" %}
-  <hr class="my-4">
-  <h5 class="mb-3">المقاسات والألوان والأسعار</h5>
 
-  <div id="variantsContainer">
-    {% if variants and variants|length %}
-      {% for v in variants %}
-        <div class="variant-row border rounded-3 p-3 mb-2">
-          <div class="row g-2 align-items-end">
-            <div class="col-md-3">
-              <label class="form-label">المقاس</label>
-              <input type="text" name="variant_size[]" class="form-control" value="{{ v.size }}">
-            </div>
-            <div class="col-md-3">
-              <label class="form-label">اللون</label>
-              <input type="text" name="variant_color[]" class="form-control" value="{{ v.color or '' }}">
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">رأس المال</label>
-              <input type="number" step="0.01" name="variant_capital_price[]" class="form-control" value="{{ v.capital_price }}">
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">سعر البيع</label>
-              <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control" value="{{ v.base_cash_price }}">
-            </div>
-            <div class="col-md-1">
-              <label class="form-label">الكمية</label>
-              <input type="number" name="variant_stock_qty[]" class="form-control" value="{{ v.stock_qty }}">
-            </div>
-            <div class="col-md-1 d-grid">
-              <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.variant-row').remove()">✕</button>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <div class="variant-row border rounded-3 p-3 mb-2">
-        <div class="row g-2 align-items-end">
-          <div class="col-md-3">
-            <label class="form-label">المقاس</label>
-            <input type="text" name="variant_size[]" class="form-control" placeholder="S / M / L">
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">اللون</label>
-            <input type="text" name="variant_color[]" class="form-control" placeholder="أبيض / رمادي">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">رأس المال</label>
-            <input type="number" step="0.01" name="variant_capital_price[]" class="form-control">
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">سعر البيع</label>
-            <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control">
-          </div>
-          <div class="col-md-1">
-            <label class="form-label">الكمية</label>
-            <input type="number" name="variant_stock_qty[]" class="form-control" value="0">
-          </div>
-          <div class="col-md-1 d-grid">
-            <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.variant-row').remove()">✕</button>
-          </div>
-        </div>
-      </div>
-    {% endif %}
-  </div>
+{% block scripts %}
 
-  <div class="d-flex gap-2 mb-3">
-    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addVariantRow()">
-      + إضافة مقاس
-    </button>
-  </div>
-{% endif %}
-
-</form>
-
-{% if product.images and product.images|length %}
-  <div class="card p-4 shadow-sm mt-3" style="max-width: 720px;">
-    <h5 class="mb-3">var olan fotoğraflar</h5>
-
-    <div class="d-flex flex-wrap gap-2">
-      {% set primary_id = product.images[0].id if product.images and product.images|length else None %}
-
-      {% for img in product.images %}
-        <div class="border rounded-3 p-2" style="width: 160px;">
-          <div class="d-flex justify-content-between align-items-center mb-1">
-            {% if img.id == primary_id %}
-              <span class="badge bg-success">⭐ أساسية</span>
-            {% else %}
-              <span class="badge bg-light text-dark">#{{ img.sort_order }}</span>
-            {% endif %}
-          </div>
-
-          <img
-            src="{{ url_for('static', filename=img.image_path) }}"
-            class="img-fluid rounded-2"
-            style="height: 90px; width: 100%; object-fit: cover;"
-            alt="img">
-
-          <div class="d-grid gap-2 mt-2">
-            <form method="POST" action="{{ url_for('products.make_primary_product_image', product_id=product.id, image_id=img.id) }}">
-              <button type="submit"
-                      class="btn btn-sm btn-outline-success w-100"
-                      {% if img.id == primary_id %}disabled{% endif %}>
-                ⭐ {{ _('اجعلها أساسية') }}
-              </button>
-            </form>
-
-            <form method="POST"
-                  action="{{ url_for('products.delete_product_image', product_id=product.id, image_id=img.id) }}"
-                  onsubmit="return confirm('حذف هذه الصورة فقط؟');">
-              <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                🗑️ sil
-              </button>
-            </form>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-{% endif %}
+{{ super() }}
 
 <script>
-  const subSelect = document.getElementById("subCategorySelect");
-  const container = document.getElementById("propertiesContainer");
 
-  const existingMap = {{ existing_map | tojson | safe }};
+  const subSelect =
+    document.getElementById("subCategorySelect");
+
+  const propertiesContainer =
+    document.getElementById("propertiesContainer");
+
+  const existingMap =
+    {{ existing_map | tojson | safe }};
+
 
   function escapeHtml(str) {
+
     return String(str)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+
   }
 
+
   function renderProperties(props) {
+
     if (!props || props.length === 0) {
-      container.innerHTML = `<div class="text-muted">لا توجد خصائص لهذا التصنيف.</div>`;
+
+      propertiesContainer.innerHTML = `
+        <div class="col-12">
+          <div class="bk-form-placeholder">
+            <i class="bi bi-sliders"></i>
+            {{ _('لا توجد خصائص لهذا التصنيف.') }}
+          </div>
+        </div>
+      `;
+
       return;
     }
 
-    let html = "";
-    for (const p of props) {
-      const requiredAttr = p.is_required ? "required" : "";
-      const requiredStar = p.is_required ? `<span class="text-danger">*</span>` : "";
-      const saved = existingMap[String(p.id)] ?? "";
 
-      html += `<div class="mb-3">
-        <label class="form-label">${escapeHtml(p.name)} ${requiredStar}</label>`;
+    let html = "";
+
+
+    for (const p of props) {
+
+      const requiredAttr =
+        p.is_required
+          ? "required"
+          : "";
+
+      const requiredStar =
+        p.is_required
+          ? `<span class="text-danger">*</span>`
+          : "";
+
+      const saved =
+        existingMap[String(p.id)] ?? "";
+
+
+      html += `
+        <div class="col-12 col-md-6">
+
+          <label class="form-label">
+            ${escapeHtml(p.name)}
+            ${requiredStar}
+          </label>
+      `;
+
 
       if (p.input_type === "select") {
-        html += `<select name="property_${p.id}" class="form-select" ${requiredAttr}>
-          <option value="">-- اختر --</option>`;
+
+        html += `
+          <select
+            name="property_${p.id}"
+            class="form-select"
+            ${requiredAttr}
+          >
+
+            <option value="">
+              -- اختر --
+            </option>
+        `;
+
 
         for (const v of (p.values || [])) {
-          const optVal = (typeof v === "string") ? v : v.value;
-          const optLabel = (typeof v === "string") ? v : v.label;
-          const sel = (String(optVal) === String(saved)) ? "selected" : "";
-          html += `<option value="${escapeHtml(optVal)}" ${sel}>${escapeHtml(optLabel)}</option>`;
+
+          const optVal =
+            (typeof v === "string")
+              ? v
+              : v.value;
+
+          const optLabel =
+            (typeof v === "string")
+              ? v
+              : v.label;
+
+          const sel =
+            String(optVal) === String(saved)
+              ? "selected"
+              : "";
+
+
+          html += `
+            <option
+              value="${escapeHtml(optVal)}"
+              ${sel}
+            >
+              ${escapeHtml(optLabel)}
+            </option>
+          `;
         }
 
+
         html += `</select>`;
-      } else if (p.input_type === "number") {
-        html += `<input type="number" name="property_${p.id}" class="form-control" value="${escapeHtml(saved)}" ${requiredAttr}>`;
+
+
+      } else if (
+        p.input_type === "number"
+      ) {
+
+        html += `
+          <input
+            type="number"
+            name="property_${p.id}"
+            class="form-control"
+            value="${escapeHtml(saved)}"
+            ${requiredAttr}
+          >
+        `;
+
+
       } else {
-        html += `<input type="text" name="property_${p.id}" class="form-control" value="${escapeHtml(saved)}" ${requiredAttr}>`;
+
+        html += `
+          <input
+            type="text"
+            name="property_${p.id}"
+            class="form-control"
+            value="${escapeHtml(saved)}"
+            ${requiredAttr}
+          >
+        `;
+
       }
+
 
       html += `</div>`;
     }
 
-    container.innerHTML = html;
+
+    propertiesContainer.innerHTML =
+      html;
+
   }
+
 
   async function loadProperties() {
-    const subId = subSelect.value;
-    if (!subId) return;
 
-    container.innerHTML = `<div class="text-muted">جاري تحميل الخصائص...</div>`;
+    const subId =
+      subSelect.value;
 
-    try {
-      const res = await fetch(`/products/api/properties/${subId}`);
-      const data = await res.json();
-      renderProperties(data);
-    } catch (e) {
-      container.innerHTML = `<div class="text-danger">فشل تحميل الخصائص.</div>`;
+
+    if (!subId) {
+      return;
     }
-  }
 
-  subSelect.addEventListener("change", loadProperties);
 
-  function addVariantRow(data = {}) {
-    const container = document.getElementById("variantsContainer");
-    if (!container) return;
-
-    const row = document.createElement("div");
-    row.className = "variant-row border rounded-3 p-3 mb-2";
-    row.innerHTML = `
-      <div class="row g-2 align-items-end">
-        <div class="col-md-3">
-          <label class="form-label">المقاس</label>
-          <input type="text" name="variant_size[]" class="form-control" value="${data.size || ''}" placeholder="S / M / L">
-        </div>
-        <div class="col-md-3">
-          <label class="form-label">اللون</label>
-          <input type="text" name="variant_color[]" class="form-control" value="${data.color || ''}" placeholder="أبيض / رمادي">
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">رأس المال</label>
-          <input type="number" step="0.01" name="variant_capital_price[]" class="form-control" value="${data.capital_price || ''}">
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">سعر البيع</label>
-          <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control" value="${data.base_cash_price || ''}">
-        </div>
-        <div class="col-md-1">
-          <label class="form-label">الكمية</label>
-          <input type="number" name="variant_stock_qty[]" class="form-control" value="${data.stock_qty || 0}">
-        </div>
-        <div class="col-md-1 d-grid">
-          <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.variant-row').remove()">✕</button>
+    propertiesContainer.innerHTML = `
+      <div class="col-12">
+        <div class="bk-form-loading">
+          <span class="spinner-border spinner-border-sm"></span>
+          {{ _('جاري تحميل الخصائص...') }}
         </div>
       </div>
     `;
-    container.appendChild(row);
+
+
+    try {
+
+      const res =
+        await fetch(
+          `/products/api/properties/${subId}`
+        );
+
+      const data =
+        await res.json();
+
+      renderProperties(data);
+
+
+    } catch (e) {
+
+      propertiesContainer.innerHTML = `
+        <div class="col-12">
+          <div class="bk-form-placeholder text-danger">
+            <i class="bi bi-exclamation-triangle"></i>
+            {{ _('فشل تحميل الخصائص.') }}
+          </div>
+        </div>
+      `;
+
+    }
+
   }
+
+
+  subSelect.addEventListener(
+    "change",
+    loadProperties
+  );
+
+
+  function addVariantRow(data = {}) {
+
+    const container =
+      document.getElementById(
+        "variantsContainer"
+      );
+
+    if (!container) return;
+
+
+    const row =
+      document.createElement("div");
+
+
+    row.className =
+      "variant-row bk-variant-editor-row";
+
+
+    row.innerHTML = `
+
+      <div class="row g-3 align-items-end">
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('المقاس') }}
+          </label>
+
+          <input
+            type="text"
+            name="variant_size[]"
+            class="form-control"
+            value="${escapeHtml(data.size || '')}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('اللون') }}
+          </label>
+
+          <input
+            type="text"
+            name="variant_color[]"
+            class="form-control"
+            value="${escapeHtml(data.color || '')}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('رأس المال') }}
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            name="variant_capital_price[]"
+            class="form-control"
+            value="${escapeHtml(data.capital_price || '')}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('سعر البيع') }}
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            name="variant_base_cash_price[]"
+            class="form-control"
+            value="${escapeHtml(data.base_cash_price || '')}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('الكمية') }}
+          </label>
+
+          <input
+            type="number"
+            name="variant_stock_qty[]"
+            class="form-control"
+            value="${escapeHtml(data.stock_qty ?? 0)}"
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-2">
+
+          <button
+            type="button"
+            class="btn btn-outline-danger w-100"
+            onclick="this.closest('.variant-row').remove()"
+          >
+            <i class="bi bi-trash3"></i>
+            {{ _('حذف') }}
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+
+    container.appendChild(row);
+
+  }
+
 </script>
+
 {% endblock %}

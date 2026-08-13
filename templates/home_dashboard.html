@@ -1,75 +1,412 @@
 {% extends "layout_new.html" %}
 
-{% block title %}{{ _('Dashboard') }}{% endblock %}
+{% block title %}{{ _('لوحة التحكم') }}{% endblock %}
 
 {% block content %}
 
-<h2 class="mb-4">{{ _('لوحة التحكم الرئيسية') }}</h2>
+<div class="bk-dashboard">
 
-<div class="row g-4">
+  <!-- =========================
+       Hero
+       ========================= -->
+  <section class="bk-dashboard-hero mb-4">
 
-    <!-- عدد العملاء -->
-    <div class="col-md-4">
-        <div class="card shadow-sm p-3 border-primary">
-            <h6 class="text-muted">{{ _('عدد الزبائن') }}</h6>
-            <h3>{{ total_customers }}</h3>
+    <div class="bk-dashboard-hero-content">
+
+      <div>
+        <div class="bk-dashboard-kicker">
+          <i class="bi bi-stars"></i>
+          {{ _('نظام إدارة معرض بكور') }}
         </div>
+
+        <h1 class="bk-dashboard-title">
+          {{ _('مرحباً بك في لوحة التحكم') }}
+        </h1>
+
+        <p class="bk-dashboard-subtitle mb-0">
+          {{ _('نظرة سريعة على الحسابات والدفاتر وإدارة المعرض') }}
+        </p>
+      </div>
+
+      <div class="bk-dashboard-hero-mark d-none d-md-flex">
+        <i class="bi bi-shop"></i>
+      </div>
+
     </div>
 
-    <!-- مجموع التقسيط (دفتر A + B فقط) -->
-    <div class="col-md-4">
-        <div class="card shadow-sm p-3 border-warning">
-            <h6 class="text-muted">{{ _('مجموع التقسيط (A + B)') }}</h6>
-            <h3>{{ total_installments }} $</h3>
+  </section>
+
+
+  <!-- =========================
+       Main Stats
+       ========================= -->
+  <div class="row g-3 mb-4">
+
+    <!-- Customers -->
+    <div class="col-12 col-md-4">
+
+      <div class="card bk-stat-card h-100 p-4">
+
+        <div class="d-flex align-items-start justify-content-between gap-3">
+
+          <div>
+            <div class="bk-stat-label">
+              {{ _('عدد الزبائن') }}
+            </div>
+
+            <div class="bk-stat-value mt-2">
+              {{ total_customers }}
+            </div>
+
+            <div class="bk-stat-note mt-1">
+              {{ _('إجمالي الزبائن المسجلين') }}
+            </div>
+          </div>
+
+          <div class="bk-stat-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+
         </div>
+
+      </div>
+
     </div>
 
-    <!-- مجموع الديون النقدية (كل الدفاتر) -->
-    <div class="col-md-4">
-        <div class="card shadow-sm p-3 border-danger">
-            <h6 class="text-muted">{{ _('الديون النقدية (A + B + C)') }}</h6>
-            <h3>{{ total_cash_debts }} $</h3>
+
+    <!-- Installments -->
+    <div class="col-12 col-md-4">
+
+      <div class="card bk-stat-card h-100 p-4">
+
+        <div class="d-flex align-items-start justify-content-between gap-3">
+
+          <div>
+            <div class="bk-stat-label">
+              {{ _('باقي التقسيط') }}
+            </div>
+
+            <div class="bk-stat-value mt-2">
+              {{ "%.2f"|format(total_installments) }}
+              <span class="bk-stat-currency">$</span>
+            </div>
+
+            <div class="bk-stat-note mt-1">
+              {{ _('دفتر التقسيط + دفتر R-M') }}
+            </div>
+          </div>
+
+          <div class="bk-stat-icon">
+            <i class="bi bi-wallet2"></i>
+          </div>
+
         </div>
+
+      </div>
+
     </div>
+
+
+    <!-- Cash Debts -->
+    <div class="col-12 col-md-4">
+
+      <div class="card bk-stat-card h-100 p-4">
+
+        <div class="d-flex align-items-start justify-content-between gap-3">
+
+          <div>
+            <div class="bk-stat-label">
+              {{ _('الديون النقدية') }}
+            </div>
+
+            <div class="bk-stat-value mt-2">
+              {{ "%.2f"|format(total_cash_debts) }}
+              <span class="bk-stat-currency">$</span>
+            </div>
+
+            <div class="bk-stat-note mt-1">
+              {{ _('إجمالي المبالغ المتبقية') }}
+            </div>
+          </div>
+
+          <div class="bk-stat-icon">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       Quick Access
+       ========================= -->
+  <div class="row g-4">
+
+    <div class="col-12 col-xl-8">
+
+      <div class="card bk-dashboard-panel h-100">
+
+        <div class="bk-dashboard-panel-header">
+
+          <div>
+            <h2 class="h5 mb-1">
+              {{ _('الوصول السريع') }}
+            </h2>
+
+            <div class="text-muted small">
+              {{ _('أكثر أقسام النظام استخداماً') }}
+            </div>
+          </div>
+
+          <i class="bi bi-lightning-charge-fill bk-panel-header-icon"></i>
+
+        </div>
+
+
+        <div class="bk-quick-grid">
+
+          <a href="/ledger/A" class="bk-quick-card">
+
+            <div class="bk-quick-icon">
+              <i class="bi bi-journal"></i>
+            </div>
+
+            <div class="bk-quick-body">
+              <div class="bk-quick-title">
+                {{ _('دفتر التقسيط') }}
+              </div>
+
+              <div class="bk-quick-note">
+                {{ _('إدارة حسابات التقسيط') }}
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-left bk-quick-arrow"></i>
+
+          </a>
+
+
+          <a href="/ledger/B" class="bk-quick-card">
+
+            <div class="bk-quick-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+
+            <div class="bk-quick-body">
+              <div class="bk-quick-title">
+                {{ _('دفتر R-M') }}
+              </div>
+
+              <div class="bk-quick-note">
+                {{ _('متابعة الحسابات الخاصة') }}
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-left bk-quick-arrow"></i>
+
+          </a>
+
+
+          <a href="/ledger/C" class="bk-quick-card">
+
+            <div class="bk-quick-icon">
+              <i class="bi bi-receipt-cutoff"></i>
+            </div>
+
+            <div class="bk-quick-body">
+              <div class="bk-quick-title">
+                {{ _('دفتر الديون النقدية') }}
+              </div>
+
+              <div class="bk-quick-note">
+                {{ _('إدارة الديون والمدفوعات') }}
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-left bk-quick-arrow"></i>
+
+          </a>
+
+
+          <a href="/sales/quick" class="bk-quick-card">
+
+            <div class="bk-quick-icon">
+              <i class="bi bi-receipt"></i>
+            </div>
+
+            <div class="bk-quick-body">
+              <div class="bk-quick-title">
+                {{ _('فاتورة نقدي سريعة') }}
+              </div>
+
+              <div class="bk-quick-note">
+                {{ _('تسجيل عملية بيع مباشرة') }}
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-left bk-quick-arrow"></i>
+
+          </a>
+
+
+          <a
+            href="{{ url_for('products.products_list') }}"
+            class="bk-quick-card"
+          >
+
+            <div class="bk-quick-icon">
+              <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div class="bk-quick-body">
+              <div class="bk-quick-title">
+                {{ _('إدارة المنتجات') }}
+              </div>
+
+              <div class="bk-quick-note">
+                {{ _('المنتجات والمخزون والأسعار') }}
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-left bk-quick-arrow"></i>
+
+          </a>
+
+
+          <a
+            href="{{ url_for('sales.profits_report') }}"
+            class="bk-quick-card"
+          >
+
+            <div class="bk-quick-icon">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+
+            <div class="bk-quick-body">
+              <div class="bk-quick-title">
+                {{ _('الأرباح') }}
+              </div>
+
+              <div class="bk-quick-note">
+                {{ _('عرض تقارير الأرباح') }}
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-left bk-quick-arrow"></i>
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         Departments
+         ========================= -->
+    <div class="col-12 col-xl-4">
+
+      <div class="card bk-dashboard-panel h-100">
+
+        <div class="bk-dashboard-panel-header">
+
+          <div>
+            <h2 class="h5 mb-1">
+              {{ _('أقسام المنتجات') }}
+            </h2>
+
+            <div class="text-muted small">
+              {{ _('الوصول المباشر حسب القسم') }}
+            </div>
+          </div>
+
+          <i class="bi bi-boxes bk-panel-header-icon"></i>
+
+        </div>
+
+
+        <div class="d-grid gap-3">
+
+          <a
+            href="{{ url_for('products.products_electrical') }}"
+            class="bk-dept-card bk-dept-electrical"
+          >
+            <div class="bk-dept-icon">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+
+            <div class="flex-grow-1">
+              <div class="bk-dept-title">
+                {{ _('كهربائيات') }}
+              </div>
+
+              <div class="bk-dept-note">
+                {{ _('إدارة منتجات الكهربائيات') }}
+              </div>
+            </div>
+
+            <i class="bi bi-arrow-left"></i>
+          </a>
+
+
+          <a
+            href="{{ url_for('products.products_linens') }}"
+            class="bk-dept-card bk-dept-linens"
+          >
+            <div class="bk-dept-icon">
+              <i class="bi bi-bag-fill"></i>
+            </div>
+
+            <div class="flex-grow-1">
+              <div class="bk-dept-title">
+                {{ _('بياضات') }}
+              </div>
+
+              <div class="bk-dept-note">
+                {{ _('إدارة منتجات البياضات') }}
+              </div>
+            </div>
+
+            <i class="bi bi-arrow-left"></i>
+          </a>
+
+
+          <a
+            href="{{ url_for('products.products_crystal') }}"
+            class="bk-dept-card bk-dept-crystal"
+          >
+            <div class="bk-dept-icon">
+              <i class="bi bi-cup-straw"></i>
+            </div>
+
+            <div class="flex-grow-1">
+              <div class="bk-dept-title">
+                {{ _('بلوريات') }}
+              </div>
+
+              <div class="bk-dept-note">
+                {{ _('إدارة منتجات البلوريات') }}
+              </div>
+            </div>
+
+            <i class="bi bi-arrow-left"></i>
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
-
-<hr class="my-4">
-
-<h4 class="mb-3">{{ _('الدفاتر الثلاثة') }}</h4>
-
-<table class="table table-striped table-hover shadow-sm">
-    <thead class="table-light">
-        <tr>
-            <th>{{ _('الدفتر') }}</th>
-            <th>{{ _('عدد الزبائن') }}</th>
-            <th>{{ _('مجموع الديون') }}</th>
-            <th>{{ _('فتح') }}</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr>
-            <td>{{ _('دفتر التقسيط (A)') }}</td>
-            <td>{{ A_customers }}</td>
-            <td>{{ A_total }} $</td>
-            <td><a href="/ledger/A" class="btn btn-primary btn-sm">{{ _('فتح') }}</a></td>
-        </tr>
-
-        <tr>
-            <td>{{ _('دفتر R-M (B)') }}</td>
-            <td>{{ B_customers }}</td>
-            <td>{{ B_total }} $</td>
-            <td><a href="/ledger/B" class="btn btn-primary btn-sm">{{ _('فتح') }}</a></td>
-        </tr>
-
-        <tr>
-            <td>{{ _('دفتر الديون النقدية (C)') }}</td>
-            <td>{{ C_customers }}</td>
-            <td>{{ C_total }} $</td>
-            <td><a href="/ledger/C" class="btn btn-primary btn-sm">{{ _('فتح') }}</a></td>
-        </tr>
-    </tbody>
-</table>
 
 {% endblock %}

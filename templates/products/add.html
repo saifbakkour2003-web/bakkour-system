@@ -1,234 +1,843 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إضافة منتج') }}{% endblock %}
+
 {% block content %}
-<h2 class="mb-4">{{ _('إضافة منتج') }}</h2>
 
-{% if forced_department %}
-  <div class="alert alert-info py-2" style="max-width: 720px;">
-    {{ _('القسم:') }} <b>{{ forced_department_label }}</b>
-  </div>
-{% endif %}
+<div class="container-fluid px-0 bk-product-form-page">
 
-<form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm" style="max-width: 720px;">
-  <!-- الاسم -->
-  <div class="mb-3">
-    <label class="form-label">{{ _('اسم المنتج') }}</label>
-    <input type="text" name="name" class="form-control" required>
-  </div>
+  <!-- =========================
+       Header
+       ========================= -->
+  <div class="bk-page-header mb-4">
 
-  <div class="mb-3">
-    <label class="form-label">{{ _('اسم المنتج (تركي)') }}</label>
-    <input type="text" name="name_tr" class="form-control">
-  </div>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-box-seam"></i>
+        {{ _('إدارة المنتجات') }}
+      </div>
 
-  <!-- التصنيف الفرعي -->
-  <div class="mb-3">
-    <label class="form-label">{{ _('التصنيف الفرعي') }}</label>
-    <select name="sub_category_id" class="form-select" id="subCategorySelect" required>
-      <option value="">{{ _('-- اختر --') }}</option>
-      {% for s in sub_categories %}
-        <option value="{{ s.id }}">{{ pick_lang(s.name, s.name_tr) }}</option>
-      {% endfor %}
-    </select>
-  </div>
+      <h2 class="bk-page-title mb-1">
+        {{ _('إضافة منتج جديد') }}
+      </h2>
 
-  <!-- الماركة -->
-  <div class="mb-3">
-    <label class="form-label">{{ _('الماركة') }}</label>
-    <select name="brand_id" class="form-select" required>
-      <option value="">{{ _('-- اختر --') }}</option>
-      {% for b in brands %}
-        <option value="{{ b.id }}">{{ b.name }} ({{ b.code }})</option>
-      {% endfor %}
-    </select>
-  </div>
-
-  <!-- الأسعار -->
-  <div class="row g-3 mb-3">
-    <div class="col-md-6">
-      <label class="form-label">{{ _('رأس المال') }}</label>
-      <input type="number" step="0.01" name="capital_price" class="form-control" required>
+      {% if forced_department %}
+        <div class="bk-page-subtitle">
+          {{ _('القسم الحالي:') }}
+          <strong>{{ forced_department_label }}</strong>
+        </div>
+      {% endif %}
     </div>
-    <div class="col-md-6">
-      <label class="form-label">{{ _('سعر البيع النقدي') }}</label>
-      <input type="number" step="0.01" name="base_cash_price" class="form-control" required>
-    </div>
+
+    <a
+      href="{{ url_for('products.products_list', dept=forced_department) if forced_department else url_for('products.products_list') }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
+
   </div>
 
-  <hr class="my-4">
 
-  <h5 class="mb-3">{{ _('خصائص المنتج') }}</h5>
-  <div id="propertiesContainer" class="mb-3">
-    <div class="text-muted">{{ _('اختر التصنيف الفرعي لعرض الخصائص.') }}</div>
-  </div>
+  <form
+    method="POST"
+    enctype="multipart/form-data"
+    class="bk-product-form"
+  >
 
-  <div class="mb-3">
-    <label class="form-label">ürün açıklaması (AR)</label>
-    <textarea class="form-control" name="description" rows="3">{{ product.description if product else '' }}</textarea>
-  </div>
+    <!-- =========================
+         Basic Information
+         ========================= -->
+    <section class="card bk-form-section">
 
-  <div class="mb-3">
-    <label class="form-label">ürün açıklaması (TR)</label>
-    <textarea class="form-control" name="description_tr" rows="3">{{ product.description_tr if product else '' }}</textarea>
-  </div>
-
-  {% if forced_department == "linens" %}
-  <hr class="my-4">
-  <h5 class="mb-3">المقاسات والألوان والأسعار</h5>
-
-  <div id="variantsContainer">
-    <div class="variant-row border rounded-3 p-3 mb-2">
-      <div class="row g-2">
-        <div class="col-md-3">
-          <label class="form-label">المقاس</label>
-          <input type="text" name="variant_size[]" class="form-control" placeholder="S / M / L">
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-info-circle"></i>
         </div>
-        <div class="col-md-3">
-          <label class="form-label">اللون</label>
-          <input type="text" name="variant_color[]" class="form-control" placeholder="أبيض / رمادي">
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">رأس المال</label>
-          <input type="number" step="0.01" name="variant_capital_price[]" class="form-control">
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">سعر البيع</label>
-          <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control">
-        </div>
-        <div class="col-md-2">
-          <label class="form-label">الكمية</label>
-          <input type="number" name="variant_stock_qty[]" class="form-control" value="0">
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('المعلومات الأساسية') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('اسم المنتج والتصنيف والماركة') }}
+          </div>
         </div>
       </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('اسم المنتج') }}
+          </label>
+
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            required
+          >
+        </div>
+
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('اسم المنتج (تركي)') }}
+          </label>
+
+          <input
+            type="text"
+            name="name_tr"
+            class="form-control"
+          >
+        </div>
+
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('التصنيف الفرعي') }}
+          </label>
+
+          <select
+            name="sub_category_id"
+            class="form-select"
+            id="subCategorySelect"
+            required
+          >
+            <option value="">
+              {{ _('-- اختر --') }}
+            </option>
+
+            {% for s in sub_categories %}
+              <option value="{{ s.id }}">
+                {{ pick_lang(s.name, s.name_tr) }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('الماركة') }}
+          </label>
+
+          <select
+            name="brand_id"
+            class="form-select"
+            required
+          >
+            <option value="">
+              {{ _('-- اختر --') }}
+            </option>
+
+            {% for b in brands %}
+              <option value="{{ b.id }}">
+                {{ b.name }} ({{ b.code }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         Pricing
+         ========================= -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('الأسعار') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('رأس المال وسعر البيع الأساسي') }}
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('رأس المال') }}
+          </label>
+
+          <div class="input-group">
+            <input
+              type="number"
+              step="0.01"
+              name="capital_price"
+              class="form-control"
+              required
+            >
+
+            <span class="input-group-text">$</span>
+          </div>
+        </div>
+
+
+        <div class="col-12 col-md-6">
+          <label class="form-label">
+            {{ _('سعر البيع النقدي') }}
+          </label>
+
+          <div class="input-group">
+            <input
+              type="number"
+              step="0.01"
+              name="base_cash_price"
+              class="form-control"
+              required
+            >
+
+            <span class="input-group-text">$</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         Properties
+         ========================= -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-sliders"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('خصائص المنتج') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('تظهر الخصائص تلقائياً حسب التصنيف المختار') }}
+          </div>
+        </div>
+      </div>
+
+
+      <div id="propertiesContainer">
+        <div class="bk-form-placeholder">
+          <i class="bi bi-arrow-up-circle"></i>
+          {{ _('اختر التصنيف الفرعي لعرض الخصائص.') }}
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         Description
+         ========================= -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-card-text"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('وصف المنتج') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('الوصف الذي سيظهر في صفحة المنتج') }}
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label">
+            {{ _('وصف المنتج (عربي)') }}
+          </label>
+
+          <textarea
+            class="form-control"
+            name="description"
+            rows="5"
+          ></textarea>
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+          <label class="form-label">
+            {{ _('وصف المنتج (تركي)') }}
+          </label>
+
+          <textarea
+            class="form-control"
+            name="description_tr"
+            rows="5"
+          ></textarea>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         Variants / Linens
+         ========================= -->
+    {% if forced_department == "linens" %}
+
+      <section class="card bk-form-section">
+
+        <div class="bk-form-section-header">
+
+          <div class="bk-form-section-icon">
+            <i class="bi bi-rulers"></i>
+          </div>
+
+          <div class="flex-grow-1">
+            <h3 class="bk-form-section-title">
+              {{ _('المقاسات والأسعار') }}
+            </h3>
+
+            <div class="bk-form-section-note">
+              {{ _('أضف المقاسات المتوفرة لهذا المنتج مع أسعارها وكمياتها') }}
+            </div>
+          </div>
+
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            onclick="addVariantRow()"
+          >
+            <i class="bi bi-plus-lg"></i>
+            {{ _('إضافة مقاس') }}
+          </button>
+
+        </div>
+
+
+        <div id="variantsContainer">
+
+          <div class="variant-row bk-variant-editor-row">
+
+            <div class="row g-3 align-items-end">
+
+              <div class="col-12 col-md-2">
+                <label class="form-label">
+                  {{ _('المقاس') }}
+                </label>
+
+                <input
+                  type="text"
+                  name="variant_size[]"
+                  class="form-control"
+                  placeholder="S / M / L"
+                >
+              </div>
+
+
+              <div class="col-12 col-md-2">
+                <label class="form-label">
+                  {{ _('اللون') }}
+                </label>
+
+                <input
+                  type="text"
+                  name="variant_color[]"
+                  class="form-control"
+                  placeholder="{{ _('اختياري') }}"
+                >
+              </div>
+
+
+              <div class="col-12 col-md-2">
+                <label class="form-label">
+                  {{ _('رأس المال') }}
+                </label>
+
+                <input
+                  type="number"
+                  step="0.01"
+                  name="variant_capital_price[]"
+                  class="form-control"
+                >
+              </div>
+
+
+              <div class="col-12 col-md-2">
+                <label class="form-label">
+                  {{ _('سعر البيع') }}
+                </label>
+
+                <input
+                  type="number"
+                  step="0.01"
+                  name="variant_base_cash_price[]"
+                  class="form-control"
+                >
+              </div>
+
+
+              <div class="col-12 col-md-2">
+                <label class="form-label">
+                  {{ _('الكمية') }}
+                </label>
+
+                <input
+                  type="number"
+                  name="variant_stock_qty[]"
+                  class="form-control"
+                  value="0"
+                >
+              </div>
+
+
+              <div class="col-12 col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger w-100"
+                  onclick="this.closest('.variant-row').remove()"
+                >
+                  <i class="bi bi-trash3"></i>
+                  {{ _('حذف') }}
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    {% endif %}
+
+
+    <!-- =========================
+         Images
+         ========================= -->
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+        <div class="bk-form-section-icon">
+          <i class="bi bi-images"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('صور المنتج') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('يمكنك اختيار أكثر من صورة في نفس الوقت') }}
+          </div>
+        </div>
+      </div>
+
+
+      <label class="bk-upload-box">
+
+        <div class="bk-upload-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+
+        <div class="bk-upload-title">
+          {{ _('اختر صور المنتج') }}
+        </div>
+
+        <div class="bk-upload-note">
+          PNG / JPG / JPEG / WEBP
+        </div>
+
+        <input
+          class="form-control"
+          type="file"
+          name="images"
+          multiple
+          accept="image/*"
+        >
+
+      </label>
+
+    </section>
+
+
+    <!-- =========================
+         Submit
+         ========================= -->
+    <div class="bk-form-submit-bar">
+
+      <div class="text-muted small">
+        <i class="bi bi-info-circle"></i>
+        {{ _('تأكد من البيانات قبل الحفظ') }}
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg"
+      >
+        <i class="bi bi-check2-circle"></i>
+        {{ _('حفظ المنتج') }}
+      </button>
+
     </div>
-  </div>
 
-  <div class="d-flex gap-2 mb-3">
-    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addVariantRow()">
-      + إضافة مقاس
-    </button>
-  </div>
-{% endif %}
+  </form>
 
-  <hr class="my-4">
+</div>
 
-  <!-- الصور -->
-  <h5 class="mb-3">ürün fotoğrafları</h5>
-  <div class="mb-3">
-    <label class="form-label">yükle</label>
-    <input class="form-control" type="file" name="images" multiple accept="image/*">
-    <div class="form-text">birden fazla yükleyebilirsiniz</div>
-  </div>
+{% endblock %}
 
-  <button class="btn btn-primary w-100">{{ _('حفظ') }}</button>
-</form>
+
+{% block scripts %}
+
+{{ super() }}
 
 <script>
-  const subSelect = document.getElementById("subCategorySelect");
-  const container = document.getElementById("propertiesContainer");
+
+  const subSelect =
+    document.getElementById("subCategorySelect");
+
+  const propertiesContainer =
+    document.getElementById("propertiesContainer");
+
 
   function escapeHtml(str) {
+
     return String(str)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+
   }
 
+
   function renderProperties(props) {
+
     if (!props || props.length === 0) {
-      container.innerHTML = `<div class="text-muted">لا توجد خصائص لهذا التصنيف.</div>`;
+
+      propertiesContainer.innerHTML = `
+        <div class="bk-form-placeholder">
+          <i class="bi bi-sliders"></i>
+          {{ _('لا توجد خصائص لهذا التصنيف.') }}
+        </div>
+      `;
+
       return;
     }
 
-    let html = "";
-    for (const p of props) {
-      const requiredAttr = p.is_required ? "required" : "";
-      const requiredStar = p.is_required ? `<span class="text-danger">*</span>` : "";
 
-      html += `<div class="mb-3">
-        <label class="form-label">${escapeHtml(p.name)} ${requiredStar}</label>`;
+    let html = `<div class="row g-3">`;
+
+
+    for (const p of props) {
+
+      const requiredAttr =
+        p.is_required ? "required" : "";
+
+      const requiredStar =
+        p.is_required
+          ? `<span class="text-danger">*</span>`
+          : "";
+
+
+      html += `
+        <div class="col-12 col-md-6">
+
+          <label class="form-label">
+            ${escapeHtml(p.name)}
+            ${requiredStar}
+          </label>
+      `;
+
 
       if (p.input_type === "select") {
-        html += `<select name="property_${p.id}" class="form-select" ${requiredAttr}>
-          <option value="">-- اختر --</option>`;
+
+        html += `
+          <select
+            name="property_${p.id}"
+            class="form-select"
+            ${requiredAttr}
+          >
+
+            <option value="">
+              -- اختر --
+            </option>
+        `;
+
 
         for (const v of (p.values || [])) {
-          const optVal = (typeof v === "string") ? v : v.value;
-          const optLabel = (typeof v === "string") ? v : v.label;
-          html += `<option value="${escapeHtml(optVal)}">${escapeHtml(optLabel)}</option>`;
+
+          const optVal =
+            (typeof v === "string")
+              ? v
+              : v.value;
+
+          const optLabel =
+            (typeof v === "string")
+              ? v
+              : v.label;
+
+
+          html += `
+            <option value="${escapeHtml(optVal)}">
+              ${escapeHtml(optLabel)}
+            </option>
+          `;
         }
 
+
         html += `</select>`;
+
+
       } else if (p.input_type === "number") {
-        html += `<input type="number" name="property_${p.id}" class="form-control" ${requiredAttr}>`;
+
+        html += `
+          <input
+            type="number"
+            name="property_${p.id}"
+            class="form-control"
+            ${requiredAttr}
+          >
+        `;
+
+
       } else {
-        html += `<input type="text" name="property_${p.id}" class="form-control" ${requiredAttr}>`;
+
+        html += `
+          <input
+            type="text"
+            name="property_${p.id}"
+            class="form-control"
+            ${requiredAttr}
+          >
+        `;
+
       }
+
 
       html += `</div>`;
     }
 
-    container.innerHTML = html;
+
+    html += `</div>`;
+
+    propertiesContainer.innerHTML = html;
+
   }
 
+
   async function loadProperties() {
-    const subId = subSelect.value;
+
+    const subId =
+      subSelect.value;
+
 
     if (!subId) {
-      container.innerHTML = `<div class="text-muted">اختر التصنيف الفرعي لعرض الخصائص.</div>`;
+
+      propertiesContainer.innerHTML = `
+        <div class="bk-form-placeholder">
+          <i class="bi bi-arrow-up-circle"></i>
+          {{ _('اختر التصنيف الفرعي لعرض الخصائص.') }}
+        </div>
+      `;
+
       return;
     }
 
-    container.innerHTML = `<div class="text-muted">جاري تحميل الخصائص...</div>`;
+
+    propertiesContainer.innerHTML = `
+      <div class="bk-form-loading">
+        <span class="spinner-border spinner-border-sm"></span>
+        {{ _('جاري تحميل الخصائص...') }}
+      </div>
+    `;
+
 
     try {
-      const res = await fetch(`/products/api/properties/${subId}`);
-      const data = await res.json();
+
+      const res =
+        await fetch(
+          `/products/api/properties/${subId}`
+        );
+
+      const data =
+        await res.json();
+
       renderProperties(data);
+
+
     } catch (e) {
-      container.innerHTML = `<div class="text-danger">فشل تحميل الخصائص.</div>`;
+
+      propertiesContainer.innerHTML = `
+        <div class="bk-form-placeholder text-danger">
+          <i class="bi bi-exclamation-triangle"></i>
+          {{ _('فشل تحميل الخصائص.') }}
+        </div>
+      `;
+
     }
+
   }
 
-  subSelect.addEventListener("change", loadProperties);
+
+  subSelect.addEventListener(
+    "change",
+    loadProperties
+  );
 
 
   function addVariantRow(data = {}) {
-    const container = document.getElementById("variantsContainer");
+
+    const container =
+      document.getElementById(
+        "variantsContainer"
+      );
+
     if (!container) return;
 
-    const row = document.createElement("div");
-    row.className = "variant-row border rounded-3 p-3 mb-2";
+
+    const row =
+      document.createElement("div");
+
+
+    row.className =
+      "variant-row bk-variant-editor-row";
+
+
     row.innerHTML = `
-      <div class="row g-2 align-items-end">
-        <div class="col-md-3">
-          <label class="form-label">المقاس</label>
-          <input type="text" name="variant_size[]" class="form-control" value="${data.size || ''}" placeholder="S / M / L">
+
+      <div class="row g-3 align-items-end">
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('المقاس') }}
+          </label>
+
+          <input
+            type="text"
+            name="variant_size[]"
+            class="form-control"
+            value="${escapeHtml(data.size || '')}"
+            placeholder="S / M / L"
+          >
+
         </div>
-        <div class="col-md-3">
-          <label class="form-label">اللون</label>
-          <input type="text" name="variant_color[]" class="form-control" value="${data.color || ''}" placeholder="أبيض / رمادي">
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('اللون') }}
+          </label>
+
+          <input
+            type="text"
+            name="variant_color[]"
+            class="form-control"
+            value="${escapeHtml(data.color || '')}"
+            placeholder="{{ _('اختياري') }}"
+          >
+
         </div>
-        <div class="col-md-2">
-          <label class="form-label">رأس المال</label>
-          <input type="number" step="0.01" name="variant_capital_price[]" class="form-control" value="${data.capital_price || ''}">
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('رأس المال') }}
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            name="variant_capital_price[]"
+            class="form-control"
+            value="${escapeHtml(data.capital_price || '')}"
+          >
+
         </div>
-        <div class="col-md-2">
-          <label class="form-label">سعر البيع</label>
-          <input type="number" step="0.01" name="variant_base_cash_price[]" class="form-control" value="${data.base_cash_price || ''}">
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('سعر البيع') }}
+          </label>
+
+          <input
+            type="number"
+            step="0.01"
+            name="variant_base_cash_price[]"
+            class="form-control"
+            value="${escapeHtml(data.base_cash_price || '')}"
+          >
+
         </div>
-        <div class="col-md-1">
-          <label class="form-label">الكمية</label>
-          <input type="number" name="variant_stock_qty[]" class="form-control" value="${data.stock_qty || 0}">
+
+
+        <div class="col-12 col-md-2">
+
+          <label class="form-label">
+            {{ _('الكمية') }}
+          </label>
+
+          <input
+            type="number"
+            name="variant_stock_qty[]"
+            class="form-control"
+            value="${escapeHtml(data.stock_qty ?? 0)}"
+          >
+
         </div>
-        <div class="col-md-1 d-grid">
-          <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.variant-row').remove()">✕</button>
+
+
+        <div class="col-12 col-md-2">
+
+          <button
+            type="button"
+            class="btn btn-outline-danger w-100"
+            onclick="this.closest('.variant-row').remove()"
+          >
+            <i class="bi bi-trash3"></i>
+            {{ _('حذف') }}
+          </button>
+
         </div>
+
       </div>
     `;
+
+
     container.appendChild(row);
+
   }
+
 </script>
+
 {% endblock %}
