@@ -1,87 +1,248 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('العروض الخاصة') }}{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 class="mb-0">{{ _('العروض الخاصة') }}</h2>
-  <a class="btn btn-primary" href="/admin/special-offers/new">+ {{ _('إضافة عرض') }}</a>
-</div>
 
-<div class="card shadow-sm">
-  <div class="table-responsive">
-    <table class="table align-middle mb-0">
-      <thead class="table-light">
-        <tr>
-          <th>#</th>
-          <th>{{ _('العنوان') }}</th>
-          <th>{{ _('النوع') }}</th>
-          <th>{{ _('الحالة') }}</th>
-          <th>{{ _('الوقت') }}</th>
-          <th>{{ _('الستوك') }}</th>
-          <th>{{ _('خيارات') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for o in offers %}
-          <tr>
-            <td>{{ o.id }}</td>
-            <td>
-              <div class="fw-bold">{{ o.title }}</div>
-              {% if o.note %}<div class="text-muted small">{{ o.note }}</div>{% endif %}
-            </td>
-            <td>{{ o.offer_kind }}</td>
-            <td>
-              {% if o.is_running %}
-                <span class="badge bg-success">{{ _('ساري') }}</span>
-              {% else %}
-                <span class="badge bg-secondary">{{ _('سابق/غير فعال') }}</span>
-              {% endif %}
-              {% if o.is_cancelled %}
-                <span class="badge bg-danger">{{ _('موقوف') }}</span>
-              {% endif %}
-            </td>
-            <td class="text-nowrap">
-              {% if o.start_at %}{{ o.start_at }}{% else %}—{% endif %}
-              <div class="text-muted small">
-                {% if o.end_at %}{{ o.end_at }}{% else %}—{% endif %}
-              </div>
-            </td>
-            <td>
-              {% if o.stock_remaining is not none %}
-                {{ o.stock_remaining }}
-              {% else %}
-                —
-              {% endif %}
-            </td>
-            <td class="text-nowrap">
-              <a class="btn btn-sm btn-warning" href="/admin/special-offers/{{ o.id }}/edit">{{ _('تعديل') }}</a>
+<div class="container-fluid px-0">
 
-              <form method="post" action="/admin/special-offers/{{ o.id }}/toggle-cancel" class="d-inline">
-                <button class="btn btn-sm btn-outline-danger" type="submit">
-                  {% if o.is_cancelled %}{{ _('تفعيل') }}{% else %}{{ _('إيقاف') }}{% endif %}
-                </button>
-              </form>
+  <div class="bk-page-header mb-4">
 
-              {% if not o.is_archived %}
-                <form method="post"
-                      action="{{ url_for('admin_special_offers.admin_archive_special_offer', offer_id=o.id) }}"
-                      class="d-inline" onsubmit="return confirm('إخفاء العرض عن المتجر؟');">
-                  <button class="btn btn-sm btn-outline-danger">{{ _('إخفاء') }}</button>
-                </form>
-              {% else %}
-                <form method="post"
-                      action="{{ url_for('admin_special_offers.admin_unarchive_special_offer', offer_id=o.id) }}"
-                      class="d-inline">
-                  <button class="btn btn-sm btn-outline-success">{{ _('استرجاع') }}</button>
-                </form>
-              {% endif %}
-            </td>
-          </tr>
-        {% else %}
-          <tr><td colspan="7" class="text-center text-muted py-4">{{ _('لا يوجد عروض') }}</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-stars"></i>
+        {{ _('التسويق') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('العروض الخاصة') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('إدارة عروض المنتجات والخصومات والهدايا') }}
+      </div>
+    </div>
+
+    <a class="btn btn-primary" href="/admin/special-offers/new">
+      <i class="bi bi-plus-lg"></i>
+      {{ _('إضافة عرض') }}
+    </a>
+
   </div>
+
+
+  <div class="card bk-report-table-card">
+
+    <div class="table-responsive">
+
+      <table class="table table-hover align-middle mb-0">
+
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>{{ _('العنوان') }}</th>
+            <th>{{ _('النوع') }}</th>
+            <th>{{ _('الحالة') }}</th>
+            <th>{{ _('الوقت') }}</th>
+            <th>{{ _('الستوك') }}</th>
+            <th class="col-actions">{{ _('خيارات') }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {% for o in offers %}
+
+            <tr class="{% if o.is_archived %}opacity-50{% endif %}">
+
+              <td>{{ o.id }}</td>
+
+              <td>
+                <div class="fw-bold">
+                  {{ o.title }}
+                </div>
+
+                {% if o.note %}
+                  <div class="text-muted small">
+                    {{ o.note }}
+                  </div>
+                {% endif %}
+              </td>
+
+              <td>
+                {% if o.offer_kind == "gift" %}
+                  <span class="bk-offer-type gift">
+                    <i class="bi bi-gift"></i>
+                    {{ _('هدية') }}
+                  </span>
+                {% elif o.offer_kind == "bundle_discount" %}
+                  <span class="bk-offer-type bundle">
+                    <i class="bi bi-tags"></i>
+                    {{ _('خصم على المنتجين') }}
+                  </span>
+                {% else %}
+                  <span class="bk-offer-type third">
+                    <i class="bi bi-percent"></i>
+                    {{ _('خصم على منتج ثالث') }}
+                  </span>
+                {% endif %}
+              </td>
+
+              <td>
+
+                {% if o.is_running %}
+                  <span class="bk-status-pill success">
+                    {{ _('ساري') }}
+                  </span>
+                {% else %}
+                  <span class="bk-status-pill neutral">
+                    {{ _('سابق/غير فعال') }}
+                  </span>
+                {% endif %}
+
+                {% if o.is_cancelled %}
+                  <span class="bk-status-pill danger">
+                    {{ _('موقوف') }}
+                  </span>
+                {% endif %}
+
+                {% if o.is_archived %}
+                  <div class="mt-1">
+                    <span class="bk-status-pill archive">
+                      {{ _('مخفي') }}
+                    </span>
+                  </div>
+                {% endif %}
+
+              </td>
+
+              <td class="text-nowrap">
+
+                <div class="bk-date-range">
+                  <div>
+                    <i class="bi bi-play-circle"></i>
+                    {{ o.start_at.strftime('%Y-%m-%d %H:%M') if o.start_at else '—' }}
+                  </div>
+
+                  <div>
+                    <i class="bi bi-stop-circle"></i>
+                    {{ o.end_at.strftime('%Y-%m-%d %H:%M') if o.end_at else '—' }}
+                  </div>
+                </div>
+
+              </td>
+
+              <td>
+
+                {% if o.stock_remaining is not none %}
+                  <strong>{{ o.stock_remaining }}</strong>
+
+                  {% if o.stock_limit is not none %}
+                    <span class="text-muted">
+                      / {{ o.stock_limit }}
+                    </span>
+                  {% endif %}
+                {% else %}
+                  —
+                {% endif %}
+
+              </td>
+
+              <td class="col-actions">
+
+                <div class="actions-group">
+
+                  <a
+                    class="btn btn-sm btn-outline-secondary"
+                    href="/admin/special-offers/{{ o.id }}/edit"
+                    title="{{ _('تعديل') }}"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+
+
+                  <form
+                    method="post"
+                    action="/admin/special-offers/{{ o.id }}/toggle-cancel"
+                    class="d-inline"
+                  >
+                    <button
+                      class="btn btn-sm {% if o.is_cancelled %}btn-outline-success{% else %}btn-outline-warning{% endif %}"
+                      type="submit"
+                      title="{% if o.is_cancelled %}{{ _('تفعيل') }}{% else %}{{ _('إيقاف') }}{% endif %}"
+                    >
+                      {% if o.is_cancelled %}
+                        <i class="bi bi-play-fill"></i>
+                      {% else %}
+                        <i class="bi bi-pause-fill"></i>
+                      {% endif %}
+                    </button>
+                  </form>
+
+
+                  {% if not o.is_archived %}
+
+                    <form
+                      method="post"
+                      action="{{ url_for('admin_special_offers.admin_archive_special_offer', offer_id=o.id) }}"
+                      class="d-inline"
+                      onsubmit="return confirm('إخفاء العرض عن المتجر؟');"
+                    >
+                      <button class="btn btn-sm btn-outline-danger" title="{{ _('إخفاء') }}">
+                        <i class="bi bi-eye-slash"></i>
+                      </button>
+                    </form>
+
+                  {% else %}
+
+                    <form
+                      method="post"
+                      action="{{ url_for('admin_special_offers.admin_unarchive_special_offer', offer_id=o.id) }}"
+                      class="d-inline"
+                    >
+                      <button class="btn btn-sm btn-outline-success" title="{{ _('استرجاع') }}">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                      </button>
+                    </form>
+
+                  {% endif %}
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          {% else %}
+
+            <tr>
+              <td colspan="7" class="py-5">
+                <div class="bk-empty-state">
+                  <div class="bk-empty-icon">
+                    <i class="bi bi-stars"></i>
+                  </div>
+
+                  <div class="bk-empty-title">
+                    {{ _('لا يوجد عروض') }}
+                  </div>
+
+                  <a href="/admin/special-offers/new" class="btn btn-primary btn-sm mt-3">
+                    {{ _('إضافة أول عرض') }}
+                  </a>
+                </div>
+              </td>
+            </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
 </div>
+
 {% endblock %}

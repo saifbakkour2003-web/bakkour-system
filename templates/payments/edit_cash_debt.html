@@ -1,25 +1,146 @@
-<!-- templates/payments/edit_cash_debt.html -->
 {% extends "layout_new.html" %}
+
+{% block title %}{{ _('تعديل الدين النقدي') }}{% endblock %}
 
 {% block content %}
 
-<h2 class="mb-4">{{ _('تعديل الدين النقدي') }}</h2>
+<div class="container-fluid px-0">
 
-<form method="POST" class="card p-3 shadow-sm" style="max-width:400px;">
+  <div class="bk-page-header mb-4">
 
-    <label>{{ _('اسم الدين:') }}</label>
-    <input type="text" name="name" value="{{ debt.name }}" class="form-control" required>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-pencil-square"></i>
+        {{ _('الحساب النقدي') }}
+      </div>
 
-    <label class="mt-2">{{ _('السعر:') }}</label>
-    <input type="number" name="price" step="0.01" value="{{ debt.price }}" class="form-control" required>
+      <h2 class="bk-page-title mb-1">
+        {{ _('تعديل الدين النقدي') }}
+      </h2>
 
-    <label class="mt-2">{{ _('تاريخ الإضافة:') }}</label>
-    <input type="date" name="date_added"
+      <div class="bk-page-subtitle">
+        {{ debt.name }}
+      </div>
+    </div>
+
+    <a
+      href="{{ url_for('customers.customer_page', id=debt.customer_id) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('إلغاء') }}
+    </a>
+
+  </div>
+
+
+  <form method="POST">
+
+    <section class="card bk-form-section">
+
+      <div class="bk-form-section-header">
+
+        <div class="bk-form-section-icon">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <div>
+          <h3 class="bk-form-section-title">
+            {{ _('بيانات الدين') }}
+          </h3>
+
+          <div class="bk-form-section-note">
+            {{ _('يمكن تعديل الاسم والمبلغ وتاريخ تسجيل الدين.') }}
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="row g-3">
+
+        <div class="col-12">
+
+          <label class="form-label">
+            {{ _('اسم الدين:') }}
+          </label>
+
+          <input
+            type="text"
+            name="name"
+            value="{{ debt.name }}"
+            class="form-control"
+            required
+          >
+
+        </div>
+
+
+        <div class="col-12 col-md-6">
+
+          <label class="form-label">
+            {{ _('السعر:') }}
+          </label>
+
+          <div class="input-group">
+
+            <input
+              type="number"
+              name="price"
+              step="0.01"
+              min="0.01"
+              value="{{ debt.price }}"
+              class="form-control"
+              required
+            >
+
+            <span class="input-group-text">$</span>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-12 col-md-6">
+
+          <label class="form-label">
+            {{ _('تاريخ الإضافة:') }}
+          </label>
+
+          <input
+            type="date"
+            name="date_added"
             value="{{ debt.date_added.strftime('%Y-%m-%d') }}"
-            class="form-control" required>
+            class="form-control"
+            required
+          >
 
-    <button class="btn btn-primary mt-3">{{ _('حفظ التعديلات') }}</button>
+        </div>
 
-</form>
+      </div>
+
+    </section>
+
+
+    <div class="bk-form-submit-bar mt-3">
+
+      <div class="text-muted small">
+        <i class="bi bi-info-circle"></i>
+        {{ _('سيتم تحديث سجل الدين بعد الحفظ مباشرة.') }}
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg"
+      >
+        <i class="bi bi-check2-circle"></i>
+        {{ _('حفظ التعديلات') }}
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
 
 {% endblock %}

@@ -1,44 +1,244 @@
-<!-- templates/sales/add.html -->
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('تسجيل بيع') }}{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">💰 {{ _('تسجيل بيع') }}</h2>
 
-<form method="POST" class="card p-4 shadow-sm" style="max-width:500px;">
+<div class="container-fluid px-0">
 
-    <p><strong>{{ _('المنتج:') }}</strong> {{ product.name }}</p>
+  <div class="bk-page-header mb-4">
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('نوع البيع') }}</label>
-        <select name="sale_type" class="form-select" required>
-            <option value="cash">{{ _('نقدي') }}</option>
-            <option value="debt">{{ _('دين') }}</option>
-            <option value="installment">{{ _('تقسيط') }}</option>
-        </select>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-bag-check"></i>
+        {{ _('إدارة المبيعات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('تسجيل بيع') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('تسجيل عملية بيع مباشرة للمنتج') }}
+      </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('سعر البيع') }}</label>
-        <input type="number" step="0.01"
-               name="sell_price"
-               class="form-control"
-               value="{{ product.base_cash_price }}"
-               required>
+    <a
+      href="{{ url_for('products.products_list') }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
+
+  </div>
+
+
+  <div class="row g-4">
+
+    <div class="col-12 col-xl-8">
+
+      <form method="POST">
+
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">
+                {{ _('بيانات عملية البيع') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('حدد نوع البيع والسعر والزبون عند الحاجة.') }}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="bk-sale-product-preview mb-4">
+
+            <div class="bk-sale-product-icon">
+              <i class="bi bi-box-seam"></i>
+            </div>
+
+            <div class="flex-grow-1">
+
+              <div class="bk-sale-product-label">
+                {{ _('المنتج') }}
+              </div>
+
+              <div class="bk-sale-product-name">
+                {{ pick_lang(product.name, product.name_tr) }}
+              </div>
+
+              <div class="bk-sale-product-code">
+                {{ product.code }}
+              </div>
+
+            </div>
+
+            <div class="bk-sale-product-price">
+              {{ "%.2f"|format(product.base_cash_price or 0) }}
+              <small>$</small>
+            </div>
+
+          </div>
+
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('نوع البيع') }}
+              </label>
+
+              <select
+                name="sale_type"
+                class="form-select"
+                required
+              >
+                <option value="cash">
+                  {{ _('نقدي') }}
+                </option>
+
+                <option value="debt">
+                  {{ _('دين') }}
+                </option>
+
+                <option value="installment">
+                  {{ _('تقسيط') }}
+                </option>
+              </select>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('سعر البيع') }}
+              </label>
+
+              <div class="input-group">
+
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="sell_price"
+                  class="form-control"
+                  value="{{ product.base_cash_price }}"
+                  required
+                >
+
+                <span class="input-group-text">$</span>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-12">
+
+              <label class="form-label">
+                {{ _('الزبون (اختياري)') }}
+              </label>
+
+              <select
+                name="customer_id"
+                class="form-select"
+              >
+                <option value="">
+                  {{ _('— بدون —') }}
+                </option>
+
+                {% for c in customers %}
+                  <option value="{{ c.id }}">
+                    {{ pick_lang(c.name, c.name_tr) }}
+                    — {{ c.custom_id }}
+                  </option>
+                {% endfor %}
+              </select>
+
+              <div class="form-text">
+                {{ _('يمكن ترك الزبون فارغاً في حال البيع النقدي المباشر.') }}
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-info-circle"></i>
+            {{ _('سيتم تسجيل العملية ضمن تقرير الأرباح وتحديث المخزون عند التفعيل.') }}
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg"
+          >
+            <i class="bi bi-check2-circle"></i>
+            {{ _('تسجيل البيع') }}
+          </button>
+
+        </div>
+
+      </form>
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('الزبون (اختياري)') }}</label>
-        <select name="customer_id" class="form-select">
-            <option value="">{{ _('— بدون —') }}</option>
-            {% for c in customers %}
-            <option value="{{ c.id }}">{{ c.name }}</option>
-            {% endfor %}
-        </select>
+
+    <div class="col-12 col-xl-4">
+
+      <div class="card bk-finance-side-card">
+
+        <div class="bk-finance-side-icon">
+          <i class="bi bi-cash-coin"></i>
+        </div>
+
+        <div class="bk-finance-side-label">
+          {{ _('السعر الأساسي') }}
+        </div>
+
+        <div class="bk-finance-side-title">
+          {{ "%.2f"|format(product.base_cash_price or 0) }} $
+        </div>
+
+        <hr>
+
+        <div class="bk-finance-mini-stat">
+          <span>{{ _('رأس المال') }}</span>
+          <strong>{{ "%.2f"|format(product.capital_price or 0) }} $</strong>
+        </div>
+
+        <div class="bk-finance-mini-stat">
+          <span>{{ _('المخزون') }}</span>
+          <strong>{{ product.stock_qty or 0 }}</strong>
+        </div>
+
+        <div class="bk-finance-mini-stat">
+          <span>{{ _('الكود') }}</span>
+          <strong>{{ product.code }}</strong>
+        </div>
+
+      </div>
+
     </div>
 
-    <button class="btn btn-success w-100">
-        💾 {{ _('تسجيل البيع') }}
-    </button>
-</form>
+  </div>
+
+</div>
+
 {% endblock %}

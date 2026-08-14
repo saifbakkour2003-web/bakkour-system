@@ -1,48 +1,113 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('التصنيفات الفرعية') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
     <div>
-      <h2 class="mb-1">📂 {{ _('التصنيفات الفرعية') }}</h2>
-      <div class="text-muted">{{ _('إدارة التصنيفات الفرعية أصبحت مرتبطة مباشرة بالقسم الثابت.') }}</div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-diagram-2"></i>
+        {{ _('هيكل المنتجات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('التصنيفات الفرعية') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('إدارة الأنواع الفعلية للمنتجات وربط كل منها بالقسم المناسب') }}
+      </div>
     </div>
 
-    <a href="{{ url_for('admin_sub_categories.add_sub_category', dept=selected_dept) }}"
-       class="btn btn-success">
-      + {{ _('إضافة تصنيف فرعي') }}
+    <a
+      href="{{ url_for('admin_sub_categories.add_sub_category', dept=selected_dept) }}"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-plus-lg"></i>
+      {{ _('إضافة تصنيف فرعي') }}
     </a>
+
   </div>
 
-  <div class="sticky-top bg-white pt-2 pb-2 mb-3 border-bottom" style="z-index: 1020;">
-    <form method="GET" class="d-flex align-items-center gap-2 flex-wrap">
-      <span class="fw-bold text-muted">{{ _('القسم:') }}</span>
 
-      <select name="dept"
-              class="form-select form-select-sm"
-              style="max-width:220px"
-              onchange="this.form.submit()">
-        <option value="">{{ _('— الكل —') }}</option>
-        <option value="electrical" {% if selected_dept == 'electrical' %}selected{% endif %}>⚡ {{ _('كهربائيات') }}</option>
-        <option value="linens" {% if selected_dept == 'linens' %}selected{% endif %}>🧺 {{ _('بياضات') }}</option>
-        <option value="crystal" {% if selected_dept == 'crystal' %}selected{% endif %}>🍷 {{ _('بلوريات') }}</option>
-      </select>
+  <!-- Department Tabs -->
+  <div class="bk-dept-tabs mb-4">
 
-      {% if selected_dept %}
-        <a href="{{ url_for('admin_sub_categories.list_sub_categories') }}"
-           class="btn btn-sm btn-outline-secondary">
-          {{ _('مسح الفلتر') }}
-        </a>
-      {% endif %}
-    </form>
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories') }}"
+      class="bk-dept-tab {% if not selected_dept %}active{% endif %}"
+    >
+      <i class="bi bi-grid"></i>
+      {{ _('الكل') }}
+    </a>
+
+
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories', dept='electrical') }}"
+      class="bk-dept-tab {% if selected_dept == 'electrical' %}active{% endif %}"
+    >
+      <i class="bi bi-lightning-charge-fill"></i>
+      {{ _('كهربائيات') }}
+    </a>
+
+
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories', dept='linens') }}"
+      class="bk-dept-tab {% if selected_dept == 'linens' %}active{% endif %}"
+    >
+      <i class="bi bi-bag-fill"></i>
+      {{ _('بياضات') }}
+    </a>
+
+
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories', dept='crystal') }}"
+      class="bk-dept-tab {% if selected_dept == 'crystal' %}active{% endif %}"
+    >
+      <i class="bi bi-cup-straw"></i>
+      {{ _('بلوريات') }}
+    </a>
+
   </div>
 
-  <div class="card shadow-sm">
+
+  <div class="card bk-report-table-card">
+
+    <div class="bk-panel-simple-header">
+
+      <div>
+
+        <div class="bk-panel-simple-kicker">
+          {% if selected_dept %}
+            {{ dept_labels[selected_dept] }}
+          {% else %}
+            {{ _('كل الأقسام') }}
+          {% endif %}
+        </div>
+
+        <h3 class="bk-panel-simple-title">
+          {{ _('قائمة التصنيفات') }}
+        </h3>
+
+      </div>
+
+      <div class="bk-table-count">
+        {{ sub_categories|length }}
+      </div>
+
+    </div>
+
+
     <div class="table-responsive">
-      <table class="table table-hover mb-0 align-middle text-center">
-        <thead class="table-light">
+
+      <table class="table table-hover align-middle mb-0">
+
+        <thead class="table-dark">
+
           <tr>
             <th>#</th>
             <th>{{ _('الاسم') }}</th>
@@ -50,51 +115,150 @@
             <th>{{ _('Code Prefix') }}</th>
             <th class="col-actions">{{ _('إجراءات') }}</th>
           </tr>
+
         </thead>
+
+
         <tbody>
+
           {% for s in sub_categories %}
-          <tr>
-            <td>{{ loop.index }}</td>
 
-            <td>{{ pick_lang(s.name, s.name_tr) }}</td>
+            <tr>
 
-            <td>
-              {% if s.department == "electrical" %}
-                <span class="badge dept-badge dept-electrical">⚡ {{ _('كهربائيات') }}</span>
-              {% elif s.department == "linens" %}
-                <span class="badge dept-badge dept-linens">🧺 {{ _('بياضات') }}</span>
-              {% elif s.department == "crystal" %}
-                <span class="badge dept-badge dept-crystal">🍷 {{ _('بلوريات') }}</span>
-              {% else %}
-                <span class="badge bg-secondary">{{ s.department }}</span>
-              {% endif %}
-            </td>
+              <td class="text-muted">
+                {{ loop.index }}
+              </td>
 
-            <td class="fw-bold">{{ s.code_prefix }}</td>
 
-            <td class="col-actions">
-              <a href="{{ url_for('admin_sub_categories.edit_sub_category', sub_id=s.id, dept=s.department) }}"
-                 class="btn btn-sm btn-outline-primary">
-                {{ _('تعديل') }}
-              </a>
+              <td>
 
-              <form method="POST"
+                <div class="bk-category-name">
+                  {{ pick_lang(s.name, s.name_tr) }}
+                </div>
+
+                {% if s.name_tr %}
+                  <div class="bk-category-secondary">
+                    {{ s.name_tr }}
+                  </div>
+                {% endif %}
+
+              </td>
+
+
+              <td>
+
+                {% if s.department == "electrical" %}
+
+                  <span class="bk-department-pill electrical">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    {{ _('كهربائيات') }}
+                  </span>
+
+                {% elif s.department == "linens" %}
+
+                  <span class="bk-department-pill linens">
+                    <i class="bi bi-bag-fill"></i>
+                    {{ _('بياضات') }}
+                  </span>
+
+                {% elif s.department == "crystal" %}
+
+                  <span class="bk-department-pill crystal">
+                    <i class="bi bi-cup-straw"></i>
+                    {{ _('بلوريات') }}
+                  </span>
+
+                {% else %}
+
+                  <span class="bk-status-pill neutral">
+                    {{ s.department }}
+                  </span>
+
+                {% endif %}
+
+              </td>
+
+
+              <td>
+
+                <span class="bk-code-chip">
+                  {{ s.code_prefix }}
+                </span>
+
+              </td>
+
+
+              <td class="col-actions">
+
+                <div class="actions-group">
+
+                  <a
+                    href="{{ url_for('admin_sub_categories.edit_sub_category', sub_id=s.id, dept=s.department) }}"
+                    class="btn btn-sm btn-outline-secondary"
+                    title="{{ _('تعديل') }}"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+
+
+                  <form
+                    method="POST"
                     action="{{ url_for('admin_sub_categories.delete_sub_category', sub_id=s.id) }}"
                     class="d-inline"
-                    onsubmit="return confirm('متأكد من الحذف؟');">
-                <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
-              </form>
-            </td>
-          </tr>
+                    onsubmit="return confirm('متأكد من حذف التصنيف؟');"
+                  >
+
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      title="{{ _('حذف') }}"
+                    >
+                      <i class="bi bi-trash3"></i>
+                    </button>
+
+                  </form>
+
+                </div>
+
+              </td>
+
+            </tr>
+
           {% else %}
-          <tr>
-            <td colspan="5" class="text-muted py-4">{{ _('لا يوجد تصنيفات فرعية') }}</td>
-          </tr>
+
+            <tr>
+
+              <td colspan="5" class="py-5">
+
+                <div class="bk-empty-state">
+
+                  <div class="bk-empty-icon">
+                    <i class="bi bi-diagram-2"></i>
+                  </div>
+
+                  <div class="bk-empty-title">
+                    {{ _('لا يوجد تصنيفات فرعية') }}
+                  </div>
+
+                  <div class="bk-empty-note">
+                    {{ _('ابدأ بإضافة أول تصنيف لهذا القسم') }}
+                  </div>
+
+                </div>
+
+              </td>
+
+            </tr>
+
           {% endfor %}
+
         </tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </div>
+
 {% endblock %}

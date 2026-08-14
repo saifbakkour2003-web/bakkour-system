@@ -1,16 +1,72 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إضافة تصنيف رئيسي') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid" style="max-width: 720px;">
-  <h2 class="mb-4">{{ _('إضافة تصنيف رئيسي') }}</h2>
 
-  <div class="alert alert-warning">
-    {{ _('التصنيفات الرئيسية أصبحت ثابتة بالنظام. لا يمكن إضافة قسم جديد من هذه الصفحة.') }}
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-grid"></i>
+        {{ _('هيكل المنتجات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('إضافة تصنيف رئيسي') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('الأقسام الرئيسية أصبحت جزءاً ثابتاً من بنية النظام') }}
+      </div>
+    </div>
+
   </div>
 
-  <a href="{{ url_for('admin_main_categories.list_main_categories') }}" class="btn btn-primary">
-    {{ _('الرجوع إلى قائمة الأقسام') }}
-  </a>
+
+  <div class="card bk-info-lock-card">
+
+    <div class="bk-info-lock-icon">
+      <i class="bi bi-lock-fill"></i>
+    </div>
+
+    <h3>
+      {{ _('لا يمكن إضافة قسم رئيسي جديد') }}
+    </h3>
+
+    <p>
+      {{ _('الأقسام الرئيسية هي كهربائيات وبياضات وبلوريات، وهي أقسام ثابتة يعتمد عليها النظام داخلياً.') }}
+    </p>
+
+    <p>
+      {{ _('إذا أردت إضافة نوع جديد من المنتجات، أضف تصنيفاً فرعياً داخل القسم المناسب.') }}
+    </p>
+
+
+    <div class="d-flex justify-content-center gap-2 flex-wrap mt-3">
+
+      <a
+        href="{{ url_for('admin_main_categories.list_main_categories') }}"
+        class="btn btn-outline-secondary"
+      >
+        <i class="bi bi-arrow-right"></i>
+        {{ _('الرجوع إلى الأقسام') }}
+      </a>
+
+      <a
+        href="{{ url_for('admin_sub_categories.add_sub_category') }}"
+        class="btn btn-primary"
+      >
+        <i class="bi bi-plus-lg"></i>
+        {{ _('إضافة تصنيف فرعي') }}
+      </a>
+
+    </div>
+
+  </div>
+
 </div>
+
 {% endblock %}

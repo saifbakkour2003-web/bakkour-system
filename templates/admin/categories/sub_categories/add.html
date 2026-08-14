@@ -1,53 +1,216 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إضافة تصنيف فرعي') }}{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">{{ _('إضافة تصنيف فرعي') }}</h2>
 
-{% if selected_dept %}
-  <div class="alert alert-info py-2" style="max-width: 450px;">
-    {{ _('القسم الحالي:') }}
-    <b>{{ dept_labels[selected_dept] }}</b>
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
+    <div>
+
+      <div class="bk-page-kicker">
+        <i class="bi bi-diagram-2"></i>
+        {{ _('التصنيفات الفرعية') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('إضافة تصنيف فرعي') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('إنشاء نوع جديد من المنتجات وربطه بأحد أقسام المعرض') }}
+      </div>
+
+    </div>
+
+
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories', dept=selected_dept) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
+
   </div>
-{% endif %}
 
-<form method="POST"
-      class="card p-4 shadow-sm"
-      style="max-width: 450px;">
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('اسم التصنيف الفرعي') }}</label>
-        <input type="text" name="name" class="form-control" required>
+  <div class="row g-4">
+
+    <div class="col-12 col-xl-8">
+
+      <form method="POST">
+
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-folder-plus"></i>
+            </div>
+
+            <div>
+
+              <h3 class="bk-form-section-title">
+                {{ _('بيانات التصنيف') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('حدد الاسم والكود والقسم الذي ينتمي إليه التصنيف.') }}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('اسم التصنيف الفرعي') }}
+              </label>
+
+              <input
+                type="text"
+                name="name"
+                class="form-control"
+                required
+              >
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('اسم التصنيف الفرعي (تركي)') }}
+              </label>
+
+              <input
+                type="text"
+                name="name_tr"
+                class="form-control"
+              >
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('Code Prefix') }}
+              </label>
+
+              <input
+                type="text"
+                name="code_prefix"
+                class="form-control bk-code-input"
+                placeholder="FRD"
+                maxlength="5"
+                required
+              >
+
+              <div class="form-text">
+                {{ _('يستخدم هذا الاختصار ضمن كود المنتج.') }}
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('القسم') }}
+              </label>
+
+              <select
+                name="department"
+                class="form-select"
+                required
+              >
+
+                <option value="">
+                  {{ _('-- اختر --') }}
+                </option>
+
+                <option value="electrical" {% if selected_dept == 'electrical' %}selected{% endif %}>
+                  ⚡ {{ _('كهربائيات') }}
+                </option>
+
+                <option value="linens" {% if selected_dept == 'linens' %}selected{% endif %}>
+                  🧺 {{ _('بياضات') }}
+                </option>
+
+                <option value="crystal" {% if selected_dept == 'crystal' %}selected{% endif %}>
+                  🍷 {{ _('بلوريات') }}
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-info-circle"></i>
+            {{ _('سيظهر هذا التصنيف مباشرة ضمن قسم المنتجات المختار.') }}
+          </div>
+
+          <button class="btn btn-primary btn-lg">
+            <i class="bi bi-check2-circle"></i>
+            {{ _('حفظ') }}
+          </button>
+
+        </div>
+
+      </form>
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('اسم التصنيف الفرعي (تركي)') }}</label>
-        <input type="text" name="name_tr" class="form-control">
+
+    <div class="col-12 col-xl-4">
+
+      <div class="card bk-finance-side-card">
+
+        <div class="bk-finance-side-icon">
+          <i class="bi bi-diagram-3"></i>
+        </div>
+
+        <div class="bk-finance-side-label">
+          {{ _('مثال') }}
+        </div>
+
+        <div class="bk-finance-side-title">
+          {{ _('برادات') }}
+        </div>
+
+        <hr>
+
+        <div class="bk-finance-mini-stat">
+          <span>{{ _('القسم') }}</span>
+          <strong>{{ _('كهربائيات') }}</strong>
+        </div>
+
+        <div class="bk-finance-mini-stat">
+          <span>{{ _('Prefix') }}</span>
+          <strong>FRD</strong>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('Code Prefix') }}</label>
-        <input type="text"
-            name="code_prefix"
-            class="form-control"
-            placeholder="{{ _('مثال: FRD') }}"
-            maxlength="5"
-            style="text-transform: uppercase;"
-            required>
-    </div>
+  </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('القسم') }}</label>
-        <select name="department" class="form-select" required>
-            <option value="">{{ _('-- اختر --') }}</option>
-            <option value="electrical" {% if selected_dept == 'electrical' %}selected{% endif %}>⚡ {{ _('كهربائيات') }}</option>
-            <option value="linens" {% if selected_dept == 'linens' %}selected{% endif %}>🧺 {{ _('بياضات') }}</option>
-            <option value="crystal" {% if selected_dept == 'crystal' %}selected{% endif %}>🍷 {{ _('بلوريات') }}</option>
-        </select>
-    </div>
+</div>
 
-    <button class="btn btn-primary w-100">
-        {{ _('حفظ') }}
-    </button>
-</form>
 {% endblock %}

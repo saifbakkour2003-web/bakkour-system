@@ -1,64 +1,298 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('لوحة التحكم -') }} {{ ledger_name }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 
-  <div class="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+<div class="container-fluid px-0 bk-ledger-dashboard">
+
+  <!-- =====================================================
+       Header
+       ===================================================== -->
+  <div class="bk-page-header mb-4">
+
     <div>
-      <h2 class="mb-1">{{ _('لوحة التحكم -') }} {{ ledger_name }}</h2>
-      <p class="text-muted mb-0">{{ _('رمز الدفتر:') }} {{ ledger_code }}</p>
+
+      <div class="bk-page-kicker">
+        <i class="bi bi-journal-text"></i>
+        {{ _('إدارة الدفاتر') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('لوحة التحكم') }}
+        <span class="bk-title-separator">—</span>
+        {{ ledger_name }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('رمز الدفتر:') }}
+        <strong>{{ ledger_code }}</strong>
+      </div>
+
     </div>
 
-    <a href="/ledger/{{ ledger_code }}/customers/add" class="btn btn-success">
-      {{ _('+ إضافة زبون جديد') }}
-    </a>
+
+    <div class="d-flex gap-2 flex-wrap">
+
+      <a
+        href="{{ url_for('customers.list_customers', code=ledger_code) }}"
+        class="btn btn-outline-secondary"
+      >
+        <i class="bi bi-people"></i>
+        {{ _('عرض الزبائن') }}
+      </a>
+
+      <a
+        href="{{ url_for('customers.add_customer', code=ledger_code) }}"
+        class="btn btn-primary"
+      >
+        <i class="bi bi-person-plus"></i>
+        {{ _('إضافة زبون جديد') }}
+      </a>
+
+    </div>
+
   </div>
 
-  <div class="row g-4 mb-4">
-    <div class="col-md-3">
-      <div class="card shadow-sm p-3 border-primary">
-        <h6 class="text-muted">{{ _('عدد العملاء في الدفتر') }}</h6>
-        <h3 class="mb-0">{{ customers_count }}</h3>
-      </div>
-    </div>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm p-3 border-warning">
-        <h6 class="text-muted">{{ _('مجموع التقسيط') }}</h6>
-        {% if ledger_code in ["A", "B"] %}
-          <h3 class="mb-0">{{ total_installments }} $</h3>
+  <!-- =====================================================
+       Ledger Hero
+       ===================================================== -->
+  <section class="bk-ledger-dashboard-hero mb-4">
+
+    <div class="bk-ledger-dashboard-hero-main">
+
+      <div class="bk-ledger-dashboard-icon">
+
+        {% if ledger_code == "A" %}
+          <i class="bi bi-journal"></i>
+
+        {% elif ledger_code == "B" %}
+          <i class="bi bi-journal-text"></i>
+
         {% else %}
-          <h4 class="text-muted mb-0">{{ _('لا يوجد') }}</h4>
+          <i class="bi bi-receipt-cutoff"></i>
         {% endif %}
+
       </div>
+
+
+      <div>
+
+        <div class="bk-ledger-dashboard-kicker">
+          {{ _('الدفتر الحالي') }}
+        </div>
+
+        <h1 class="bk-ledger-dashboard-title">
+          {{ ledger_name }}
+        </h1>
+
+        <div class="bk-ledger-dashboard-subtitle">
+          {{ _('متابعة الزبائن والحسابات والمبالغ المتبقية ضمن هذا الدفتر') }}
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm p-3 border-danger">
-        <h6 class="text-muted">{{ _('الديون النقدية') }}</h6>
-        <h3 class="mb-0">{{ total_cash_debts }} $</h3>
-      </div>
+
+    <div class="bk-ledger-dashboard-code">
+      {{ ledger_code }}
     </div>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm p-3 border-success">
-        <h6 class="text-muted">{{ _('أرباح هذا الشهر') }}</h6>
-        <h3 class="mb-0">{{ monthly_profit }} $</h3>
+  </section>
+
+
+  <!-- =====================================================
+       Stats
+       ===================================================== -->
+  <div class="row g-3 mb-4">
+
+    <!-- Customers -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+      <div class="card bk-ledger-stat-card h-100">
+
+        <div class="bk-ledger-stat-top">
+
+          <div class="bk-ledger-stat-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+
+          <span class="bk-ledger-stat-tag">
+            {{ ledger_code }}
+          </span>
+
+        </div>
+
+
+        <div class="bk-ledger-stat-label">
+          {{ _('عدد العملاء في الدفتر') }}
+        </div>
+
+        <div class="bk-ledger-stat-value">
+          {{ customers_count }}
+        </div>
+
+        <div class="bk-ledger-stat-note">
+          {{ _('إجمالي الزبائن المسجلين') }}
+        </div>
+
       </div>
+
     </div>
+
+
+    <!-- Installments -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+      <div class="card bk-ledger-stat-card h-100">
+
+        <div class="bk-ledger-stat-top">
+
+          <div class="bk-ledger-stat-icon">
+            <i class="bi bi-wallet2"></i>
+          </div>
+
+        </div>
+
+
+        <div class="bk-ledger-stat-label">
+          {{ _('مجموع التقسيط') }}
+        </div>
+
+
+        {% if ledger_code in ["A", "B"] %}
+
+          <div class="bk-ledger-stat-value">
+            {{ "%.2f"|format(total_installments or 0) }}
+            <small>$</small>
+          </div>
+
+          <div class="bk-ledger-stat-note">
+            {{ _('إجمالي المبالغ المتبقية') }}
+          </div>
+
+        {% else %}
+
+          <div class="bk-ledger-stat-value muted">
+            —
+          </div>
+
+          <div class="bk-ledger-stat-note">
+            {{ _('لا يوجد تقسيط في هذا الدفتر') }}
+          </div>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+
+    <!-- Cash debt -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+      <div class="card bk-ledger-stat-card h-100">
+
+        <div class="bk-ledger-stat-top">
+
+          <div class="bk-ledger-stat-icon">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+
+        </div>
+
+
+        <div class="bk-ledger-stat-label">
+          {{ _('الديون النقدية') }}
+        </div>
+
+        <div class="bk-ledger-stat-value">
+          {{ "%.2f"|format(total_cash_debts or 0) }}
+          <small>$</small>
+        </div>
+
+        <div class="bk-ledger-stat-note">
+          {{ _('إجمالي الديون المتبقية') }}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Profit -->
+    <div class="col-12 col-sm-6 col-xl-3">
+
+      <div class="card bk-ledger-stat-card h-100">
+
+        <div class="bk-ledger-stat-top">
+
+          <div class="bk-ledger-stat-icon">
+            <i class="bi bi-graph-up-arrow"></i>
+          </div>
+
+        </div>
+
+
+        <div class="bk-ledger-stat-label">
+          {{ _('أرباح هذا الشهر') }}
+        </div>
+
+        <div class="bk-ledger-stat-value">
+          {{ "%.2f"|format(monthly_profit or 0) }}
+          <small>$</small>
+        </div>
+
+        <div class="bk-ledger-stat-note">
+          {{ _('حسب السجلات الحالية') }}
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <hr class="my-4">
 
-  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-    <h4 class="mb-0">{{ _('زبائن هذا الدفتر') }}</h4>
+  <!-- =====================================================
+       Customer Section Header
+       ===================================================== -->
+  <div class="bk-section-heading mb-3">
+
+    <div>
+
+      <div class="bk-section-kicker">
+        {{ _('الزبائن') }}
+      </div>
+
+      <h3>
+        {{ _('زبائن هذا الدفتر') }}
+      </h3>
+
+    </div>
+
+
+    <div class="text-muted small">
+      {{ customers_count }}
+      {{ _('زبون') }}
+    </div>
+
   </div>
 
-  <div class="card shadow-sm">
+
+  <!-- =====================================================
+       Customers Table
+       ===================================================== -->
+  <div class="card bk-customers-table-card">
+
     <div class="table-responsive">
-      <table class="table table-hover mb-0 align-middle">
-        <thead class="table-light">
+
+      <table class="table table-hover align-middle mb-0 bk-customers-table">
+
+        <thead class="table-dark">
+
           <tr>
             <th>{{ _('الرقم') }}</th>
             <th>{{ _('الاسم') }}</th>
@@ -66,28 +300,173 @@
             <th>{{ _('ملاحظات') }}</th>
             <th class="col-actions">{{ _('خيارات') }}</th>
           </tr>
+
         </thead>
+
+
         <tbody>
+
           {% for customer in customers %}
-          <tr>
-            <td>{{ customer.custom_id }}</td>
-            <td>{{ pick_lang(customer.name, customer.name_tr) }}</td>
-            <td>{{ customer.phone }}</td>
-            <td class="text-muted">{{ customer.notes }}</td>
-            <td class="text-nowrap">
-              <a href="/customer/{{ customer.id }}" class="btn btn-primary btn-sm">{{ _('عرض') }}</a>
-              <a href="{{ url_for('customers.edit_customer', id=customer.id) }}" class="btn btn-warning btn-sm">{{ _('تعديل') }}</a>
-            </td>
-          </tr>
+
+            <tr>
+
+              <!-- ID -->
+              <td>
+
+                <span class="bk-customer-code">
+                  {{ customer.custom_id }}
+                </span>
+
+              </td>
+
+
+              <!-- Name -->
+              <td>
+
+                <div class="bk-customer-name-cell">
+
+                  <div class="bk-customer-avatar">
+                    {{ (customer.name or '?')[:1] }}
+                  </div>
+
+
+                  <div>
+
+                    <a
+                      href="{{ url_for('customers.customer_page', id=customer.id) }}"
+                      class="bk-customer-name-link"
+                    >
+                      {{ pick_lang(customer.name, customer.name_tr) }}
+                    </a>
+
+                    <div class="bk-customer-ledger-mini">
+                      {{ ledger_name }}
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- Phone -->
+              <td>
+
+                {% if customer.phone %}
+
+                  <a
+                    href="tel:{{ customer.phone }}"
+                    class="bk-phone-link"
+                  >
+                    <i class="bi bi-telephone"></i>
+                    {{ customer.phone }}
+                  </a>
+
+                {% else %}
+
+                  <span class="text-muted">—</span>
+
+                {% endif %}
+
+              </td>
+
+
+              <!-- Notes -->
+              <td>
+
+                {% if customer.notes %}
+
+                  <div
+                    class="bk-customer-notes"
+                    title="{{ customer.notes }}"
+                  >
+                    {{ customer.notes }}
+                  </div>
+
+                {% else %}
+
+                  <span class="text-muted">—</span>
+
+                {% endif %}
+
+              </td>
+
+
+              <!-- Actions -->
+              <td class="col-actions">
+
+                <div class="bk-table-actions">
+
+                  <a
+                    href="{{ url_for('customers.customer_page', id=customer.id) }}"
+                    class="btn btn-sm btn-outline-secondary"
+                    title="{{ _('عرض') }}"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </a>
+
+
+                  <a
+                    href="{{ url_for('customers.edit_customer', id=customer.id) }}"
+                    class="btn btn-sm btn-outline-secondary"
+                    title="{{ _('تعديل') }}"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+
           {% else %}
-          <tr>
-            <td colspan="5" class="text-muted py-4 text-center">{{ _('لا يوجد زبائن') }}</td>
-          </tr>
+
+            <tr>
+
+              <td colspan="5" class="py-5">
+
+                <div class="bk-empty-state">
+
+                  <div class="bk-empty-icon">
+                    <i class="bi bi-people"></i>
+                  </div>
+
+                  <div class="bk-empty-title">
+                    {{ _('لا يوجد زبائن') }}
+                  </div>
+
+                  <div class="bk-empty-note">
+                    {{ _('لم يتم إضافة أي زبون إلى هذا الدفتر حتى الآن.') }}
+                  </div>
+
+
+                  <a
+                    href="{{ url_for('customers.add_customer', code=ledger_code) }}"
+                    class="btn btn-primary btn-sm mt-3"
+                  >
+                    <i class="bi bi-person-plus"></i>
+                    {{ _('إضافة أول زبون') }}
+                  </a>
+
+                </div>
+
+              </td>
+
+            </tr>
+
           {% endfor %}
+
         </tbody>
+
       </table>
+
     </div>
+
   </div>
 
 </div>
+
 {% endblock %}

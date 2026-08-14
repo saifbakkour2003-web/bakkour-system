@@ -40,15 +40,18 @@
 </head>
 
 
-<body class="app-body">
+{% set is_admin_login = request.endpoint == 'admin_auth.admin_login_view' %}
 
+<body class="app-body {% if is_admin_login %}auth-only{% endif %}">
+
+
+  {% if not is_admin_login %}
 
   <!-- =====================================================
        NAVBAR
        ===================================================== -->
   <nav class="navbar app-navbar px-3">
 
-    <!-- Right / Left side depending on direction -->
     <div class="d-flex align-items-center gap-2">
 
       <!-- Sidebar Toggle -->
@@ -75,6 +78,7 @@
         >
 
         <span class="app-brand-copy">
+
           <span class="app-brand-title">
             {{ _('معرض بكور') }}
           </span>
@@ -82,6 +86,7 @@
           <span class="app-brand-subtitle">
             BAKKOUR TRADING COMPANY
           </span>
+
         </span>
 
       </a>
@@ -97,6 +102,7 @@
         <div
           class="app-navbar-user text-end d-none d-lg-block"
         >
+
           <div
             class="small fw-semibold"
             style="color:#fff;"
@@ -115,6 +121,7 @@
           >
             {{ _("مدير النظام") }}
           </div>
+
         </div>
 
       {% endif %}
@@ -152,6 +159,7 @@
         <ul class="dropdown-menu dropdown-menu-end">
 
           <li>
+
             <a
               class="dropdown-item
               {% if get_locale() == 'ar' %}
@@ -161,10 +169,12 @@
             >
               🇸🇦 العربية
             </a>
+
           </li>
 
 
           <li>
+
             <a
               class="dropdown-item
               {% if get_locale() == 'tr' %}
@@ -174,6 +184,7 @@
             >
               🇹🇷 Türkçe
             </a>
+
           </li>
 
         </ul>
@@ -219,6 +230,7 @@
       </div>
 
       <div class="sidebar-brand-copy sidebar-text">
+
         <div class="sidebar-brand-name">
           {{ _('لوحة الإدارة') }}
         </div>
@@ -226,6 +238,7 @@
         <div class="sidebar-brand-note">
           {{ _('إدارة معرض بكور') }}
         </div>
+
       </div>
 
     </div>
@@ -509,7 +522,6 @@
     </nav>
 
 
-    <!-- Sidebar bottom spacing -->
     <div style="height:40px;"></div>
 
   </aside>
@@ -521,13 +533,15 @@
     id="appBackdrop"
   ></div>
 
+  {% endif %}
+
 
   <!-- =====================================================
        MAIN CONTENT
        ===================================================== -->
   <main
     id="content"
-    class="app-content"
+    class="{% if is_admin_login %}auth-content{% else %}app-content{% endif %}"
   >
 
     <!-- Flash Messages -->
@@ -535,7 +549,9 @@
 
       {% if messages %}
 
-        <div class="container-fluid px-0 mb-3">
+        <div
+          class="{% if is_admin_login %}bk-auth-flashes{% else %}container-fluid px-0 mb-3{% endif %}"
+        >
 
           {% for category, message in messages %}
 
@@ -590,7 +606,6 @@
     {% endwith %}
 
 
-    <!-- Page -->
     {% block content %}{% endblock %}
 
   </main>
@@ -620,150 +635,402 @@
       document.getElementById("appBackdrop");
 
 
-    /* =====================================================
-       Responsive helper
-       ===================================================== */
-
-    function isMobile() {
-      return window
-        .matchMedia("(max-width: 991.98px)")
-        .matches;
-    }
+    const hasSidebar =
+      sidebar &&
+      content &&
+      toggleBtn &&
+      backdrop;
 
 
     /* =====================================================
-       Desktop saved state
+       SIDEBAR LOGIC
        ===================================================== */
 
-    function applyDesktopSavedState() {
+    if (hasSidebar) {
 
-      if (isMobile()) return;
 
-      const saved =
-        localStorage.getItem("sidebarCollapsed");
+      function isMobile() {
 
-      if (saved === "1") {
-
-        sidebar.classList.add("collapsed");
-        content.classList.add("expanded");
-
-      } else {
-
-        sidebar.classList.remove("collapsed");
-        content.classList.remove("expanded");
+        return window
+          .matchMedia("(max-width: 991.98px)")
+          .matches;
 
       }
-    }
 
 
-    applyDesktopSavedState();
+      /* ===================================================
+         Desktop saved state
+         =================================================== */
+
+      function applyDesktopSavedState() {
+
+        if (isMobile()) return;
+
+        const saved =
+          localStorage.getItem("sidebarCollapsed");
 
 
-    /* =====================================================
-       Mobile open / close
-       ===================================================== */
+        if (saved === "1") {
 
-    function openMobileSidebar() {
-      document.body.classList.add("sidebar-open");
-    }
+          sidebar.classList.add("collapsed");
 
-
-    function closeMobileSidebar() {
-      document.body.classList.remove("sidebar-open");
-    }
-
-
-    /* =====================================================
-       Sidebar toggle
-       ===================================================== */
-
-    toggleBtn.addEventListener("click", () => {
-
-      if (isMobile()) {
-
-        if (
-          document.body.classList.contains(
-            "sidebar-open"
-          )
-        ) {
-
-          closeMobileSidebar();
+          content.classList.add("expanded");
 
         } else {
 
-          openMobileSidebar();
+          sidebar.classList.remove("collapsed");
+
+          content.classList.remove("expanded");
 
         }
 
-        return;
       }
 
 
-      sidebar.classList.toggle("collapsed");
-
-      content.classList.toggle("expanded");
+      applyDesktopSavedState();
 
 
-      localStorage.setItem(
-        "sidebarCollapsed",
-        sidebar.classList.contains("collapsed")
-          ? "1"
-          : "0"
+      /* ===================================================
+         Mobile open / close
+         =================================================== */
+
+      function openMobileSidebar() {
+
+        document.body.classList.add(
+          "sidebar-open"
+        );
+
+      }
+
+
+      function closeMobileSidebar() {
+
+        document.body.classList.remove(
+          "sidebar-open"
+        );
+
+      }
+
+
+      /* ===================================================
+         Sidebar toggle
+         =================================================== */
+
+      toggleBtn.addEventListener(
+        "click",
+        () => {
+
+          if (isMobile()) {
+
+            if (
+              document.body.classList.contains(
+                "sidebar-open"
+              )
+            ) {
+
+              closeMobileSidebar();
+
+            } else {
+
+              openMobileSidebar();
+
+            }
+
+            return;
+
+          }
+
+
+          sidebar.classList.toggle(
+            "collapsed"
+          );
+
+
+          content.classList.toggle(
+            "expanded"
+          );
+
+
+          localStorage.setItem(
+            "sidebarCollapsed",
+            sidebar.classList.contains(
+              "collapsed"
+            )
+              ? "1"
+              : "0"
+          );
+
+        }
       );
 
-    });
+
+      /* ===================================================
+         Backdrop
+         =================================================== */
+
+      backdrop.addEventListener(
+        "click",
+        () => {
+
+          if (isMobile()) {
+
+            closeMobileSidebar();
+
+          }
+
+        }
+      );
 
 
-    /* =====================================================
-       Backdrop
-       ===================================================== */
+      /* ===================================================
+         ESC
+         =================================================== */
 
-    backdrop.addEventListener("click", () => {
+      document.addEventListener(
+        "keydown",
+        (e) => {
 
-      if (isMobile()) {
-        closeMobileSidebar();
-      }
+          if (
+            e.key === "Escape" &&
+            isMobile()
+          ) {
 
-    });
+            closeMobileSidebar();
 
+          }
 
-    /* =====================================================
-       ESC
-       ===================================================== */
-
-    document.addEventListener("keydown", (e) => {
-
-      if (
-        e.key === "Escape" &&
-        isMobile()
-      ) {
-
-        closeMobileSidebar();
-
-      }
-
-    });
+        }
+      );
 
 
-    /* =====================================================
-       Resize
-       ===================================================== */
+      /* ===================================================
+         Resize
+         =================================================== */
 
-    window.addEventListener("resize", () => {
+      window.addEventListener(
+        "resize",
+        () => {
 
-      if (!isMobile()) {
+          if (!isMobile()) {
 
-        closeMobileSidebar();
+            closeMobileSidebar();
 
-        applyDesktopSavedState();
+            applyDesktopSavedState();
 
-      }
+          }
 
-    });
+        }
+      );
+
+
+      /* ===================================================
+         Close sidebar after mobile navigation
+         =================================================== */
+
+      document
+        .querySelectorAll(
+          "#sidebar a.nav-link"
+        )
+        .forEach((a) => {
+
+          a.addEventListener(
+            "click",
+            () => {
+
+              if (isMobile()) {
+
+                closeMobileSidebar();
+
+              }
+
+            }
+          );
+
+        });
+
+
+      /* ===================================================
+         Sidebar Active Link
+         =================================================== */
+
+      (function () {
+
+        const path =
+          window.location.pathname
+            .replace(/\/+$/, "") || "/";
+
+
+        const qs =
+          new URLSearchParams(
+            window.location.search
+          );
+
+
+        document
+          .querySelectorAll(
+            "#sidebar a.nav-link"
+          )
+          .forEach((a) => {
+
+            const hrefRaw =
+              a.getAttribute("href") || "";
+
+
+            if (
+              !hrefRaw ||
+              hrefRaw.startsWith("javascript:") ||
+              hrefRaw === "#"
+            ) {
+
+              return;
+
+            }
+
+
+            let href;
+
+
+            try {
+
+              const parsed =
+                new URL(
+                  hrefRaw,
+                  window.location.origin
+                );
+
+
+              href =
+                parsed.pathname
+                  .replace(/\/+$/, "") || "/";
+
+            } catch {
+
+              href =
+                hrefRaw.replace(
+                  /\/+$/,
+                  ""
+                );
+
+            }
+
+
+            const isExact =
+              href === path;
+
+
+            const isPrefix =
+              href !== "/" &&
+              path.startsWith(href);
+
+
+            if (
+              isExact ||
+              isPrefix
+            ) {
+
+              a.classList.add(
+                "active"
+              );
+
+            }
+
+          });
+
+
+        /* Products special handling */
+
+        if (
+          path.startsWith("/products")
+        ) {
+
+          const root =
+            document.querySelector(
+              '[data-key="products-root"]'
+            );
+
+
+          if (root) {
+
+            root.classList.add(
+              "active"
+            );
+
+          }
+
+
+          let dept = null;
+
+
+          const parts =
+            path
+              .split("/")
+              .filter(Boolean);
+
+
+          if (
+            parts.length >= 2 &&
+            [
+              "electrical",
+              "linens",
+              "crystal"
+            ].includes(parts[1])
+          ) {
+
+            dept = parts[1];
+
+          }
+
+
+          if (!dept) {
+
+            const qd =
+              (qs.get("dept") || "")
+                .toLowerCase();
+
+
+            if (
+              [
+                "electrical",
+                "linens",
+                "crystal"
+              ].includes(qd)
+            ) {
+
+              dept = qd;
+
+            }
+
+          }
+
+
+          if (dept) {
+
+            const link =
+              document.querySelector(
+                `[data-key="products-${dept}"]`
+              );
+
+
+            if (link) {
+
+              link.classList.add(
+                "active"
+              );
+
+            }
+
+          }
+
+        }
+
+      })();
+
+    }
 
 
     /* =====================================================
        Auto-dismiss alerts
+       works on login + admin pages
        ===================================================== */
 
     setTimeout(() => {
@@ -773,191 +1040,15 @@
         .forEach((el) => {
 
           const alert =
-            bootstrap.Alert.getOrCreateInstance(el);
+            bootstrap.Alert
+              .getOrCreateInstance(el);
+
 
           alert.close();
 
         });
 
     }, 3500);
-
-
-    /* =====================================================
-       Close sidebar after mobile navigation
-       ===================================================== */
-
-    document
-      .querySelectorAll("#sidebar a.nav-link")
-      .forEach((a) => {
-
-        a.addEventListener("click", () => {
-
-          if (isMobile()) {
-            closeMobileSidebar();
-          }
-
-        });
-
-      });
-
-
-    /* =====================================================
-       Sidebar Active Link
-       ===================================================== */
-
-    (function () {
-
-      const path =
-        window.location.pathname
-          .replace(/\/+$/, "") || "/";
-
-      const qs =
-        new URLSearchParams(
-          window.location.search
-        );
-
-
-      /* Normal links */
-
-      document
-        .querySelectorAll("#sidebar a.nav-link")
-        .forEach((a) => {
-
-          const hrefRaw =
-            a.getAttribute("href") || "";
-
-          if (
-            !hrefRaw ||
-            hrefRaw.startsWith("javascript:") ||
-            hrefRaw === "#"
-          ) {
-            return;
-          }
-
-
-          let href;
-
-          try {
-
-            const parsed =
-              new URL(
-                hrefRaw,
-                window.location.origin
-              );
-
-            href =
-              parsed.pathname
-                .replace(/\/+$/, "") || "/";
-
-          } catch {
-
-            href =
-              hrefRaw.replace(/\/+$/, "");
-
-          }
-
-
-          const isExact =
-            href === path;
-
-          const isPrefix =
-            href !== "/" &&
-            path.startsWith(href);
-
-
-          if (
-            isExact ||
-            isPrefix
-          ) {
-
-            a.classList.add("active");
-
-          }
-
-        });
-
-
-      /* Products special handling */
-
-      if (
-        path.startsWith("/products")
-      ) {
-
-        const root =
-          document.querySelector(
-            '[data-key="products-root"]'
-          );
-
-        if (root) {
-          root.classList.add("active");
-        }
-
-
-        let dept = null;
-
-
-        /* /products/electrical */
-
-        const parts =
-          path
-            .split("/")
-            .filter(Boolean);
-
-
-        if (
-          parts.length >= 2 &&
-          [
-            "electrical",
-            "linens",
-            "crystal"
-          ].includes(parts[1])
-        ) {
-
-          dept = parts[1];
-
-        }
-
-
-        /* /products?dept=... */
-
-        if (!dept) {
-
-          const qd =
-            (qs.get("dept") || "")
-              .toLowerCase();
-
-
-          if (
-            [
-              "electrical",
-              "linens",
-              "crystal"
-            ].includes(qd)
-          ) {
-
-            dept = qd;
-
-          }
-
-        }
-
-
-        if (dept) {
-
-          const link =
-            document.querySelector(
-              `[data-key="products-${dept}"]`
-            );
-
-          if (link) {
-            link.classList.add("active");
-          }
-
-        }
-
-      }
-
-    })();
 
   </script>
 

@@ -1,149 +1,508 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('الأرباح') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 
-  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
-    <h2 class="mb-0">📊 {{ _('تقرير الأرباح') }}</h2>
-  </div>
+<div class="container-fluid px-0 bk-profits-page">
 
-  <!-- فلترات -->
-  <div class="card shadow-sm mb-3 p-3">
-    <div class="d-flex flex-wrap gap-3 align-items-end">
+  <!-- Header -->
+  <div class="bk-page-header mb-4">
 
-      <form method="GET" action="{{ url_for('sales.profits_report') }}" class="d-flex gap-2 align-items-end">
-        <input type="hidden" name="view" value="day">
-        <div>
-          <label class="form-label mb-1">{{ _('يومي') }}</label>
-          <input type="date" class="form-control" name="day" value="{{ day_str }}">
-        </div>
-        <button class="btn btn-outline-primary">{{ _('عرض') }}</button>
-      </form>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-graph-up-arrow"></i>
+        {{ _('التقارير المالية') }}
+      </div>
 
-      <form method="GET" action="{{ url_for('sales.profits_report') }}" class="d-flex gap-2 align-items-end">
-        <input type="hidden" name="view" value="month">
-        <div>
-          <label class="form-label mb-1">{{ _('شهري') }}</label>
-          <input type="month" class="form-control" name="month" value="{{ month_str }}">
-        </div>
-        <button class="btn btn-outline-dark">{{ _('عرض') }}</button>
-      </form>
+      <h2 class="bk-page-title mb-1">
+        {{ _('تقرير الأرباح') }}
+      </h2>
 
-      <form method="GET" action="{{ url_for('sales.profits_report') }}" class="d-flex gap-2 align-items-end">
-        <input type="hidden" name="view" value="range">
-        <div>
-          <label class="form-label mb-1">{{ _('من') }}</label>
-          <input type="date" class="form-control" name="from" value="{{ from_str }}">
-        </div>
-        <div>
-          <label class="form-label mb-1">{{ _('إلى') }}</label>
-          <input type="date" class="form-control" name="to" value="{{ to_str }}">
-        </div>
-        <button class="btn btn-outline-secondary">{{ _('عرض') }}</button>
-      </form>
-
-    </div>
-  </div>
-
-  <!-- أرقام سريعة -->
-  <div class="row g-3 mb-3">
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <div class="text-muted">{{ _('إجمالي المبيعات') }}</div>
-        <div class="fw-bold stat-number">{{ total_revenue }} $</div>
+      <div class="bk-page-subtitle">
+        {{ _('متابعة المبيعات ورأس المال وصافي الربح حسب الفترة') }}
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <div class="text-muted">{{ _('إجمالي رأس المال') }}</div>
-        <div class="fw-bold stat-number">{{ total_cost }} $</div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card shadow-sm p-3">
-        <div class="text-muted">{{ _('إجمالي الربح') }}</div>
-        <div class="fw-bold stat-number text-success">{{ total_profit }} $</div>
-      </div>
-    </div>
+
   </div>
 
-  <!-- ملخص يومي -->
-  <div class="card shadow-sm mb-3">
-    <div class="card-header bg-light fw-bold">{{ _('ملخص حسب اليوم') }}</div>
-    <div class="table-responsive">
-      <table class="table mb-0 text-center align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>{{ _('اليوم') }}</th>
-            <th>{{ _('عدد المبيعات') }}</th>
-            <th>{{ _('مبيعات') }}</th>
-            <th>{{ _('رأس مال') }}</th>
-            <th>{{ _('ربح') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if daily_rows and daily_rows|length %}
-            {% for r in daily_rows %}
+
+  <!-- Filters -->
+  <div class="card bk-profit-filter-card mb-4">
+
+    <div class="bk-profit-filter-header">
+
+      <div>
+        <div class="bk-profit-filter-title">
+          {{ _('الفترة الزمنية') }}
+        </div>
+
+        <div class="bk-profit-filter-note">
+          {{ _('اختر طريقة عرض التقرير') }}
+        </div>
+      </div>
+
+      <i class="bi bi-calendar-range"></i>
+
+    </div>
+
+
+    <div class="row g-3">
+
+      <!-- Day -->
+      <div class="col-12 col-lg-4">
+
+        <form
+          method="GET"
+          action="{{ url_for('sales.profits_report') }}"
+          class="bk-report-filter-box"
+        >
+          <input type="hidden" name="view" value="day">
+
+          <div class="bk-report-filter-label">
+            <i class="bi bi-calendar-day"></i>
+            {{ _('يومي') }}
+          </div>
+
+          <div class="d-flex gap-2">
+
+            <input
+              type="date"
+              class="form-control"
+              name="day"
+              value="{{ day_str }}"
+            >
+
+            <button class="btn btn-outline-secondary">
+              {{ _('عرض') }}
+            </button>
+
+          </div>
+        </form>
+
+      </div>
+
+
+      <!-- Month -->
+      <div class="col-12 col-lg-4">
+
+        <form
+          method="GET"
+          action="{{ url_for('sales.profits_report') }}"
+          class="bk-report-filter-box"
+        >
+          <input type="hidden" name="view" value="month">
+
+          <div class="bk-report-filter-label">
+            <i class="bi bi-calendar3"></i>
+            {{ _('شهري') }}
+          </div>
+
+          <div class="d-flex gap-2">
+
+            <input
+              type="month"
+              class="form-control"
+              name="month"
+              value="{{ month_str }}"
+            >
+
+            <button class="btn btn-outline-secondary">
+              {{ _('عرض') }}
+            </button>
+
+          </div>
+        </form>
+
+      </div>
+
+
+      <!-- Range -->
+      <div class="col-12 col-lg-4">
+
+        <form
+          method="GET"
+          action="{{ url_for('sales.profits_report') }}"
+          class="bk-report-filter-box"
+        >
+          <input type="hidden" name="view" value="range">
+
+          <div class="bk-report-filter-label">
+            <i class="bi bi-calendar-range"></i>
+            {{ _('فترة مخصصة') }}
+          </div>
+
+          <div class="row g-2">
+
+            <div class="col">
+              <input
+                type="date"
+                class="form-control"
+                name="from"
+                value="{{ from_str }}"
+              >
+            </div>
+
+            <div class="col">
+              <input
+                type="date"
+                class="form-control"
+                name="to"
+                value="{{ to_str }}"
+              >
+            </div>
+
+            <div class="col-auto">
+              <button class="btn btn-outline-secondary">
+                {{ _('عرض') }}
+              </button>
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Stats -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-12 col-md-4">
+
+      <div class="card bk-profit-stat-card">
+
+        <div class="bk-profit-stat-icon">
+          <i class="bi bi-cart-check"></i>
+        </div>
+
+        <div>
+          <div class="bk-profit-stat-label">
+            {{ _('إجمالي المبيعات') }}
+          </div>
+
+          <div class="bk-profit-stat-value">
+            {{ "%.2f"|format(total_revenue or 0) }}
+            <small>$</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-12 col-md-4">
+
+      <div class="card bk-profit-stat-card">
+
+        <div class="bk-profit-stat-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+
+        <div>
+          <div class="bk-profit-stat-label">
+            {{ _('إجمالي رأس المال') }}
+          </div>
+
+          <div class="bk-profit-stat-value">
+            {{ "%.2f"|format(total_cost or 0) }}
+            <small>$</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-12 col-md-4">
+
+      <div class="card bk-profit-stat-card bk-profit-stat-highlight">
+
+        <div class="bk-profit-stat-icon">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+
+        <div>
+          <div class="bk-profit-stat-label">
+            {{ _('إجمالي الربح') }}
+          </div>
+
+          <div class="bk-profit-stat-value">
+            {{ "%.2f"|format(total_profit or 0) }}
+            <small>$</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Daily summary -->
+  <section class="mb-4">
+
+    <div class="bk-section-heading">
+
+      <div>
+        <div class="bk-section-kicker">
+          {{ _('الملخص') }}
+        </div>
+
+        <h3>
+          {{ _('ملخص حسب اليوم') }}
+        </h3>
+      </div>
+
+    </div>
+
+
+    <div class="card bk-report-table-card">
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+          <thead class="table-dark">
             <tr>
-              <td>{{ r.day }}</td>
-              <td>{{ r.count }}</td>
-              <td>{{ "%.2f"|format(r.revenue) }} $</td>
-              <td>{{ "%.2f"|format(r.cost) }} $</td>
-              <td class="fw-bold">{{ "%.2f"|format(r.profit) }} $</td>
+              <th>{{ _('اليوم') }}</th>
+              <th>{{ _('عدد المبيعات') }}</th>
+              <th>{{ _('مبيعات') }}</th>
+              <th>{{ _('رأس مال') }}</th>
+              <th>{{ _('ربح') }}</th>
             </tr>
+          </thead>
+
+          <tbody>
+
+            {% if daily_rows and daily_rows|length %}
+
+              {% for r in daily_rows %}
+
+                <tr>
+                  <td class="fw-semibold">
+                    {{ r.day }}
+                  </td>
+
+                  <td>
+                    <span class="bk-sale-count">
+                      {{ r.count }}
+                    </span>
+                  </td>
+
+                  <td>
+                    {{ "%.2f"|format(r.revenue) }} $
+                  </td>
+
+                  <td>
+                    {{ "%.2f"|format(r.cost) }} $
+                  </td>
+
+                  <td>
+                    <strong class="{% if r.profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                      {{ "%.2f"|format(r.profit) }} $
+                    </strong>
+                  </td>
+                </tr>
+
+              {% endfor %}
+
+            {% else %}
+
+              <tr>
+                <td colspan="5" class="py-5">
+                  <div class="bk-empty-state">
+                    <div class="bk-empty-icon">
+                      <i class="bi bi-bar-chart"></i>
+                    </div>
+
+                    <div class="bk-empty-title">
+                      {{ _('لا يوجد بيانات') }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+            {% endif %}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- Sales -->
+  <section>
+
+    <div class="bk-section-heading">
+
+      <div>
+        <div class="bk-section-kicker">
+          {{ _('المبيعات') }}
+        </div>
+
+        <h3>
+          {{ _('تفاصيل المبيعات') }}
+        </h3>
+      </div>
+
+      <div class="text-muted small">
+        {{ sales|length }} {{ _('عملية') }}
+      </div>
+
+    </div>
+
+
+    <div class="card bk-report-table-card">
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+          <thead class="table-dark">
+            <tr>
+              <th>{{ _('المنتج') }}</th>
+              <th>{{ _('نوع البيع') }}</th>
+              <th>{{ _('سعر البيع') }}</th>
+              <th>{{ _('رأس المال') }}</th>
+              <th>{{ _('الربح') }}</th>
+              <th>{{ _('التاريخ') }}</th>
+            </tr>
+          </thead>
+
+
+          <tbody>
+
+            {% for s in sales %}
+
+              {% set profit = (s.sell_price or 0) - (s.cost_price or 0) %}
+
+              <tr>
+
+                <td>
+
+                  {% if s.product %}
+
+                    <div class="bk-sale-product-name">
+                      {{ pick_lang(s.product.name, s.product.name_tr) }}
+                    </div>
+
+                    <div class="bk-sale-product-code">
+                      {{ s.product.code }}
+                    </div>
+
+                  {% else %}
+
+                    <div class="bk-sale-product-name">
+                      {{ s.manual_name or _('بيع يدوي') }}
+                    </div>
+
+                    {% if s.manual_code %}
+                      <div class="bk-sale-product-code">
+                        {{ s.manual_code }}
+                      </div>
+                    {% endif %}
+
+                  {% endif %}
+
+                </td>
+
+
+                <td>
+
+                  {% if s.sale_type in ["cash", "Cash", "نقدي"] %}
+
+                    <span class="bk-sale-type cash">
+                      {{ _('نقدي') }}
+                    </span>
+
+                  {% elif s.sale_type in ["installment"] %}
+
+                    <span class="bk-sale-type installment">
+                      {{ _('تقسيط') }}
+                    </span>
+
+                  {% elif s.sale_type in ["debt", "debt_manual"] %}
+
+                    <span class="bk-sale-type debt">
+                      {{ _('دين') }}
+                    </span>
+
+                  {% else %}
+
+                    <span class="bk-sale-type other">
+                      {{ s.sale_type }}
+                    </span>
+
+                  {% endif %}
+
+                </td>
+
+
+                <td>
+                  {{ "%.2f"|format(s.sell_price or 0) }} $
+                </td>
+
+                <td>
+                  {{ "%.2f"|format(s.cost_price or 0) }} $
+                </td>
+
+                <td>
+                  <strong class="{% if profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    {{ "%.2f"|format(profit) }} $
+                  </strong>
+                </td>
+
+                <td class="text-nowrap">
+                  {{ s.date_created.strftime('%Y-%m-%d %H:%M') }}
+                </td>
+
+              </tr>
+
+            {% else %}
+
+              <tr>
+                <td colspan="6" class="py-5">
+
+                  <div class="bk-empty-state">
+
+                    <div class="bk-empty-icon">
+                      <i class="bi bi-receipt"></i>
+                    </div>
+
+                    <div class="bk-empty-title">
+                      {{ _('لا يوجد مبيعات ضمن الفترة') }}
+                    </div>
+
+                  </div>
+
+                </td>
+              </tr>
+
             {% endfor %}
-          {% else %}
-            <tr>
-              <td colspan="5" class="text-muted py-3">{{ _('لا يوجد بيانات') }}</td>
-            </tr>
-          {% endif %}
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- تفاصيل المبيعات -->
-  <div class="card shadow-sm">
-    <div class="card-header bg-light fw-bold">{{ _('تفاصيل المبيعات') }}</div>
-    <div class="table-responsive">
-      <table class="table mb-0 text-center align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>{{ _('المنتج') }}</th>
-            <th>{{ _('نوع البيع') }}</th>
-            <th>{{ _('سعر البيع') }}</th>
-            <th>{{ _('رأس المال') }}</th>
-            <th>{{ _('الربح') }}</th>
-            <th>{{ _('التاريخ') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for s in sales %}
-          <tr>
-            <td class="text-start">{{pick_lang(s.product.name, s.product.name_tr) }}</td>
-            <td>
-              {# اختياري: خليها badge لطيف #}
-              {% if s.sale_type in ["cash", "Cash", "نقدي"] %}
-                <span class="badge bg-dark">{{ _('نقدي') }}</span>
-              {% else %}
-                <span class="badge bg-secondary">{{ _('تقسيط') }}</span>
-              {% endif %}
-            </td>
-            <td>{{ "%.2f"|format(s.sell_price) }}</td>
-            <td>{{ "%.2f"|format(s.cost_price) }}</td>
-            <td class="fw-bold">{{ "%.2f"|format(s.sell_price - s.cost_price) }}</td>
-            <td class="text-nowrap">{{ s.date_created.strftime('%Y-%m-%d %H:%M') }}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="6" class="text-muted py-4">{{ _('لا يوجد مبيعات ضمن الفترة') }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </tbody>
+
+        </table>
+
+      </div>
+
     </div>
-  </div>
+
+  </section>
 
 </div>
+
 {% endblock %}

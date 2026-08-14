@@ -1,79 +1,292 @@
-<!-- templates/admin/coupon_form.html -->
 {% extends "layout_new.html" %}
-{% block title %}{{ _('كوبون') }}{% endblock %}
+
+{% block title %}{{ c and _('تعديل كوبون') or _('إضافة كوبون') }}{% endblock %}
 
 {% block content %}
-<h2 class="mb-3">{{ c and _('تعديل كوبون') or _('إضافة كوبون') }}</h2>
 
-<form method="post" class="card p-4 shadow-sm" style="max-width: 760px;">
-  <div class="row g-3">
+<div class="container-fluid px-0">
 
-    <div class="col-md-6">
-      <label class="form-label">{{ _('الكود') }}</label>
-      <input class="form-control" name="code" value="{{ c.code if c else '' }}" placeholder="INSTA5" required>
-      <div class="form-text">{{ _('يفضّل أحرف كبيرة + أرقام') }}</div>
-    </div>
+  <div class="bk-page-header mb-4">
 
-    <div class="col-md-6">
-      <label class="form-label">{{ _('قيمة الخصم (مبلغ ثابت)') }}</label>
-      <input class="form-control" type="number" step="0.01" name="discount_amount"
-             value="{{ c.discount_amount if c else 0 }}" required>
-    </div>
-
-    <div class="col-12">
-      <label class="form-label">{{ _('عنوان اختياري') }}</label>
-      <input class="form-control" name="title" value="{{ c.title if c else '' }}" placeholder="خصم ستوري اليوم">
-    </div>
-
-    <div class="col-12">
-      <label class="form-label">{{ _('وصف اختياري') }}</label>
-      <textarea class="form-control" name="description" rows="3">{{ c.description if c else '' }}</textarea>
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label">{{ _('حد الاستخدام (اختياري)') }}</label>
-      <input class="form-control" type="number" name="usage_limit"
-             value="{{ c.usage_limit if c and c.usage_limit is not none else '' }}"
-             placeholder="مثلاً 5">
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label">{{ _('Auto-claim لأول X دخول؟') }}</label>
-      <div class="form-check mt-2">
-        <input class="form-check-input" type="checkbox" name="auto_claim" id="auto_claim"
-               {% if c and c.auto_claim %}checked{% endif %}>
-        <label class="form-check-label" for="auto_claim">
-          {{ _('نعم') }}
-        </label>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-ticket-perforated"></i>
+        {{ _('الكوبونات') }}
       </div>
-      <div class="form-text">{{ _('إذا فعلته + usage_limit=5 => أول 5 أشخاص يسجلوا دخول بيناخدوه') }}</div>
-    </div>
 
-    <div class="col-md-6">
-      <label class="form-label">{{ _('بداية') }}</label>
-      <input class="form-control" type="datetime-local" name="start_at"
-             value="{{ c.start_at.strftime('%Y-%m-%dT%H:%M') if c and c.start_at else '' }}">
-    </div>
+      <h2 class="bk-page-title mb-1">
+        {{ c and _('تعديل كوبون') or _('إضافة كوبون') }}
+      </h2>
 
-    <div class="col-md-6">
-      <label class="form-label">{{ _('نهاية') }}</label>
-      <input class="form-control" type="datetime-local" name="end_at"
-             value="{{ c.end_at.strftime('%Y-%m-%dT%H:%M') if c and c.end_at else '' }}">
-    </div>
-
-    <div class="col-12">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="is_active" id="is_active"
-               {% if not c or c.is_active %}checked{% endif %}>
-        <label class="form-check-label" for="is_active">{{ _('فعال') }}</label>
+      <div class="bk-page-subtitle">
+        {{ _('إنشاء كوبون خصم ثابت مع التحكم بالمدة وعدد الاستخدامات') }}
       </div>
     </div>
 
-    <div class="col-12 d-flex gap-2">
-      <button class="btn btn-primary">{{ _('حفظ') }}</button>
-      <a href="/admin/coupons/" class="btn btn-outline-secondary">{{ _('رجوع') }}</a>
-    </div>
+    <a href="/admin/coupons/" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
 
   </div>
-</form>
+
+
+  <form method="post">
+
+    <div class="row g-4">
+
+      <div class="col-12 col-xl-8">
+
+        <section class="card bk-form-section mb-3">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-ticket-perforated"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">{{ _('بيانات الكوبون') }}</h3>
+              <div class="bk-form-section-note">
+                {{ _('حدد الكود والعنوان وقيمة الخصم.') }}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('الكود') }}</label>
+
+              <input
+                class="form-control bk-coupon-code-input"
+                name="code"
+                value="{{ c.code if c else '' }}"
+                placeholder="INSTA5"
+                required
+              >
+
+              <div class="form-text">
+                {{ _('يفضّل أحرف كبيرة + أرقام') }}
+              </div>
+            </div>
+
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('قيمة الخصم (مبلغ ثابت)') }}</label>
+
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  name="discount_amount"
+                  value="{{ c.discount_amount if c else 0 }}"
+                  required
+                >
+                <span class="input-group-text">$</span>
+              </div>
+            </div>
+
+
+            <div class="col-12">
+              <label class="form-label">{{ _('عنوان اختياري') }}</label>
+              <input
+                class="form-control"
+                name="title"
+                value="{{ c.title if c else '' }}"
+                placeholder="{{ _('مثال: خصم ستوري اليوم') }}"
+              >
+            </div>
+
+
+            <div class="col-12">
+              <label class="form-label">{{ _('وصف اختياري') }}</label>
+              <textarea
+                class="form-control"
+                name="description"
+                rows="3"
+              >{{ c.description if c else '' }}</textarea>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-sliders"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">{{ _('التحكم والاستخدام') }}</h3>
+              <div class="bk-form-section-note">
+                {{ _('حدد حد الاستخدام والفترة وطريقة توزيع الكوبون.') }}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('حد الاستخدام (اختياري)') }}</label>
+
+              <input
+                class="form-control"
+                type="number"
+                min="1"
+                name="usage_limit"
+                value="{{ c.usage_limit if c and c.usage_limit is not none else '' }}"
+                placeholder="{{ _('مثلاً 5') }}"
+              >
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="bk-switch-card h-100" for="auto_claim">
+
+                <div>
+                  <div class="bk-switch-title">
+                    {{ _('Auto-claim لأول X دخول؟') }}
+                  </div>
+
+                  <div class="bk-switch-note">
+                    {{ _('توزيع الكوبون تلقائياً لأول عدد من المستخدمين.') }}
+                  </div>
+                </div>
+
+                <div class="form-check form-switch m-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="auto_claim"
+                    id="auto_claim"
+                    {% if c and c.auto_claim %}checked{% endif %}
+                  >
+                </div>
+
+              </label>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('بداية') }}</label>
+
+              <input
+                class="form-control"
+                type="datetime-local"
+                name="start_at"
+                value="{{ c.start_at.strftime('%Y-%m-%dT%H:%M') if c and c.start_at else '' }}"
+              >
+            </div>
+
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('نهاية') }}</label>
+
+              <input
+                class="form-control"
+                type="datetime-local"
+                name="end_at"
+                value="{{ c.end_at.strftime('%Y-%m-%dT%H:%M') if c and c.end_at else '' }}"
+              >
+            </div>
+
+
+            <div class="col-12">
+
+              <label class="bk-switch-card" for="is_active">
+
+                <div>
+                  <div class="bk-switch-title">{{ _('فعال') }}</div>
+                  <div class="bk-switch-note">
+                    {{ _('السماح باستخدام الكوبون ضمن الفترة المحددة.') }}
+                  </div>
+                </div>
+
+                <div class="form-check form-switch m-0">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="is_active"
+                    id="is_active"
+                    {% if not c or c.is_active %}checked{% endif %}
+                  >
+                </div>
+
+              </label>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-info-circle"></i>
+            {{ _('يمكن إيقاف الكوبون لاحقاً دون حذف بيانات الاستخدام.') }}
+          </div>
+
+          <button class="btn btn-primary btn-lg">
+            <i class="bi bi-check2-circle"></i>
+            {{ _('حفظ') }}
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-12 col-xl-4">
+
+        <div class="card bk-coupon-preview-card">
+
+          <div class="bk-coupon-preview-top">
+            <div class="bk-coupon-preview-brand">
+              BAKKOUR
+            </div>
+
+            <i class="bi bi-ticket-perforated"></i>
+          </div>
+
+          <div class="bk-coupon-preview-label">
+            {{ _('كود الخصم') }}
+          </div>
+
+          <div class="bk-coupon-preview-code">
+            {{ c.code if c else 'INSTA5' }}
+          </div>
+
+          <div class="bk-coupon-preview-discount">
+            {{ "%.2f"|format(c.discount_amount if c else 0) }} $
+          </div>
+
+          <div class="bk-coupon-preview-note">
+            {{ _('خصم ثابت') }}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+</div>
+
 {% endblock %}

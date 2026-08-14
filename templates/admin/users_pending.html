@@ -1,58 +1,214 @@
 {% extends "layout_new.html" %}
 
-{% block content %}
-<div class="container py-3">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="m-0">🧾 {{ _('طلبات الحسابات') }}</h2>
+{% block title %}{{ _('طلبات الحسابات') }}{% endblock %}
 
-    <a class="btn btn-outline-primary btn-sm" href="/admin/users/manage">
-      ⚙️ {{ _('إدارة الحسابات') }}
+{% block content %}
+
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-person-plus"></i>
+        {{ _('إدارة الحسابات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('طلبات الحسابات') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('مراجعة الحسابات الجديدة قبل منحها صلاحية الدخول الكاملة') }}
+      </div>
+    </div>
+
+    <a
+      href="/admin/users/manage"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-people"></i>
+      {{ _('إدارة الحسابات') }}
     </a>
+
   </div>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for cat, msg in messages %}
-        <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
 
-  <div class="card rounded-4">
-    <div class="card-header fw-bold">{{ _('طلبات جديدة (Pending)') }}</div>
-    <div class="card-body">
+  <div class="row g-4">
 
-      {% if pending %}
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead>
-              <tr>
-                <th>{{ _('البريد') }}</th>
-                <th class="text-end">{{ _('إجراءات') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for u in pending %}
-                <tr>
-                  <td>{{ u.email }}</td>
-                  <td class="text-end">
-                    <form method="post" action="/admin/users/{{ u.id }}/approve" class="d-inline">
-                      <button class="btn btn-sm btn-success">✅ {{ _('تفعيل') }}</button>
-                    </form>
-                    <form method="post" action="/admin/users/{{ u.id }}/block" class="d-inline">
-                      <button class="btn btn-sm btn-outline-danger">⛔ {{ _('حظر') }}</button>
-                    </form>
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    <div class="col-12 col-xl-4">
+
+      <div class="card bk-account-summary-card">
+
+        <div class="bk-account-summary-icon">
+          <i class="bi bi-hourglass-split"></i>
         </div>
-      {% else %}
-        <div class="text-muted small">{{ _('لا يوجد طلبات حالياً') }}</div>
-      {% endif %}
+
+        <div class="bk-account-summary-label">
+          {{ _('طلبات بانتظار المراجعة') }}
+        </div>
+
+        <div class="bk-account-summary-value">
+          {{ pending|length }}
+        </div>
+
+        <div class="bk-account-summary-note">
+          {{ _('يمكنك تفعيل الحساب أو حظره مباشرة من القائمة.') }}
+        </div>
+
+      </div>
 
     </div>
+
+
+    <div class="col-12 col-xl-8">
+
+      <div class="card bk-report-table-card">
+
+        <div class="bk-panel-simple-header">
+
+          <div>
+            <div class="bk-panel-simple-kicker">
+              {{ _('Pending') }}
+            </div>
+
+            <h3 class="bk-panel-simple-title">
+              {{ _('الحسابات الجديدة') }}
+            </h3>
+          </div>
+
+          <div class="bk-table-count">
+            {{ pending|length }}
+          </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+          <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-dark">
+              <tr>
+                <th>#</th>
+                <th>{{ _('الحساب') }}</th>
+                <th>{{ _('الحالة') }}</th>
+                <th class="col-actions">{{ _('إجراءات') }}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              {% for u in pending %}
+
+                <tr>
+
+                  <td class="text-muted">
+                    {{ loop.index }}
+                  </td>
+
+                  <td>
+
+                    <div class="bk-user-cell">
+
+                      <div class="bk-user-avatar">
+                        <i class="bi bi-person"></i>
+                      </div>
+
+                      <div>
+                        <div class="bk-user-email">
+                          {{ u.email }}
+                        </div>
+
+                        {% if u.first_name or u.last_name %}
+                          <div class="bk-user-meta">
+                            {{ (u.first_name or '') }} {{ (u.last_name or '') }}
+                          </div>
+                        {% endif %}
+                      </div>
+
+                    </div>
+
+                  </td>
+
+                  <td>
+                    <span class="bk-status-pill warning">
+                      <i class="bi bi-clock"></i>
+                      {{ _('قيد المراجعة') }}
+                    </span>
+                  </td>
+
+                  <td class="col-actions">
+
+                    <div class="actions-group">
+
+                      <form
+                        method="post"
+                        action="/admin/users/{{ u.id }}/approve"
+                        class="d-inline"
+                      >
+                        <button class="btn btn-sm btn-success">
+                          <i class="bi bi-check-lg"></i>
+                          {{ _('تفعيل') }}
+                        </button>
+                      </form>
+
+                      <form
+                        method="post"
+                        action="/admin/users/{{ u.id }}/block"
+                        class="d-inline"
+                        onsubmit="return confirm('متأكد من حظر هذا الحساب؟');"
+                      >
+                        <button class="btn btn-sm btn-outline-danger">
+                          <i class="bi bi-slash-circle"></i>
+                          {{ _('حظر') }}
+                        </button>
+                      </form>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              {% else %}
+
+                <tr>
+                  <td colspan="4" class="py-5">
+
+                    <div class="bk-empty-state">
+
+                      <div class="bk-empty-icon">
+                        <i class="bi bi-person-check"></i>
+                      </div>
+
+                      <div class="bk-empty-title">
+                        {{ _('لا يوجد طلبات حالياً') }}
+                      </div>
+
+                      <div class="bk-empty-note">
+                        {{ _('كل طلبات الحسابات تمت مراجعتها.') }}
+                      </div>
+
+                    </div>
+
+                  </td>
+                </tr>
+
+              {% endfor %}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </div>
+
 {% endblock %}

@@ -1,70 +1,226 @@
-<!-- templates/admin/categories/properties/values.html -->
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إدارة قيم الخاصية') }}{% endblock %}
 
 {% block content %}
-<h2 class="mb-3">{{ _('إدارة القيم:') }} {{ pick_lang(prop.name, prop.name_tr) }}</h2>
 
-{% if not readonly %}
-  <div class="card p-3 mb-3" style="max-width:520px;">
-    <form method="POST" class="d-flex gap-2 flex-column">
+<div class="container-fluid px-0">
 
-      <input
-        name="value"
-        class="form-control"
-        placeholder="{{ _('القيمة (عربي)') }}"
-        required>
+  <div class="bk-page-header mb-4">
 
-      <input
-        name="value_tr"
-        class="form-control"
-        placeholder="{{ _('القيمة (تركي)') }}">
+    <div>
 
-      <button class="btn btn-primary">
-        {{ _('إضافة') }}
-      </button>
+      <div class="bk-page-kicker">
+        <i class="bi bi-list-check"></i>
+        {{ _('خصائص المنتجات') }}
+      </div>
 
-    </form>
+      <h2 class="bk-page-title mb-1">
+        {{ _('إدارة قيم الخاصية') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ pick_lang(prop.name, prop.name_tr) }}
+      </div>
+
+    </div>
+
+
+    <a
+      href="{{ url_for('admin_properties.list_properties', dept=dept) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
+
   </div>
-{% else %}
 
-  <div class="alert alert-info" style="max-width:520px;">
-    {{ _('هذه الخاصية ليست من نوع') }}
-    <strong>select</strong>.
-    {{ _('لا يمكن إضافة/حذف قيم لها.') }}
-    <br>
-    {{ _('إذا بدك قيم جاهزة، غيّر نوع الخاصية إلى') }}
-    <strong>select</strong>.
-  </div>
-{% endif %}
 
-<div class="card" style="max-width:520px;">
-  <div class="card-header">{{ _('القيم الحالية') }}</div>
-  <div class="card-body p-0">
-    {% if values %}
-    <ul class="list-group list-group-flush">
-      {% for v in values %}
-      <li class="list-group-item d-flex justify-content-between align-items-center">
-        <span>{{ pick_lang(v.value, v.value_tr) }}</span>
+  <div class="row g-4">
 
-        {% if not readonly %}
-          <form method="POST"
-                action="{{ url_for('admin_properties.delete_value', value_id=v.id) }}"
-                onsubmit="return confirm('متأكد من الحذف؟');">
-            <button class="btn btn-sm btn-danger">{{ _('حذف') }}</button>
+    <div class="col-12 col-lg-5">
+
+      {% if not readonly %}
+
+        <div class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-plus-lg"></i>
+            </div>
+
+            <div>
+
+              <h3 class="bk-form-section-title">
+                {{ _('إضافة قيمة جديدة') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('مثال: أبيض، أسود، فضي أو أي خيار جاهز للمنتج.') }}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <form method="POST">
+
+            <div class="mb-3">
+
+              <label class="form-label">
+                {{ _('القيمة (عربي)') }}
+              </label>
+
+              <input
+                name="value"
+                class="form-control"
+                required
+              >
+
+            </div>
+
+
+            <div class="mb-3">
+
+              <label class="form-label">
+                {{ _('القيمة (تركي)') }}
+              </label>
+
+              <input
+                name="value_tr"
+                class="form-control"
+              >
+
+            </div>
+
+
+            <button class="btn btn-primary w-100">
+              <i class="bi bi-plus-lg"></i>
+              {{ _('إضافة') }}
+            </button>
+
           </form>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-      <div class="p-3 text-muted">{{ _('لا توجد قيم بعد.') }}</div>
-    {% endif %}
+
+        </div>
+
+      {% else %}
+
+        <div class="bk-system-note">
+
+          <div class="bk-system-note-icon">
+            <i class="bi bi-info-circle"></i>
+          </div>
+
+          <div>
+
+            <div class="bk-system-note-title">
+              {{ _('هذه الخاصية لا تستخدم قائمة خيارات') }}
+            </div>
+
+            <div class="bk-system-note-text">
+              {{ _('لتتمكن من إضافة قيم جاهزة، غيّر نوع الخاصية إلى قائمة.') }}
+            </div>
+
+          </div>
+
+        </div>
+
+      {% endif %}
+
+    </div>
+
+
+    <div class="col-12 col-lg-7">
+
+      <div class="card bk-values-card">
+
+        <div class="bk-panel-simple-header">
+
+          <div>
+
+            <div class="bk-panel-simple-kicker">
+              {{ _('القيم') }}
+            </div>
+
+            <h3 class="bk-panel-simple-title">
+              {{ _('القيم الحالية') }}
+            </h3>
+
+          </div>
+
+          <div class="bk-table-count">
+            {{ values|length }}
+          </div>
+
+        </div>
+
+
+        <div class="bk-values-list">
+
+          {% for v in values %}
+
+            <div class="bk-value-row">
+
+              <div>
+
+                <div class="bk-value-primary">
+                  {{ v.value }}
+                </div>
+
+                {% if v.value_tr %}
+                  <div class="bk-value-secondary">
+                    {{ v.value_tr }}
+                  </div>
+                {% endif %}
+
+              </div>
+
+
+              {% if not readonly %}
+
+                <form
+                  method="POST"
+                  action="{{ url_for('admin_properties.delete_value', value_id=v.id) }}"
+                  onsubmit="return confirm('متأكد من حذف القيمة؟');"
+                >
+
+                  <button class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+
+                </form>
+
+              {% endif %}
+
+            </div>
+
+          {% else %}
+
+            <div class="bk-empty-state py-5">
+
+              <div class="bk-empty-icon">
+                <i class="bi bi-list-ul"></i>
+              </div>
+
+              <div class="bk-empty-title">
+                {{ _('لا توجد قيم بعد.') }}
+              </div>
+
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </div>
 
-<a class="btn btn-link mt-3"
-   href="{{ url_for('admin_properties.list_properties', dept=dept) }}">
-  {{ _('رجوع') }}
-</a>
 {% endblock %}

@@ -1,103 +1,429 @@
 {% extends "layout_new.html" %}
 
+{% block title %}{{ _('إدارة الحسابات') }}{% endblock %}
+
 {% block content %}
-<div class="container py-3">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="m-0">⚙️ {{ _('إدارة الحسابات') }}</h2>
 
-    <a class="btn btn-outline-secondary btn-sm" href="/admin/users/pending">
-      🧾 {{ _('طلبات الحسابات') }}
-    </a>
-  </div>
+<div class="container-fluid px-0">
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for cat, msg in messages %}
-        <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+  <div class="bk-page-header mb-4">
 
-  <div class="card rounded-4">
-    <div class="card-header fw-bold">{{ _('الحسابات') }}</div>
-    <div class="card-body">
-      {% if users %}
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead>
-              <tr>
-                <th>{{ _('البريد') }}</th>
-                <th>{{ _('الدور') }}</th>
-                <th>{{ _('الحالة') }}</th>
-                <th style="min-width:240px;">{{ _('ربط الزبون') }}</th>
-                <th class="text-end">{{ _('إجراءات') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for u in users %}
-                <tr>
-                  <td>
-                    <div class="fw-semibold">{{ u.email }}</div>
-                    <div class="small text-muted">
-                      {{ _('Customer ID') }}:
-                      <b>{{ u.customer_ref_code if u.customer_ref_code else '-' }}</b>
-                    </div>
-                  </td>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-people"></i>
+        {{ _('إدارة الحسابات') }}
+      </div>
 
-                  <td>{{ u.role }}</td>
-                  <td>
-                    {% if u.status == 'active' %}
-                      <span class="badge text-bg-success">{{ _('مفعّل') }}</span>
-                    {% elif u.status == 'pending' %}
-                      <span class="badge text-bg-warning">{{ _('قيد المراجعة') }}</span>
-                    {% elif u.status == 'blocked' %}
-                      <span class="badge text-bg-danger">{{ _('محظور') }}</span>
-                    {% else %}
-                      <span class="badge text-bg-secondary">{{ u.status }}</span>
-                    {% endif %}
-                  </td>
+      <h2 class="bk-page-title mb-1">
+        {{ _('الحسابات المسجلة') }}
+      </h2>
 
-                  <td>
-                    <form method="post" action="/admin/users/{{ u.id }}/link-customer" class="d-flex gap-2">
-                    <input class="form-control form-control-sm" name="customer_ref_code"
-                            value="{{ u.customer_ref_code or '' }}"
-                            placeholder="{{ _('مثل B.1') }}">
-                    <button class="btn btn-sm btn-outline-primary">{{ _('حفظ') }}</button>
-                    </form>
-
-                    <div class="small text-muted mt-1">
-                      {{ _('اتركه فارغًا لإزالة الربط') }}
-                    </div>
-                  </td>
-
-                  <td class="text-end">
-                    <form method="post" action="/admin/users/{{ u.id }}/toggle-admin" class="d-inline">
-                      {% if u.role == 'admin' %}
-                        <button class="btn btn-sm btn-outline-warning">⭐ {{ _('إزالة أدمن') }}</button>
-                      {% else %}
-                        <button class="btn btn-sm btn-warning">⭐ {{ _('جعله أدمن') }}</button>
-                      {% endif %}
-                    </form>
-
-                    {% if u.status == 'blocked' %}
-                      <form method="post" action="/admin/users/{{ u.id }}/unblock" class="d-inline">
-                        <button class="btn btn-sm btn-outline-success">♻️ {{ _('إلغاء الحظر') }}</button>
-                      </form>
-                    {% else %}
-                      <form method="post" action="/admin/users/{{ u.id }}/block" class="d-inline">
-                        <button class="btn btn-sm btn-outline-danger">⛔ {{ _('حظر') }}</button>
-                      </form>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <div class="text-muted small">{{ _('لا يوجد حسابات') }}</div>
-      {% endif %}
+      <div class="bk-page-subtitle">
+        {{ _('إدارة حالة الحسابات والصلاحيات وربط حساب المشتري بصفحة الزبون') }}
+      </div>
     </div>
+
+    <a
+      href="/admin/users/pending"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-person-plus"></i>
+      {{ _('طلبات الحسابات') }}
+    </a>
+
   </div>
+
+
+  <div class="row g-3 mb-4">
+
+    <div class="col-12 col-md-3">
+
+      <div class="card bk-mini-stat-card">
+
+        <div>
+          <div class="bk-mini-stat-label">
+            {{ _('كل الحسابات') }}
+          </div>
+
+          <div class="bk-mini-stat-value">
+            {{ users|length }}
+          </div>
+        </div>
+
+        <div class="bk-mini-stat-icon">
+          <i class="bi bi-people"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-12 col-md-3">
+
+      <div class="card bk-mini-stat-card">
+
+        <div>
+          <div class="bk-mini-stat-label">
+            {{ _('المفعلة') }}
+          </div>
+
+          <div class="bk-mini-stat-value">
+            {{ users|selectattr('status', 'equalto', 'active')|list|length }}
+          </div>
+        </div>
+
+        <div class="bk-mini-stat-icon success">
+          <i class="bi bi-person-check"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-12 col-md-3">
+
+      <div class="card bk-mini-stat-card">
+
+        <div>
+          <div class="bk-mini-stat-label">
+            {{ _('المحظورة') }}
+          </div>
+
+          <div class="bk-mini-stat-value">
+            {{ users|selectattr('status', 'equalto', 'blocked')|list|length }}
+          </div>
+        </div>
+
+        <div class="bk-mini-stat-icon danger">
+          <i class="bi bi-person-x"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="col-12 col-md-3">
+
+      <div class="card bk-mini-stat-card">
+
+        <div>
+          <div class="bk-mini-stat-label">
+            {{ _('الأدمن') }}
+          </div>
+
+          <div class="bk-mini-stat-value">
+            {{ users|selectattr('role', 'equalto', 'admin')|list|length }}
+          </div>
+        </div>
+
+        <div class="bk-mini-stat-icon gold">
+          <i class="bi bi-shield-check"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card bk-report-table-card">
+
+    <div class="bk-panel-simple-header">
+
+      <div>
+        <div class="bk-panel-simple-kicker">
+          {{ _('Users') }}
+        </div>
+
+        <h3 class="bk-panel-simple-title">
+          {{ _('قائمة الحسابات') }}
+        </h3>
+      </div>
+
+      <div class="bk-table-count">
+        {{ users|length }}
+      </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+      <table class="table table-hover align-middle mb-0">
+
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>{{ _('الحساب') }}</th>
+            <th>{{ _('الدور') }}</th>
+            <th>{{ _('الحالة') }}</th>
+            <th style="min-width:280px;">
+              {{ _('ربط الزبون') }}
+            </th>
+            <th class="col-actions">
+              {{ _('إجراءات') }}
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {% for u in users %}
+
+            <tr>
+
+              <td class="text-muted">
+                {{ loop.index }}
+              </td>
+
+
+              <td>
+
+                <div class="bk-user-cell">
+
+                  <div class="bk-user-avatar {% if u.role == 'admin' %}admin{% endif %}">
+                    {% if u.role == 'admin' %}
+                      <i class="bi bi-shield-check"></i>
+                    {% else %}
+                      <i class="bi bi-person"></i>
+                    {% endif %}
+                  </div>
+
+                  <div>
+
+                    <div class="bk-user-email">
+                      {{ u.email }}
+                    </div>
+
+                    {% if u.first_name or u.last_name %}
+                      <div class="bk-user-meta">
+                        {{ (u.first_name or '') }} {{ (u.last_name or '') }}
+                      </div>
+                    {% endif %}
+
+                    {% if u.phone %}
+                      <div class="bk-user-meta">
+                        <i class="bi bi-telephone"></i>
+                        {{ u.phone }}
+                      </div>
+                    {% endif %}
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                {% if u.role == 'admin' %}
+                  <span class="bk-status-pill admin">
+                    <i class="bi bi-shield-fill-check"></i>
+                    {{ _('أدمن') }}
+                  </span>
+                {% else %}
+                  <span class="bk-status-pill neutral">
+                    <i class="bi bi-person"></i>
+                    {{ _('مشتري') }}
+                  </span>
+                {% endif %}
+
+              </td>
+
+
+              <td>
+
+                {% if u.status == 'active' %}
+
+                  <span class="bk-status-pill success">
+                    <i class="bi bi-check-circle"></i>
+                    {{ _('مفعّل') }}
+                  </span>
+
+                {% elif u.status == 'pending' %}
+
+                  <span class="bk-status-pill warning">
+                    <i class="bi bi-clock"></i>
+                    {{ _('قيد المراجعة') }}
+                  </span>
+
+                {% elif u.status == 'blocked' %}
+
+                  <span class="bk-status-pill danger">
+                    <i class="bi bi-slash-circle"></i>
+                    {{ _('محظور') }}
+                  </span>
+
+                {% else %}
+
+                  <span class="bk-status-pill neutral">
+                    {{ u.status }}
+                  </span>
+
+                {% endif %}
+
+              </td>
+
+
+              <td>
+
+                <form
+                  method="post"
+                  action="/admin/users/{{ u.id }}/link-customer"
+                  class="bk-user-link-form"
+                >
+
+                  <div class="input-group input-group-sm">
+
+                    <span class="input-group-text">
+                      <i class="bi bi-link-45deg"></i>
+                    </span>
+
+                    <input
+                      class="form-control"
+                      name="customer_ref_code"
+                      value="{{ u.customer_ref_code or '' }}"
+                      placeholder="{{ _('مثل B.1') }}"
+                    >
+
+                    <button
+                      class="btn btn-outline-primary"
+                      title="{{ _('حفظ الربط') }}"
+                    >
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+
+                  </div>
+
+                  <div class="bk-user-link-note">
+
+                    {% if u.customer_ref_code %}
+                      <span class="bk-linked-customer">
+                        <i class="bi bi-check-circle-fill"></i>
+                        {{ _('مرتبط بالزبون:') }}
+                        {{ u.customer_ref_code }}
+                      </span>
+                    {% else %}
+                      {{ _('اترك الحقل فارغاً لإزالة الربط') }}
+                    {% endif %}
+
+                  </div>
+
+                </form>
+
+              </td>
+
+
+              <td class="col-actions">
+
+                <div class="actions-group">
+
+                  <form
+                    method="post"
+                    action="/admin/users/{{ u.id }}/toggle-admin"
+                    class="d-inline"
+                    onsubmit="return confirm('متأكد من تغيير صلاحية هذا الحساب؟');"
+                  >
+
+                    {% if u.role == 'admin' %}
+
+                      <button
+                        class="btn btn-sm btn-outline-warning"
+                        title="{{ _('إزالة أدمن') }}"
+                      >
+                        <i class="bi bi-shield-minus"></i>
+                      </button>
+
+                    {% else %}
+
+                      <button
+                        class="btn btn-sm btn-outline-primary"
+                        title="{{ _('جعله أدمن') }}"
+                      >
+                        <i class="bi bi-shield-plus"></i>
+                      </button>
+
+                    {% endif %}
+
+                  </form>
+
+
+                  {% if u.status == 'blocked' %}
+
+                    <form
+                      method="post"
+                      action="/admin/users/{{ u.id }}/unblock"
+                      class="d-inline"
+                    >
+                      <button
+                        class="btn btn-sm btn-outline-success"
+                        title="{{ _('إلغاء الحظر') }}"
+                      >
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                      </button>
+                    </form>
+
+                  {% else %}
+
+                    <form
+                      method="post"
+                      action="/admin/users/{{ u.id }}/block"
+                      class="d-inline"
+                      onsubmit="return confirm('متأكد من حظر الحساب؟');"
+                    >
+                      <button
+                        class="btn btn-sm btn-outline-danger"
+                        title="{{ _('حظر') }}"
+                      >
+                        <i class="bi bi-slash-circle"></i>
+                      </button>
+                    </form>
+
+                  {% endif %}
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          {% else %}
+
+            <tr>
+
+              <td colspan="6" class="py-5">
+
+                <div class="bk-empty-state">
+
+                  <div class="bk-empty-icon">
+                    <i class="bi bi-people"></i>
+                  </div>
+
+                  <div class="bk-empty-title">
+                    {{ _('لا يوجد حسابات') }}
+                  </div>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
 </div>
+
 {% endblock %}

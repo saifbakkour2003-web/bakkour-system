@@ -4,47 +4,219 @@
 
 {% block content %}
 
-<h2 class="mb-4">{{ _('إضافة زبون جديد إلى دفتر') }} {{ ledger_name }}</h2>
+<div class="container-fluid px-0">
 
-<div class="card shadow-sm p-4">
+  <!-- Header -->
+  <div class="bk-page-header mb-4">
 
-    <form method="POST">
+    <div>
 
-        <!-- اسم الزبون -->
-        <div class="mb-3">
-            <label class="form-label">{{ _('اسم الزبون') }}</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        
-        <div class="mb-3">
-            <label class="form-label">{{ _('اسم الزبون (تركي)') }}</label>
-            <input type="text" name="name_tr" class="form-control">
-        </div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-person-plus"></i>
+        {{ _('إدارة الزبائن') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('إضافة زبون جديد') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('سيتم إضافة الزبون إلى دفتر') }}
+        <strong>{{ ledger_name }}</strong>
+      </div>
+
+    </div>
 
 
-        <!-- الهاتف -->
-        <div class="mb-3">
-            <label class="form-label">{{ _('رقم الهاتف (اختياري)') }}</label>
-            <input type="text" name="phone" class="form-control">
-        </div>
+    <a
+      href="{{ url_for('customers.list_customers', code=ledger_code) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
 
-        <!-- ملاحظات -->
-        <div class="mb-3">
-            <label class="form-label">{{ _('ملاحظات') }}</label>
-            <textarea name="notes" class="form-control" rows="3"></textarea>
-        </div>
+  </div>
 
-        <!-- زر الإضافة -->
-        <button type="submit" class="btn btn-success">
+
+  <div class="row g-4">
+
+    <!-- Form -->
+    <div class="col-12 col-xl-8">
+
+      <form method="POST">
+
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-person-vcard"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">
+                {{ _('بيانات الزبون') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('أدخل المعلومات الأساسية الخاصة بالزبون') }}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('اسم الزبون') }}
+                <span class="text-danger">*</span>
+              </label>
+
+              <input
+                type="text"
+                name="name"
+                class="form-control"
+                required
+                autofocus
+              >
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('اسم الزبون (تركي)') }}
+              </label>
+
+              <input
+                type="text"
+                name="name_tr"
+                class="form-control"
+              >
+
+            </div>
+
+
+            <div class="col-12">
+
+              <label class="form-label">
+                {{ _('رقم الهاتف (اختياري)') }}
+              </label>
+
+              <div class="input-group">
+
+                <span class="input-group-text">
+                  <i class="bi bi-telephone"></i>
+                </span>
+
+                <input
+                  type="text"
+                  name="phone"
+                  class="form-control"
+                  dir="ltr"
+                >
+
+              </div>
+
+            </div>
+
+
+            <div class="col-12">
+
+              <label class="form-label">
+                {{ _('ملاحظات') }}
+              </label>
+
+              <textarea
+                name="notes"
+                class="form-control"
+                rows="4"
+              ></textarea>
+
+              <div class="form-text">
+                {{ _('يمكن ترك هذا الحقل فارغاً.') }}
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-info-circle"></i>
+            {{ _('سيتم إنشاء رقم خاص للزبون تلقائياً.') }}
+          </div>
+
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg"
+          >
+            <i class="bi bi-person-check"></i>
             {{ _('إضافة الزبون') }}
-        </button>
+          </button>
 
-        <!-- العودة للدفتر -->
-        <a href="/ledger/{{ ledger_code }}/customers" class="btn btn-secondary ms-2">
-            {{ _('رجوع') }}
-        </a>
+        </div>
 
-    </form>
+      </form>
+
+    </div>
+
+
+    <!-- Side info -->
+    <div class="col-12 col-xl-4">
+
+      <div class="card bk-customer-side-card">
+
+        <div class="bk-customer-side-icon">
+
+          {% if ledger_code == "A" %}
+            <i class="bi bi-journal"></i>
+
+          {% elif ledger_code == "B" %}
+            <i class="bi bi-journal-text"></i>
+
+          {% else %}
+            <i class="bi bi-receipt-cutoff"></i>
+          {% endif %}
+
+        </div>
+
+
+        <div class="bk-customer-side-label">
+          {{ _('الدفتر') }}
+        </div>
+
+        <div class="bk-customer-side-title">
+          {{ ledger_name }}
+        </div>
+
+        <div class="bk-customer-side-code">
+          {{ ledger_code }}
+        </div>
+
+
+        <hr>
+
+
+        <div class="text-muted small">
+          {{ _('بعد إضافة الزبون سيتم نقلك مباشرة إلى صفحته لإضافة العقود أو الديون والدفعات.') }}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 

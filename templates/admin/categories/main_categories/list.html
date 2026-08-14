@@ -1,95 +1,218 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إدارة التصنيفات الرئيسية') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
     <div>
-      <h2 class="mb-1">{{ _('📁 التصنيفات الرئيسية') }}</h2>
-      <div class="text-muted">{{ _('هذه الأقسام ثابتة بالنظام وتُستخدم كأساس للتصنيفات الفرعية والمنتجات.') }}</div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-grid"></i>
+        {{ _('هيكل المنتجات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('الأقسام الرئيسية') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('الأقسام الثلاثة الأساسية التي يقوم عليها نظام المنتجات في المعرض') }}
+      </div>
     </div>
 
-    <a href="{{ url_for('admin_sub_categories.list_sub_categories') }}"
-       class="btn btn-primary">
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories') }}"
+      class="btn btn-primary"
+    >
+      <i class="bi bi-diagram-2"></i>
       {{ _('إدارة التصنيفات الفرعية') }}
     </a>
+
   </div>
 
-  <div class="alert alert-info">
-    {{ _('الأقسام الرئيسية لم تعد قابلة للإضافة أو الحذف من الواجهة. الإدارة الفعلية أصبحت عبر التصنيفات الفرعية.') }}
-  </div>
 
-  <div class="card shadow-sm">
-    <div class="table-responsive">
-      <table class="table table-hover mb-0 align-middle text-center">
-        <thead class="table-light">
-          <tr>
-            <th>{{ _('#') }}</th>
-            <th>{{ _('القسم الثابت') }}</th>
-            <th>{{ _('الاسم (تركي)') }}</th>
-            <th>{{ _('Code Prefix') }}</th>
-            <th>{{ _('Department Key') }}</th>
-            <th>{{ _('الحالة') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in fixed_departments %}
-          <tr>
-            <td>{{ loop.index }}</td>
-            <td>
-              {% if item.department == "electrical" %}
-                <span class="badge dept-badge dept-electrical">⚡ {{ item.name }}</span>
-              {% elif item.department == "linens" %}
-                <span class="badge dept-badge dept-linens">🧺 {{ item.name }}</span>
-              {% elif item.department == "crystal" %}
-                <span class="badge dept-badge dept-crystal">🍷 {{ item.name }}</span>
-              {% else %}
-                <span class="badge bg-secondary">{{ item.name }}</span>
-              {% endif %}
-            </td>
-            <td>{{ item.name_tr }}</td>
-            <td class="fw-bold">{{ item.code_prefix }}</td>
-            <td><code>{{ item.department }}</code></td>
-            <td><span class="badge bg-success">{{ _('ثابت') }}</span></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <div class="bk-system-note mb-4">
+
+    <div class="bk-system-note-icon">
+      <i class="bi bi-lock-fill"></i>
     </div>
+
+    <div>
+      <div class="bk-system-note-title">
+        {{ _('أقسام ثابتة بالنظام') }}
+      </div>
+
+      <div class="bk-system-note-text">
+        {{ _('الكهربائيات والبياضات والبلوريات هي أقسام أساسية ثابتة، بينما تتم الإدارة الفعلية للمنتجات عبر التصنيفات الفرعية.') }}
+      </div>
+    </div>
+
   </div>
+
+
+  <div class="row g-3 mb-4">
+
+    {% for item in fixed_departments %}
+
+      <div class="col-12 col-md-4">
+
+        <div class="card bk-department-system-card h-100">
+
+          <div class="bk-department-system-top">
+
+            <div class="bk-department-system-icon
+              {% if item.department == 'electrical' %}
+                electrical
+              {% elif item.department == 'linens' %}
+                linens
+              {% else %}
+                crystal
+              {% endif %}
+            ">
+
+              {% if item.department == "electrical" %}
+                <i class="bi bi-lightning-charge-fill"></i>
+              {% elif item.department == "linens" %}
+                <i class="bi bi-bag-fill"></i>
+              {% else %}
+                <i class="bi bi-cup-straw"></i>
+              {% endif %}
+
+            </div>
+
+            <span class="bk-status-pill success">
+              <i class="bi bi-lock-fill"></i>
+              {{ _('ثابت') }}
+            </span>
+
+          </div>
+
+
+          <div class="bk-department-system-name">
+            {{ item.name }}
+          </div>
+
+          <div class="bk-department-system-tr">
+            {{ item.name_tr }}
+          </div>
+
+
+          <div class="bk-department-system-meta">
+
+            <div>
+              <span>{{ _('Code Prefix') }}</span>
+              <strong>{{ item.code_prefix }}</strong>
+            </div>
+
+            <div>
+              <span>{{ _('Department Key') }}</span>
+              <code>{{ item.department }}</code>
+            </div>
+
+          </div>
+
+
+          <a
+            href="{{ url_for('admin_sub_categories.list_sub_categories', dept=item.department) }}"
+            class="btn btn-outline-secondary w-100 mt-3"
+          >
+            <i class="bi bi-diagram-2"></i>
+            {{ _('عرض التصنيفات الفرعية') }}
+          </a>
+
+        </div>
+
+      </div>
+
+    {% endfor %}
+
+  </div>
+
 
   {% if categories %}
-  <div class="card shadow-sm mt-4">
-    <div class="card-header bg-light fw-bold">
-      {{ _('السجلات الموجودة حاليًا في قاعدة البيانات (Legacy)') }}
+
+    <div class="card bk-report-table-card">
+
+      <div class="bk-panel-simple-header">
+
+        <div>
+          <div class="bk-panel-simple-kicker">
+            {{ _('Legacy') }}
+          </div>
+
+          <h3 class="bk-panel-simple-title">
+            {{ _('السجلات الموجودة في قاعدة البيانات') }}
+          </h3>
+        </div>
+
+        <div class="bk-panel-simple-icon">
+          <i class="bi bi-database"></i>
+        </div>
+
+      </div>
+
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+          <thead class="table-dark">
+
+            <tr>
+              <th>#</th>
+              <th>{{ _('الاسم') }}</th>
+              <th>{{ _('الاسم (تركي)') }}</th>
+              <th>{{ _('Code Prefix') }}</th>
+              <th>{{ _('Department') }}</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {% for c in categories %}
+
+              <tr>
+
+                <td>{{ loop.index }}</td>
+
+                <td class="fw-semibold">
+                  {{ c.name }}
+                </td>
+
+                <td>
+                  {{ c.name_tr or '—' }}
+                </td>
+
+                <td>
+                  <span class="bk-code-chip">
+                    {{ c.code_prefix }}
+                  </span>
+                </td>
+
+                <td>
+                  <code class="bk-department-key">
+                    {{ c.department }}
+                  </code>
+                </td>
+
+              </tr>
+
+            {% endfor %}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
     </div>
-    <div class="table-responsive">
-      <table class="table table-sm table-hover mb-0 align-middle text-center">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>{{ _('الاسم') }}</th>
-            <th>{{ _('الاسم (تركي)') }}</th>
-            <th>{{ _('Code Prefix') }}</th>
-            <th>{{ _('Department') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for c in categories %}
-          <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ c.name }}</td>
-            <td>{{ c.name_tr or '—' }}</td>
-            <td>{{ c.code_prefix }}</td>
-            <td><code>{{ c.department }}</code></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
+
   {% endif %}
 
 </div>
+
 {% endblock %}

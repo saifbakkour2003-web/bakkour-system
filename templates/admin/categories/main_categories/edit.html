@@ -1,16 +1,55 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('تعديل تصنيف رئيسي') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid" style="max-width: 720px;">
-  <h2 class="mb-4">{{ _('تعديل تصنيف رئيسي') }}</h2>
 
-  <div class="alert alert-warning">
-    {{ _('التصنيفات الرئيسية أصبحت ثابتة بالنظام. لا يمكن تعديلها من هذه الصفحة.') }}
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-grid"></i>
+        {{ _('هيكل المنتجات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('تعديل تصنيف رئيسي') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('الأقسام الأساسية محمية من التعديل عبر الواجهة') }}
+      </div>
+    </div>
+
   </div>
 
-  <a href="{{ url_for('admin_main_categories.list_main_categories') }}" class="btn btn-primary">
-    {{ _('الرجوع إلى قائمة الأقسام') }}
-  </a>
+
+  <div class="card bk-info-lock-card">
+
+    <div class="bk-info-lock-icon">
+      <i class="bi bi-shield-lock-fill"></i>
+    </div>
+
+    <h3>
+      {{ _('لا يمكن تعديل القسم الرئيسي') }}
+    </h3>
+
+    <p>
+      {{ _('هذه الأقسام مرتبطة مباشرة ببنية المنتجات والتصنيفات والماركات، لذلك يتم التعامل معها كأقسام ثابتة.') }}
+    </p>
+
+    <a
+      href="{{ url_for('admin_main_categories.list_main_categories') }}"
+      class="btn btn-primary mt-2"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('الرجوع إلى قائمة الأقسام') }}
+    </a>
+
+  </div>
+
 </div>
+
 {% endblock %}

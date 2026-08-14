@@ -1,83 +1,314 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('إدارة الماركات') }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
 
-  <div class="d-flex justify-content-between align-items-end mb-3">
-    <h2 class="mb-0">{{ _('🏷️ إدارة الماركات') }}</h2>
+<div class="container-fluid px-0">
+
+  <!-- =========================
+       Header
+       ========================= -->
+  <div class="bk-page-header mb-4">
+
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-tags"></i>
+        {{ _('إعدادات المنتجات') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('إدارة الماركات') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ _('إضافة الماركات وربط كل ماركة بالقسم المناسب من المعرض') }}
+      </div>
+    </div>
+
   </div>
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-header">{{ _('إضافة ماركة جديدة') }}</div>
-    <div class="card-body">
-      <form method="POST" class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">{{ _('اسم الماركة') }}</label>
-          <input type="text" name="name" class="form-control" required>
-        </div>
 
-        <div class="col-md-4">
-          <label class="form-label">{{ _('كود الماركة') }}</label>
-          <input type="text" name="code" class="form-control text-uppercase" required>
-        </div>
+  <div class="row g-4">
 
-        <div class="col-md-4">
-          <label class="form-label">{{ _('القسم') }}</label>
-          <select name="department" class="form-select" required>
-            <option value="electrical">{{ _('⚡ كهربائيات') }}</option>
-            <option value="linens">{{ _('🧺 بياضات') }}</option>
-            <option value="crystal">{{ _('🍷 بلوريات') }}</option>
-          </select>
-        </div>
+    <!-- =========================
+         Add Brand
+         ========================= -->
+    <div class="col-12 col-xl-4">
 
-        <div class="col-12">
-          <button class="btn btn-primary">{{ _('إضافة') }}</button>
-        </div>
+      <form method="POST">
+
+        <section class="card bk-form-section h-100">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-tag-fill"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">
+                {{ _('إضافة ماركة جديدة') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('حدد الاسم والكود والقسم الذي تتبع له الماركة.') }}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              {{ _('اسم الماركة') }}
+            </label>
+
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              placeholder="{{ _('مثال: Samsung') }}"
+              required
+            >
+
+          </div>
+
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              {{ _('كود الماركة') }}
+            </label>
+
+            <input
+              type="text"
+              name="code"
+              class="form-control bk-code-input"
+              placeholder="SAM"
+              maxlength="10"
+              required
+            >
+
+            <div class="form-text">
+              {{ _('يستخدم هذا الكود ضمن كود المنتج النهائي.') }}
+            </div>
+
+          </div>
+
+
+          <div class="mb-4">
+
+            <label class="form-label">
+              {{ _('القسم') }}
+            </label>
+
+            <select
+              name="department"
+              class="form-select"
+              required
+            >
+
+              <option value="electrical">
+                ⚡ {{ _('كهربائيات') }}
+              </option>
+
+              <option value="linens">
+                🧺 {{ _('بياضات') }}
+              </option>
+
+              <option value="crystal">
+                🍷 {{ _('بلوريات') }}
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <button class="btn btn-primary w-100">
+            <i class="bi bi-plus-lg"></i>
+            {{ _('إضافة الماركة') }}
+          </button>
+
+        </section>
+
       </form>
-    </div>
-  </div>
 
-  <div class="card shadow-sm">
-    <div class="table-responsive">
-      <table class="table table-hover mb-0 align-middle text-center">
-        <thead class="table-light">
-          <tr>
-            <th>{{ _('#') }}</th>
-            <th>{{ _('الاسم') }}</th>
-            <th>{{ _('القسم') }}</th>
-            <th>{{ _('الكود') }}</th>
-            <th class="col-actions">{{ _('إجراءات') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for b in brands %}
-          <tr>
-            <td>{{ loop.index }}</td>
-            <td>{{ b.name }}</td>
-            <td>
-              <span class="badge dept-badge dept-{{ b.department }}">
-                {{ b.department }}
-              </span>
-            </td>
-            <td class="fw-bold">{{ b.code }}</td>
-            <td class="col-actions">
-              <form method="POST"
-                    action="{{ url_for('admin_brands.delete_brand', brand_id=b.id) }}"
-                    onsubmit="return confirm('متأكد من الحذف؟');">
-                <button class="btn btn-sm btn-outline-danger">{{ _('حذف') }}</button>
-              </form>
-            </td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="5" class="text-muted py-4">{{ _('لا يوجد ماركات') }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
     </div>
+
+
+    <!-- =========================
+         Brands List
+         ========================= -->
+    <div class="col-12 col-xl-8">
+
+      <div class="card bk-report-table-card h-100">
+
+        <div class="bk-panel-simple-header">
+
+          <div>
+
+            <div class="bk-panel-simple-kicker">
+              {{ _('الماركات') }}
+            </div>
+
+            <h3 class="bk-panel-simple-title">
+              {{ _('الماركات المسجلة') }}
+            </h3>
+
+          </div>
+
+          <div class="bk-table-count">
+            {{ brands|length }}
+          </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+          <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-dark">
+
+              <tr>
+                <th>#</th>
+                <th>{{ _('الاسم') }}</th>
+                <th>{{ _('القسم') }}</th>
+                <th>{{ _('الكود') }}</th>
+                <th class="col-actions">{{ _('إجراءات') }}</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              {% for b in brands %}
+
+                <tr>
+
+                  <td class="text-muted">
+                    {{ loop.index }}
+                  </td>
+
+
+                  <td>
+
+                    <div class="bk-brand-name">
+                      {{ b.name }}
+                    </div>
+
+                  </td>
+
+
+                  <td>
+
+                    {% if b.department == "electrical" %}
+
+                      <span class="bk-department-pill electrical">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                        {{ _('كهربائيات') }}
+                      </span>
+
+                    {% elif b.department == "linens" %}
+
+                      <span class="bk-department-pill linens">
+                        <i class="bi bi-bag-fill"></i>
+                        {{ _('بياضات') }}
+                      </span>
+
+                    {% elif b.department == "crystal" %}
+
+                      <span class="bk-department-pill crystal">
+                        <i class="bi bi-cup-straw"></i>
+                        {{ _('بلوريات') }}
+                      </span>
+
+                    {% else %}
+
+                      <span class="bk-status-pill neutral">
+                        {{ b.department }}
+                      </span>
+
+                    {% endif %}
+
+                  </td>
+
+
+                  <td>
+
+                    <span class="bk-code-chip">
+                      {{ b.code }}
+                    </span>
+
+                  </td>
+
+
+                  <td class="col-actions">
+
+                    <form
+                      method="POST"
+                      action="{{ url_for('admin_brands.delete_brand', brand_id=b.id) }}"
+                      class="d-inline"
+                      onsubmit="return confirm('متأكد من حذف الماركة؟');"
+                    >
+
+                      <button
+                        class="btn btn-sm btn-outline-danger"
+                        title="{{ _('حذف') }}"
+                      >
+                        <i class="bi bi-trash3"></i>
+                      </button>
+
+                    </form>
+
+                  </td>
+
+                </tr>
+
+              {% else %}
+
+                <tr>
+
+                  <td colspan="5" class="py-5">
+
+                    <div class="bk-empty-state">
+
+                      <div class="bk-empty-icon">
+                        <i class="bi bi-tags"></i>
+                      </div>
+
+                      <div class="bk-empty-title">
+                        {{ _('لا يوجد ماركات') }}
+                      </div>
+
+                      <div class="bk-empty-note">
+                        {{ _('ابدأ بإضافة أول ماركة من النموذج الجانبي') }}
+                      </div>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              {% endfor %}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>
+
 {% endblock %}

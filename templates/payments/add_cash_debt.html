@@ -1,91 +1,322 @@
-<!-- templates/payments/add_cash_debt.html -->
 {% extends "layout_new.html" %}
 
 {% block title %}{{ _('إضافة دين نقدي') }}{% endblock %}
 
 {% block content %}
 
-<div class="container" style="max-width: 520px;">
+<div class="container-fluid px-0">
 
-  <h2 class="mb-4">{{ _('إضافة دين نقدي للزبون رقم:') }} {{ customer.id }}</h2>
+  <div class="bk-page-header mb-4">
 
-  <div class="card shadow-sm p-4">
-    <form method="POST">
-
-      <!-- ✅ اختيار نوع الإدخال -->
-      <div class="mb-3">
-        <label class="form-label">{{ _('طريقة الإضافة') }}</label>
-        <select name="mode" id="mode" class="form-select" onchange="toggleMode()" required>
-          <option value="product">{{ _('من منتج مسجل (بكود)') }}</option>
-          <option value="manual">{{ _('دين يدوي (بدون منتج)') }}</option>
-        </select>
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-cash-stack"></i>
+        {{ _('الحساب النقدي') }}
       </div>
 
-      <!-- ====== Product Mode ====== -->
-      <div id="productBox">
-        <div class="mb-3">
-          <label class="form-label">{{ _('كود المنتج') }}</label>
-          <input type="text"
-                 name="product_code"
-                 class="form-control"
-                 placeholder="{{ _('مثال: ELE-FRD-000123') }}">
-        </div>
+      <h2 class="bk-page-title mb-1">
+        {{ _('إضافة دين نقدي') }}
+      </h2>
 
-        {% if product_name %}
-        <div class="mb-3">
-          <label class="form-label">{{ _('اسم المنتج') }}</label>
-          <input type="text" class="form-control" value="{{ product_name }}" disabled>
-        </div>
-        {% endif %}
+      <div class="bk-page-subtitle">
+        {{ _('الزبون:') }}
+        <strong>{{ pick_lang(customer.name, customer.name_tr) }}</strong>
+        —
+        {{ customer.custom_id }}
       </div>
+    </div>
 
-      <!-- ====== Manual Mode ====== -->
-      <div id="manualBox" style="display:none;">
-        <div class="mb-3">
-          <label class="form-label">{{ _('اسم الدين') }}</label>
-          <input type="text" name="manual_name" class="form-control" placeholder="{{ _('مثال: تركيب / أجرة / قطعة غير مسجلة') }}">
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">{{ _('كود اختياري') }}</label>
-          <input type="text" name="manual_code" class="form-control" placeholder="{{ _('اختياري') }}">
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">{{ _('رأس المال (مهم للأرباح)') }}</label>
-          <input type="number" step="0.01" name="capital_price" class="form-control" placeholder="0.00">
-        </div>
-      </div>
-
-      <!-- السعر -->
-      <div class="mb-3">
-        <label class="form-label">{{ _('سعر البيع (دين نقدي)') }}</label>
-        <input type="number" step="0.01" name="price" class="form-control" required>
-      </div>
-
-      <!-- التاريخ -->
-      <div class="mb-3">
-        <label class="form-label">{{ _('تاريخ الإضافة') }}</label>
-        <input type="date"
-               name="date_added"
-               class="form-control"
-               value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}"
-               required>
-      </div>
-
-      <button type="submit" class="btn btn-success w-100">
-        {{ _('إضافة الدين') }}
-      </button>
-
-    </form>
-
-    <a href="{{ url_for('customers.customer_page', id=customer.id) }}"
-       class="btn btn-secondary w-100 mt-2">
+    <a
+      href="{{ url_for('customers.customer_page', id=customer.id) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
       {{ _('الرجوع لصفحة الزبون') }}
     </a>
+
+  </div>
+
+
+  <div class="row g-4">
+
+    <div class="col-12 col-xl-8">
+
+      <form method="POST">
+
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-plus-circle"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">
+                {{ _('بيانات الدين') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('يمكن إضافة الدين من منتج مسجل أو بشكل يدوي.') }}
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="mb-4">
+
+            <label class="form-label">
+              {{ _('طريقة الإضافة') }}
+            </label>
+
+            <select
+              name="mode"
+              id="mode"
+              class="form-select"
+              onchange="toggleMode()"
+              required
+            >
+              <option value="product">
+                {{ _('من منتج مسجل (بكود)') }}
+              </option>
+
+              <option value="manual">
+                {{ _('دين يدوي (بدون منتج)') }}
+              </option>
+            </select>
+
+          </div>
+
+
+          <div id="productBox" class="bk-mode-box">
+
+            <div class="bk-mode-box-title">
+              <i class="bi bi-box-seam"></i>
+              {{ _('منتج مسجل') }}
+            </div>
+
+            <div class="mb-3">
+
+              <label class="form-label">
+                {{ _('كود المنتج') }}
+              </label>
+
+              <div class="input-group">
+
+                <span class="input-group-text">
+                  <i class="bi bi-upc"></i>
+                </span>
+
+                <input
+                  type="text"
+                  name="product_code"
+                  class="form-control"
+                  placeholder="{{ _('مثال: ELE-FRD-000123') }}"
+                >
+
+              </div>
+
+            </div>
+
+
+            {% if product_name %}
+
+              <div class="mb-0">
+                <label class="form-label">
+                  {{ _('اسم المنتج') }}
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  value="{{ product_name }}"
+                  disabled
+                >
+              </div>
+
+            {% endif %}
+
+          </div>
+
+
+          <div
+            id="manualBox"
+            class="bk-mode-box"
+            style="display:none;"
+          >
+
+            <div class="bk-mode-box-title">
+              <i class="bi bi-pencil-square"></i>
+              {{ _('دين يدوي') }}
+            </div>
+
+
+            <div class="row g-3">
+
+              <div class="col-12 col-md-6">
+
+                <label class="form-label">
+                  {{ _('اسم الدين') }}
+                </label>
+
+                <input
+                  type="text"
+                  name="manual_name"
+                  class="form-control"
+                  placeholder="{{ _('مثال: تركيب / أجرة / قطعة غير مسجلة') }}"
+                >
+
+              </div>
+
+
+              <div class="col-12 col-md-6">
+
+                <label class="form-label">
+                  {{ _('كود اختياري') }}
+                </label>
+
+                <input
+                  type="text"
+                  name="manual_code"
+                  class="form-control"
+                  placeholder="{{ _('اختياري') }}"
+                >
+
+              </div>
+
+
+              <div class="col-12">
+
+                <label class="form-label">
+                  {{ _('رأس المال (مهم للأرباح)') }}
+                </label>
+
+                <div class="input-group">
+
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    name="capital_price"
+                    class="form-control"
+                    placeholder="0.00"
+                  >
+
+                  <span class="input-group-text">$</span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="row g-3 mt-1">
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('سعر البيع (دين نقدي)') }}
+              </label>
+
+              <div class="input-group">
+
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  name="price"
+                  class="form-control"
+                  required
+                >
+
+                <span class="input-group-text">$</span>
+
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('تاريخ الإضافة') }}
+              </label>
+
+              <input
+                type="date"
+                name="date_added"
+                class="form-control"
+                value="{{ datetime.utcnow().strftime('%Y-%m-%d') }}"
+                required
+              >
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-info-circle"></i>
+            {{ _('في حال اختيار منتج مسجل سيتم تحديث المخزون وتسجيل العملية ضمن الأرباح.') }}
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg"
+          >
+            <i class="bi bi-check-circle"></i>
+            {{ _('إضافة الدين') }}
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+
+    <div class="col-12 col-xl-4">
+
+      <div class="card bk-finance-side-card">
+
+        <div class="bk-finance-side-icon">
+          <i class="bi bi-person"></i>
+        </div>
+
+        <div class="bk-finance-side-label">
+          {{ _('الزبون') }}
+        </div>
+
+        <div class="bk-finance-side-title">
+          {{ pick_lang(customer.name, customer.name_tr) }}
+        </div>
+
+        <div class="bk-finance-side-code">
+          {{ customer.custom_id }}
+        </div>
+
+        <hr>
+
+        <div class="text-muted small">
+          {{ _('الدين سيظهر مباشرة ضمن سجل الحركات النقدية في صفحة الزبون.') }}
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
 </div>
+
 
 <script>
 function toggleMode(){

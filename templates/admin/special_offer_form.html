@@ -1,141 +1,379 @@
 {% extends "layout_new.html" %}
-{% block title %}{{ _('عرض خاص') }}{% endblock %}
+
+{% block title %}{{ offer and _('تعديل عرض') or _('إضافة عرض') }}{% endblock %}
 
 {% block content %}
-<h2 class="mb-3">{{ offer and _('تعديل عرض') or _('إضافة عرض') }}</h2>
 
-<form method="post" class="card p-4 shadow-sm" style="max-width:900px">
+<div class="container-fluid px-0">
 
-  <div class="row g-3">
-    <div class="col-md-8">
-      <label class="form-label">{{ _('عنوان العرض') }}</label>
-      <input class="form-control" name="title" required value="{{ offer.title if offer else '' }}">
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">{{ _('نوع العرض') }}</label>
-      <select class="form-select" name="offer_kind" id="offerKind">
-        {% set k = offer.offer_kind if offer else 'gift' %}
-        <option value="gift" {% if k=='gift' %}selected{% endif %}>{{ _('هدية') }}</option>
-        <option value="bundle_discount" {% if k=='bundle_discount' %}selected{% endif %}>{{ _('خصم على المنتجين') }}</option>
-        <option value="third_discount" {% if k=='third_discount' %}selected{% endif %}>{{ _('خصم على منتج ثالث') }}</option>
-      </select>
-    </div>
+  <div class="bk-page-header mb-4">
+    <div>
+      <div class="bk-page-kicker">
+        <i class="bi bi-stars"></i>
+        {{ _('العروض الخاصة') }}
+      </div>
 
-    <div class="col-12">
-      <label class="form-label">{{ _('ملاحظة مختصرة') }}</label>
-      <input class="form-control" name="note" value="{{ offer.note if offer else '' }}">
-    </div>
+      <h2 class="bk-page-title mb-1">
+        {{ offer and _('تعديل عرض') or _('إضافة عرض') }}
+      </h2>
 
-    <div class="col-md-6">
-      <label class="form-label">{{ _('المنتج الأول') }}</label>
-      <select class="form-select" name="product1_id" required>
-        {% for p in products %}
-          <option value="{{ p.id }}" {% if offer and p.id==offer.product1_id %}selected{% endif %}>
-            {{ p.code }} — {{ p.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label">{{ _('المنتج الثاني') }}</label>
-      <select class="form-select" name="product2_id" required>
-        {% for p in products %}
-          <option value="{{ p.id }}" {% if offer and p.id==offer.product2_id %}selected{% endif %}>
-            {{ p.code }} — {{ p.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="col-md-6" id="thirdWrap">
-      <label class="form-label">{{ _('المنتج الثالث (هدية/خصم)') }}</label>
-      <select class="form-select" name="third_product_id">
-        <option value="">{{ _('-- لا يوجد --') }}</option>
-        {% for p in products %}
-          <option value="{{ p.id }}" {% if offer and offer.third_product_id and p.id==offer.third_product_id %}selected{% endif %}>
-            {{ p.code }} — {{ p.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-
-    <div class="col-md-6" id="discountWrap">
-      <label class="form-label">{{ _('قيمة الخصم (ثابت)') }}</label>
-      <input type="number" step="0.01" class="form-control" name="discount_amount"
-             value="{{ offer.discount_amount if offer and offer.discount_amount is not none else '' }}">
-      <div class="form-text">{{ _('مثال: 5 (يعني يطرح 5 من مجموع المنتجين أو من المنتج الثالث حسب النوع)') }}</div>
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label">{{ _('بداية العرض') }}</label>
-      <input type="datetime-local" class="form-control" name="start_at"
-        value="{{ offer.start_at.strftime('%Y-%m-%dT%H:%M') if offer and offer.start_at else '' }}">
-    </div>
-
-    <div class="col-md-6">
-      <label class="form-label">{{ _('نهاية العرض') }}</label>
-      <input type="datetime-local" class="form-control" name="end_at"
-        value="{{ offer.end_at.strftime('%Y-%m-%dT%H:%M') if offer and offer.end_at else '' }}">
-    </div>
-
-    <div class="col-md-3">
-      <label class="form-label">{{ _('الستوك الإجمالي') }}</label>
-      <input type="number" class="form-control" name="stock_limit"
-        value="{{ offer.stock_limit if offer and offer.stock_limit is not none else '' }}">
-    </div>
-
-    <div class="col-md-3">
-      <label class="form-label">{{ _('المتبقي') }}</label>
-      <input type="number" class="form-control" name="stock_remaining"
-        value="{{ offer.stock_remaining if offer and offer.stock_remaining is not none else '' }}">
-    </div>
-
-    <div class="col-md-3 d-flex align-items-end">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="is_active" id="isActive"
-               {% if not offer or offer.is_active %}checked{% endif %}>
-        <label class="form-check-label" for="isActive">{{ _('فعّال') }}</label>
+      <div class="bk-page-subtitle">
+        {{ _('إنشاء عروض مركبة بين المنتجات مع تحديد الخصم والفترة والمخزون') }}
       </div>
     </div>
 
-    <div class="col-md-3 d-flex align-items-end">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="is_cancelled" id="isCancelled"
-               {% if offer and offer.is_cancelled %}checked{% endif %}>
-        <label class="form-check-label" for="isCancelled">{{ _('موقوف') }}</label>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <button class="btn btn-primary w-100">{{ _('حفظ') }}</button>
-    </div>
+    <a href="/admin/special-offers/" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
   </div>
-</form>
+
+
+  <form method="post">
+
+    <div class="row g-4">
+
+      <div class="col-12 col-xl-8">
+
+        <!-- Basic -->
+        <section class="card bk-form-section mb-3">
+
+          <div class="bk-form-section-header">
+            <div class="bk-form-section-icon">
+              <i class="bi bi-megaphone"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">{{ _('بيانات العرض') }}</h3>
+              <div class="bk-form-section-note">
+                {{ _('حدد اسم العرض ونوعه والملاحظة التي ستظهر للزبون.') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-8">
+              <label class="form-label">{{ _('عنوان العرض') }}</label>
+              <input
+                class="form-control"
+                name="title"
+                required
+                value="{{ offer.title if offer else '' }}"
+              >
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label">{{ _('نوع العرض') }}</label>
+
+              <select class="form-select" name="offer_kind" id="offerKind">
+                {% set k = offer.offer_kind if offer else 'gift' %}
+
+                <option value="gift" {% if k == 'gift' %}selected{% endif %}>
+                  {{ _('هدية') }}
+                </option>
+
+                <option value="bundle_discount" {% if k == 'bundle_discount' %}selected{% endif %}>
+                  {{ _('خصم على المنتجين') }}
+                </option>
+
+                <option value="third_discount" {% if k == 'third_discount' %}selected{% endif %}>
+                  {{ _('خصم على منتج ثالث') }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">{{ _('ملاحظة مختصرة') }}</label>
+              <input
+                class="form-control"
+                name="note"
+                value="{{ offer.note if offer else '' }}"
+              >
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- Products -->
+        <section class="card bk-form-section mb-3">
+
+          <div class="bk-form-section-header">
+            <div class="bk-form-section-icon">
+              <i class="bi bi-boxes"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">{{ _('منتجات العرض') }}</h3>
+              <div class="bk-form-section-note">
+                {{ _('اختر المنتجات الداخلة ضمن هذا العرض.') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('المنتج الأول') }}</label>
+
+              <select class="form-select" name="product1_id" required>
+                {% for p in products %}
+                  <option
+                    value="{{ p.id }}"
+                    {% if offer and p.id == offer.product1_id %}selected{% endif %}
+                  >
+                    {{ p.code }} — {{ pick_lang(p.name, p.name_tr) }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('المنتج الثاني') }}</label>
+
+              <select class="form-select" name="product2_id" required>
+                {% for p in products %}
+                  <option
+                    value="{{ p.id }}"
+                    {% if offer and p.id == offer.product2_id %}selected{% endif %}
+                  >
+                    {{ p.code }} — {{ pick_lang(p.name, p.name_tr) }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+
+            <div class="col-12 col-md-6" id="thirdWrap">
+              <label class="form-label">{{ _('المنتج الثالث (هدية/خصم)') }}</label>
+
+              <select class="form-select" name="third_product_id">
+                <option value="">{{ _('-- لا يوجد --') }}</option>
+
+                {% for p in products %}
+                  <option
+                    value="{{ p.id }}"
+                    {% if offer and offer.third_product_id and p.id == offer.third_product_id %}selected{% endif %}
+                  >
+                    {{ p.code }} — {{ pick_lang(p.name, p.name_tr) }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+
+            <div class="col-12 col-md-6" id="discountWrap">
+              <label class="form-label">{{ _('قيمة الخصم (ثابت)') }}</label>
+
+              <div class="input-group">
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  class="form-control"
+                  name="discount_amount"
+                  value="{{ offer.discount_amount if offer and offer.discount_amount is not none else '' }}"
+                >
+                <span class="input-group-text">$</span>
+              </div>
+
+              <div class="form-text">
+                {{ _('يتم طرح هذا المبلغ حسب نوع العرض المختار.') }}
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- Schedule -->
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+            <div class="bk-form-section-icon">
+              <i class="bi bi-calendar-range"></i>
+            </div>
+
+            <div>
+              <h3 class="bk-form-section-title">{{ _('الوقت والمخزون') }}</h3>
+              <div class="bk-form-section-note">
+                {{ _('حدد مدة العرض والكمية المتاحة والحالة.') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('بداية العرض') }}</label>
+              <input
+                type="datetime-local"
+                class="form-control"
+                name="start_at"
+                value="{{ offer.start_at.strftime('%Y-%m-%dT%H:%M') if offer and offer.start_at else '' }}"
+              >
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('نهاية العرض') }}</label>
+              <input
+                type="datetime-local"
+                class="form-control"
+                name="end_at"
+                value="{{ offer.end_at.strftime('%Y-%m-%dT%H:%M') if offer and offer.end_at else '' }}"
+              >
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('الستوك الإجمالي') }}</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                name="stock_limit"
+                value="{{ offer.stock_limit if offer and offer.stock_limit is not none else '' }}"
+              >
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label">{{ _('المتبقي') }}</label>
+              <input
+                type="number"
+                min="0"
+                class="form-control"
+                name="stock_remaining"
+                value="{{ offer.stock_remaining if offer and offer.stock_remaining is not none else '' }}"
+              >
+            </div>
+
+            <div class="col-12">
+
+              <div class="bk-switch-grid">
+
+                <label class="bk-switch-card" for="isActive">
+                  <div>
+                    <div class="bk-switch-title">{{ _('فعّال') }}</div>
+                    <div class="bk-switch-note">{{ _('السماح بظهور وتشغيل العرض') }}</div>
+                  </div>
+
+                  <div class="form-check form-switch m-0">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="is_active"
+                      id="isActive"
+                      {% if not offer or offer.is_active %}checked{% endif %}
+                    >
+                  </div>
+                </label>
+
+
+                <label class="bk-switch-card" for="isCancelled">
+                  <div>
+                    <div class="bk-switch-title">{{ _('موقوف') }}</div>
+                    <div class="bk-switch-note">{{ _('إيقاف العرض يدويًا دون حذفه') }}</div>
+                  </div>
+
+                  <div class="form-check form-switch m-0">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="is_cancelled"
+                      id="isCancelled"
+                      {% if offer and offer.is_cancelled %}checked{% endif %}
+                    >
+                  </div>
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-info-circle"></i>
+            {{ _('يمكن تعديل أو إيقاف العرض لاحقاً دون حذفه.') }}
+          </div>
+
+          <button class="btn btn-primary btn-lg">
+            <i class="bi bi-check2-circle"></i>
+            {{ _('حفظ') }}
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- Preview side -->
+      <div class="col-12 col-xl-4">
+
+        <div class="card bk-finance-side-card">
+
+          <div class="bk-finance-side-icon">
+            <i class="bi bi-stars"></i>
+          </div>
+
+          <div class="bk-finance-side-label">
+            {{ _('نوع العرض') }}
+          </div>
+
+          <div class="bk-finance-side-title" id="offerTypePreview">
+            —
+          </div>
+
+          <hr>
+
+          <div class="text-muted small">
+            {{ _('تأكد من اختيار المنتجات الصحيحة وتحديد الخصم بحسب نوع العرض.') }}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+</div>
+
 
 <script>
-  function syncFields(){
-    const k = document.getElementById("offerKind").value;
-    const thirdWrap = document.getElementById("thirdWrap");
-    const discountWrap = document.getElementById("discountWrap");
+function syncFields(){
+  const k = document.getElementById("offerKind").value;
+  const thirdWrap = document.getElementById("thirdWrap");
+  const discountWrap = document.getElementById("discountWrap");
+  const preview = document.getElementById("offerTypePreview");
 
-    // gift: يحتاج third فقط
-    if(k === "gift"){
-      thirdWrap.style.display = "";
-      discountWrap.style.display = "none";
-    }
-    // bundle_discount: يحتاج discount فقط
-    else if(k === "bundle_discount"){
-      thirdWrap.style.display = "none";
-      discountWrap.style.display = "";
-    }
-    // third_discount: يحتاج third + discount
-    else {
-      thirdWrap.style.display = "";
-      discountWrap.style.display = "";
-    }
+  if(k === "gift"){
+    thirdWrap.style.display = "";
+    discountWrap.style.display = "none";
+    preview.textContent = "{{ _('هدية') }}";
   }
-  document.getElementById("offerKind").addEventListener("change", syncFields);
-  syncFields();
+  else if(k === "bundle_discount"){
+    thirdWrap.style.display = "none";
+    discountWrap.style.display = "";
+    preview.textContent = "{{ _('خصم على المنتجين') }}";
+  }
+  else {
+    thirdWrap.style.display = "";
+    discountWrap.style.display = "";
+    preview.textContent = "{{ _('خصم على منتج ثالث') }}";
+  }
+}
+
+document.getElementById("offerKind").addEventListener("change", syncFields);
+syncFields();
 </script>
+
 {% endblock %}

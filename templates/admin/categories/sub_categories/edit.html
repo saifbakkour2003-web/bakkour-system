@@ -1,59 +1,177 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('تعديل تصنيف فرعي') }}{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">✏️ {{ _('تعديل تصنيف فرعي') }}</h2>
 
-{% if selected_dept %}
-  <div class="alert alert-info py-2" style="max-width: 450px;">
-    {{ _('القسم الحالي:') }}
-    <b>{{ dept_labels[selected_dept] }}</b>
+<div class="container-fluid px-0">
+
+  <div class="bk-page-header mb-4">
+
+    <div>
+
+      <div class="bk-page-kicker">
+        <i class="bi bi-diagram-2"></i>
+        {{ _('التصنيفات الفرعية') }}
+      </div>
+
+      <h2 class="bk-page-title mb-1">
+        {{ _('تعديل تصنيف فرعي') }}
+      </h2>
+
+      <div class="bk-page-subtitle">
+        {{ pick_lang(sub.name, sub.name_tr) }}
+      </div>
+
+    </div>
+
+
+    <a
+      href="{{ url_for('admin_sub_categories.list_sub_categories', dept=sub.department) }}"
+      class="btn btn-outline-secondary"
+    >
+      <i class="bi bi-arrow-right"></i>
+      {{ _('رجوع') }}
+    </a>
+
   </div>
-{% endif %}
 
-<form method="POST"
-      class="card p-4 shadow-sm"
-      style="max-width: 450px;">
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('اسم التصنيف الفرعي') }}</label>
-        <input type="text"
-               name="name"
-               class="form-control"
-               value="{{ sub.name }}"
-               required>
+  <div class="row g-4">
+
+    <div class="col-12 col-xl-8">
+
+      <form method="POST">
+
+        <section class="card bk-form-section">
+
+          <div class="bk-form-section-header">
+
+            <div class="bk-form-section-icon">
+              <i class="bi bi-pencil-square"></i>
+            </div>
+
+            <div>
+
+              <h3 class="bk-form-section-title">
+                {{ _('بيانات التصنيف') }}
+              </h3>
+
+              <div class="bk-form-section-note">
+                {{ _('تعديل الاسم أو الكود أو نقل التصنيف إلى قسم آخر.') }}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('اسم التصنيف الفرعي') }}
+              </label>
+
+              <input
+                type="text"
+                name="name"
+                class="form-control"
+                value="{{ sub.name }}"
+                required
+              >
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('اسم التصنيف الفرعي (تركي)') }}
+              </label>
+
+              <input
+                type="text"
+                name="name_tr"
+                class="form-control"
+                value="{{ sub.name_tr or '' }}"
+              >
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('Code Prefix') }}
+              </label>
+
+              <input
+                type="text"
+                name="code_prefix"
+                class="form-control bk-code-input"
+                value="{{ sub.code_prefix }}"
+                maxlength="5"
+                required
+              >
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <label class="form-label">
+                {{ _('القسم') }}
+              </label>
+
+              <select
+                name="department"
+                class="form-select"
+                required
+              >
+
+                <option value="electrical" {% if sub.department == 'electrical' %}selected{% endif %}>
+                  ⚡ {{ _('كهربائيات') }}
+                </option>
+
+                <option value="linens" {% if sub.department == 'linens' %}selected{% endif %}>
+                  🧺 {{ _('بياضات') }}
+                </option>
+
+                <option value="crystal" {% if sub.department == 'crystal' %}selected{% endif %}>
+                  🍷 {{ _('بلوريات') }}
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="bk-form-submit-bar mt-3">
+
+          <div class="text-muted small">
+            <i class="bi bi-exclamation-circle"></i>
+            {{ _('تغيير القسم يؤثر على مكان ظهور التصنيف ضمن إضافة المنتجات.') }}
+          </div>
+
+          <button class="btn btn-primary btn-lg">
+            <i class="bi bi-check2-circle"></i>
+            {{ _('حفظ التعديلات') }}
+          </button>
+
+        </div>
+
+      </form>
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('اسم التصنيف الفرعي (تركي)') }}</label>
-        <input type="text"
-               name="name_tr"
-               class="form-control"
-               value="{{ sub.name_tr or '' }}">
-    </div>
+  </div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('Code Prefix') }}</label>
-        <input type="text"
-               name="code_prefix"
-               class="form-control"
-               value="{{ sub.code_prefix }}"
-               style="text-transform: uppercase;"
-               maxlength="5"
-               required>
-    </div>
+</div>
 
-    <div class="mb-3">
-        <label class="form-label">{{ _('القسم') }}</label>
-        <select name="department" class="form-select" required>
-            <option value="electrical" {% if sub.department == 'electrical' %}selected{% endif %}>⚡ {{ _('كهربائيات') }}</option>
-            <option value="linens" {% if sub.department == 'linens' %}selected{% endif %}>🧺 {{ _('بياضات') }}</option>
-            <option value="crystal" {% if sub.department == 'crystal' %}selected{% endif %}>🍷 {{ _('بلوريات') }}</option>
-        </select>
-    </div>
-
-    <button class="btn btn-primary w-100">
-        💾 {{ _('حفظ التعديلات') }}
-    </button>
-</form>
 {% endblock %}

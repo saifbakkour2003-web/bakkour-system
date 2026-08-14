@@ -1,34 +1,162 @@
 {% extends "layout_new.html" %}
+
 {% block title %}{{ _('تسجيل دخول الأدمن') }}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card shadow-sm rounded-4">
-        <div class="card-body p-4">
-          <h1 class="h5 fw-bold mb-3">🧰 {{ _('تسجيل دخول الأدمن') }}</h1>
 
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for cat, msg in messages %}
-                <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
+<div class="bk-auth-page">
 
-          <form method="post" action="/admin/login" class="d-grid gap-2">
-            <input class="form-control" name="email" type="email" placeholder="{{ _('البريد الإلكتروني') }}" required>
-            <input class="form-control" name="password" type="password" placeholder="{{ _('كلمة المرور') }}" required>
-            <button class="btn btn-dark">{{ _('دخول') }}</button>
-          </form>
+  <div class="bk-auth-card">
 
-          <div class="text-muted small mt-3">
-            {{ _('هذه الصفحة مخصصة للإدارة فقط.') }}
-          </div>
+    <div class="bk-auth-brand">
+      <div class="bk-auth-logo">
+        <i class="bi bi-shop"></i>
+      </div>
+
+      <div>
+        <div class="bk-auth-kicker">
+          BAKKOUR SYSTEM
         </div>
+
+        <h1 class="bk-auth-title">
+          {{ _('تسجيل دخول الأدمن') }}
+        </h1>
+
+        <p class="bk-auth-subtitle">
+          {{ _('الدخول إلى لوحة إدارة معرض بكور') }}
+        </p>
       </div>
     </div>
+
+
+    <div class="bk-auth-divider"></div>
+
+
+    <form method="post" action="/admin/login" class="bk-auth-form">
+
+      <div class="mb-3">
+
+        <label class="form-label">
+          {{ _('البريد الإلكتروني') }}
+        </label>
+
+        <div class="input-group">
+
+          <span class="input-group-text">
+            <i class="bi bi-envelope"></i>
+          </span>
+
+          <input
+            class="form-control"
+            name="email"
+            type="email"
+            placeholder="admin@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="mb-3">
+
+        <label class="form-label">
+          {{ _('كلمة المرور') }}
+        </label>
+
+        <div class="input-group">
+
+          <span class="input-group-text">
+            <i class="bi bi-lock"></i>
+          </span>
+
+          <input
+            id="adminPassword"
+            class="form-control"
+            name="password"
+            type="password"
+            placeholder="{{ _('كلمة المرور') }}"
+            autocomplete="current-password"
+            required
+          >
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            id="toggleAdminPassword"
+            aria-label="{{ _('إظهار كلمة المرور') }}"
+          >
+            <i class="bi bi-eye"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <button class="btn btn-primary w-100 mt-2">
+        <i class="bi bi-box-arrow-in-right"></i>
+        {{ _('دخول إلى لوحة التحكم') }}
+      </button>
+
+    </form>
+
+
+    <div class="bk-auth-note">
+
+      <i class="bi bi-shield-lock"></i>
+
+      <span>
+        {{ _('هذه الصفحة مخصصة للإدارة فقط.') }}
+      </span>
+
+    </div>
+
   </div>
+
 </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+(function () {
+
+  const passwordInput = document.getElementById("adminPassword");
+  const toggleButton = document.getElementById("toggleAdminPassword");
+
+  if (!passwordInput || !toggleButton) return;
+
+  toggleButton.addEventListener("click", function () {
+
+    const icon = toggleButton.querySelector("i");
+
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+
+      if (icon) {
+        icon.classList.remove("bi-eye");
+        icon.classList.add("bi-eye-slash");
+      }
+
+    } else {
+
+      passwordInput.type = "password";
+
+      if (icon) {
+        icon.classList.remove("bi-eye-slash");
+        icon.classList.add("bi-eye");
+      }
+    }
+
+  });
+
+})();
+</script>
+
 {% endblock %}
