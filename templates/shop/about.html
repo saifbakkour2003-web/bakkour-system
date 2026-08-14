@@ -1,89 +1,259 @@
 {% extends "shop/layout.html" %}
+
 {% block title %}{{ _('من نحن') }}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
 
-  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-    <div class="p-4 p-lg-5 bk-about-hero">
-      <div class="row align-items-center g-4">
-        <div class="col-12 col-lg-7">
-          <div class="text-uppercase small bk-about-kicker">{{ _('معرض بكّور') }}</div>
-          <h1 class="display-6 fw-bold mb-2">{{ _('من نحن') }}</h1>
-          <p class="text-muted mb-3" style="max-width: 52ch;">
-            {{ _('نقدّم أجهزة منزلية ومنتجات مختارة بعناية مع خيارات دفع مرنة (نقدي/تقسيط) وخدمة متابعة للزبائن.') }}
-          </p>
+<div class="bk-info-page">
 
-          <div class="d-flex flex-wrap gap-2">
-            <a href="/shop/products" class="btn btn-dark rounded-3 px-4">
-              <i class="bi bi-bag"></i> {{ _('تصفّح المنتجات') }}
-            </a>
-            <a href="/shop/special-offers" class="btn btn-outline-dark rounded-3 px-4">
-              <i class="bi bi-stars"></i> {{ _('العروض الخاصة') }}
-            </a>
-          </div>
+  {# =====================================================
+     HERO
+     ===================================================== #}
+  <section class="bk-info-hero">
 
-          <div class="mt-4 d-flex flex-wrap gap-3">
-            <div class="bk-about-pill">
+    <div class="row align-items-center g-4 g-xl-5">
+
+      <div class="col-12 col-lg-7">
+
+        <div class="bk-info-eyebrow">
+          <i class="bi bi-shop"></i>
+          {{ _('معرض بكّور') }}
+        </div>
+
+        <h1 class="bk-info-title">
+          {{ _('من نحن') }}
+        </h1>
+
+        <p class="bk-info-lead">
+          {{ _('نقدّم أجهزة منزلية ومنتجات مختارة بعناية مع خيارات دفع مرنة (نقدي/تقسيط) وخدمة متابعة للزبائن.') }}
+        </p>
+
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+
+          <a
+            href="/shop/products"
+            class="btn btn-dark bk-info-main-btn"
+          >
+            <i class="bi bi-bag"></i>
+            {{ _('تصفّح المنتجات') }}
+          </a>
+
+
+          <a
+            href="/shop/special-offers"
+            class="btn btn-outline-dark bk-info-secondary-btn"
+          >
+            <i class="bi bi-stars"></i>
+            {{ _('العروض الخاصة') }}
+          </a>
+
+        </div>
+
+
+        <div class="bk-info-features mt-4">
+
+          <div class="bk-info-feature">
+            <span class="bk-info-feature-icon">
               <i class="bi bi-shield-check"></i>
-              <span>{{ _('ضمان وخدمة') }}</span>
-            </div>
-            <!-- <div class="bk-about-pill">
-              <i class="bi bi-truck"></i>
-              <span>{{ _('توصيل وتركيب') }}</span>
-            </div> -->
-            <div class="bk-about-pill">
+            </span>
+
+            <span>
+              {{ _('ضمان وخدمة') }}
+            </span>
+          </div>
+
+
+          <div class="bk-info-feature">
+            <span class="bk-info-feature-icon">
               <i class="bi bi-cash-coin"></i>
-              <span>{{ _('تقسيط مرن') }}</span>
+            </span>
+
+            <span>
+              {{ _('تقسيط مرن') }}
+            </span>
+          </div>
+
+
+          <div class="bk-info-feature">
+            <span class="bk-info-feature-icon">
+              <i class="bi bi-headset"></i>
+            </span>
+
+            <span>
+              {{ _('متابعة مستمرة') }}
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-12 col-lg-5">
+
+        <div class="bk-info-brand-card">
+
+          <div class="bk-info-brand-glow"></div>
+
+          <img
+            src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+            alt="{{ _('معرض بكّور') }}"
+            class="bk-info-brand-img"
+          >
+
+          <div class="bk-info-brand-footer">
+
+            <div>
+              <div class="bk-info-brand-name">
+                {{ _('معرض بكّور') }}
+              </div>
+
+              <div class="bk-info-brand-sub">
+                BAKKOUR TRADING COMPANY
+              </div>
             </div>
+
+            <span class="bk-info-brand-mark">
+              <i class="bi bi-stars"></i>
+            </span>
+
           </div>
+
         </div>
 
-        <div class="col-12 col-lg-5">
-          <div class="bk-about-logo-wrap">
-            <img src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
-                 alt="Bakkour" class="bk-about-logo-img">
-          </div>
-        </div>
       </div>
-    </div>
-  </div>
 
-  {# ===== Why us ===== #}
-  <div class="row g-3 mt-3">
-    <div class="col-12 col-md-4">
-      <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-        <div class="fw-bold mb-1"><i class="bi bi-gem"></i> {{ _('منتجات مختارة') }}</div>
-        <div class="text-muted small">{{ _('نختار القطع بعناية ونركّز على الجودة مقابل السعر.') }}</div>
-      </div>
     </div>
-    <div class="col-12 col-md-4">
-      <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-        <div class="fw-bold mb-1"><i class="bi bi-headset"></i> {{ _('دعم سريع') }}</div>
-        <div class="text-muted small">{{ _('تواصل معنا بأي وقت عبر واتساب للاستفسار أو الحجز.') }}</div>
-      </div>
-    </div>
-    <div class="col-12 col-md-4">
-      <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-        <div class="fw-bold mb-1"><i class="bi bi-receipt"></i> {{ _('شفافية بالتعامل') }}</div>
-        <div class="text-muted small">{{ _('سعر واضح، عروض واضحة، ودفترك متاح للعرض بعد ربط الحساب.') }}</div>
-      </div>
-    </div>
-  </div>
 
-  {# ===== CTA ===== #}
-  <div class="card border-0 shadow-sm rounded-4 p-4 mt-3 bk-about-cta">
-    <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between gap-3">
+  </section>
+
+
+  {# =====================================================
+     WHY US
+     ===================================================== #}
+  <section class="bk-info-section">
+
+    <div class="bk-section-heading">
+
       <div>
-        <div class="fw-bold mb-1">{{ _('بدك تسأل عن منتج أو تحجز؟') }}</div>
-        <div class="text-muted small">{{ _('راسلنا على واتساب وبنبعتلك كل التفاصيل بسرعة.') }}</div>
+        <div class="bk-section-kicker">
+          {{ _('ليش بكّور؟') }}
+        </div>
+
+        <h2 class="bk-section-title">
+          {{ _('تجربة شراء أوضح وأسهل') }}
+        </h2>
       </div>
-      <a class="btn btn-success rounded-3 px-4" target="_blank"
-         href="{{ WHATSAPP_LINK if WHATSAPP_LINK is defined else '#' }}">
-        <i class="bi bi-whatsapp"></i> {{ _('تواصل عبر واتساب') }}
-      </a>
+
     </div>
-  </div>
+
+
+    <div class="row g-3">
+
+      <div class="col-12 col-md-4">
+
+        <div class="bk-about-value-card">
+
+          <div class="bk-about-value-icon">
+            <i class="bi bi-gem"></i>
+          </div>
+
+          <div class="bk-about-value-title">
+            {{ _('منتجات مختارة') }}
+          </div>
+
+          <div class="bk-about-value-text">
+            {{ _('نختار القطع بعناية ونركّز على الجودة مقابل السعر.') }}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-12 col-md-4">
+
+        <div class="bk-about-value-card">
+
+          <div class="bk-about-value-icon">
+            <i class="bi bi-headset"></i>
+          </div>
+
+          <div class="bk-about-value-title">
+            {{ _('دعم سريع') }}
+          </div>
+
+          <div class="bk-about-value-text">
+            {{ _('تواصل معنا بأي وقت عبر واتساب للاستفسار أو الحجز.') }}
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-12 col-md-4">
+
+        <div class="bk-about-value-card">
+
+          <div class="bk-about-value-icon">
+            <i class="bi bi-receipt"></i>
+          </div>
+
+          <div class="bk-about-value-title">
+            {{ _('شفافية بالتعامل') }}
+          </div>
+
+          <div class="bk-about-value-text">
+            {{ _('سعر واضح، عروض واضحة، ودفترك متاح للعرض بعد ربط الحساب.') }}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {# =====================================================
+     CTA
+     ===================================================== #}
+  <section class="bk-info-cta">
+
+    <div class="bk-info-cta-copy">
+
+      <span class="bk-info-cta-icon">
+        <i class="bi bi-whatsapp"></i>
+      </span>
+
+      <div>
+        <h2 class="bk-info-cta-title">
+          {{ _('بدك تسأل عن منتج أو تحجز؟') }}
+        </h2>
+
+        <p class="bk-info-cta-text">
+          {{ _('راسلنا على واتساب وبنبعتلك كل التفاصيل بسرعة.') }}
+        </p>
+      </div>
+
+    </div>
+
+
+    <a
+      class="btn btn-success bk-info-whatsapp-btn"
+      target="_blank"
+      rel="noopener"
+      href="{{ WHATSAPP_LINK if WHATSAPP_LINK is defined else '#' }}"
+    >
+      <i class="bi bi-whatsapp"></i>
+      {{ _('تواصل عبر واتساب') }}
+    </a>
+
+  </section>
 
 </div>
+
 {% endblock %}

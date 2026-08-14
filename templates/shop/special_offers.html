@@ -1,4 +1,3 @@
-<!-- templates/shop/special_offers.html -->
 {% extends "shop/layout.html" %}
 
 {% block title %}{{ _("العروض الخاصة") }}{% endblock %}
@@ -8,37 +7,151 @@
 {%- endmacro %}
 
 {% block content %}
-<div class="container py-3">
+<div class="bk-special-page">
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h5 fw-bold mb-0">🎁 {{ _("العروض الخاصة") }}</h1>
-    <a class="btn btn-outline-dark btn-sm" href="/shop/">{{ _("رجوع") }}</a>
-  </div>
+  <section class="bk-special-page-hero">
 
-  {% if running and running|length %}
-    <h2 class="h6 fw-bold mb-2">{{ _("عروض سارية") }}</h2>
+    <div>
 
-    <div class="d-grid gap-3">
-      {% for o in running %}
-        {% include "shop/partials/special_offer_card.html" %}
-      {% endfor %}
+      <div class="bk-special-page-kicker">
+        {{ _("عروض حصرية") }}
+      </div>
+
+      <h1>
+        {{ _("العروض الخاصة") }}
+      </h1>
+
+      <p>
+        {{ _("باقات وهدايا وخصومات إضافية متوفرة لفترة محدودة.") }}
+      </p>
+
     </div>
-  {% else %}
-    <div class="alert alert-light border rounded-4">
-      {{ _("لا يوجد عروض سارية حالياً.") }}
+
+
+    <a
+      href="/shop/"
+      class="btn bk-special-page-back"
+    >
+      <i class="bi bi-house"></i>
+      {{ _("الرئيسية") }}
+    </a>
+
+  </section>
+
+
+  {# =========================
+     Running
+     ========================= #}
+  <section class="bk-special-page-section">
+
+    <div class="bk-special-page-section-head">
+
+      <div>
+
+        <div class="bk-special-page-section-kicker">
+          {{ _("متاحة الآن") }}
+        </div>
+
+        <h2>
+          {{ _("عروض سارية") }}
+        </h2>
+
+      </div>
+
+
+      {% if running and running|length %}
+        <span class="bk-special-page-count">
+          {{ running|length }}
+        </span>
+      {% endif %}
+
     </div>
-  {% endif %}
 
-  <div class="my-4"></div>
 
-  <h2 class="h6 fw-bold mb-2 text-muted">{{ _("عروض سابقة") }}</h2>
-  <div class="d-grid gap-3">
-    {% for o in previous %}
-      {% include "shop/partials/special_offer_card.html" %}
+    {% if running and running|length %}
+
+      <div class="bk-special-page-list">
+
+        {% for o in running %}
+          {% include "shop/partials/special_offer_card.html" %}
+        {% endfor %}
+
+      </div>
+
     {% else %}
-      <div class="text-muted small">{{ _("لا يوجد عروض سابقة.") }}</div>
-    {% endfor %}
-  </div>
+
+      <div class="bk-special-page-empty">
+
+        <div class="bk-special-page-empty-icon">
+          <i class="bi bi-gift"></i>
+        </div>
+
+        <div>
+
+          <div class="fw-bold">
+            {{ _("لا يوجد عروض خاصة سارية حالياً") }}
+          </div>
+
+          <div class="small">
+            {{ _("تابع الصفحة لاحقاً لرؤية العروض الجديدة.") }}
+          </div>
+
+        </div>
+
+      </div>
+
+    {% endif %}
+
+  </section>
+
+
+  {# =========================
+     Previous
+     ========================= #}
+  <section class="bk-special-page-section is-previous">
+
+    <div class="bk-special-page-section-head">
+
+      <div>
+
+        <div class="bk-special-page-section-kicker">
+          {{ _("الأرشيف") }}
+        </div>
+
+        <h2>
+          {{ _("عروض سابقة") }}
+        </h2>
+
+      </div>
+
+    </div>
+
+
+    {% if previous and previous|length %}
+
+      <div class="bk-special-page-list">
+
+        {% for o in previous %}
+          {% include "shop/partials/special_offer_card.html" %}
+        {% endfor %}
+
+      </div>
+
+    {% else %}
+
+      <div class="bk-special-page-empty is-small">
+
+        <i class="bi bi-clock-history"></i>
+
+        <span>
+          {{ _("لا يوجد عروض سابقة.") }}
+        </span>
+
+      </div>
+
+    {% endif %}
+
+  </section>
 
 </div>
-{% endblock %} 
+{% endblock %}

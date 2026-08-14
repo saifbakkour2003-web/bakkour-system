@@ -1,148 +1,543 @@
+{# templates/shop/partials/special_offer_card.html #}
+
 {% macro money(x) -%}
-    {{ "%.2f"|format(x or 0)}}
+  {{ "%.2f"|format(x or 0) }}
 {%- endmacro %}
+
+
+{# =====================================================
+   PRODUCTS
+   ===================================================== #}
 
 {% set p1 = o.product1 %}
 {% set p2 = o.product2 %}
 {% set p3 = o.third_product %}
 
-{% set p1_img = (p1.images[0].image_path if p1 and p1.images and p1.images|length else None) %}
-{% set p2_img = (p2.images[0].image_path if p2 and p2.images and p2.images|length else None) %}
-{% set p3_img = (p3.images[0].image_path if p3 and p3.images and p3.images|length else None) %}
 
-{% set p1_url = (url_for('static', filename=p1_img) if p1_img else url_for('static', filename='shop/img/logo.jpg')) %}
-{% set p2_url = (url_for('static', filename=p2_img) if p2_img else url_for('static', filename='shop/img/logo.jpg')) %}
-{% set p3_url = (url_for('static', filename=p3_img) if p3_img else url_for('static', filename='shop/img/logo.jpg')) %}
+{# =====================================================
+   IMAGES
+   ===================================================== #}
+
+{% set p1_img = (
+  p1.images[0].image_path
+  if p1 and p1.images and p1.images|length
+  else None
+) %}
+
+{% set p2_img = (
+  p2.images[0].image_path
+  if p2 and p2.images and p2.images|length
+  else None
+) %}
+
+{% set p3_img = (
+  p3.images[0].image_path
+  if p3 and p3.images and p3.images|length
+  else None
+) %}
+
+
+{% set p1_url = (
+  url_for('static', filename=p1_img)
+  if p1_img
+  else url_for('static', filename='shop/img/logo.jpg')
+) %}
+
+{% set p2_url = (
+  url_for('static', filename=p2_img)
+  if p2_img
+  else url_for('static', filename='shop/img/logo.jpg')
+) %}
+
+{% set p3_url = (
+  url_for('static', filename=p3_img)
+  if p3_img
+  else url_for('static', filename='shop/img/logo.jpg')
+) %}
+
+
+{# =====================================================
+   PRICES
+   ===================================================== #}
 
 {% set p1_price = (p1.base_cash_price or 0) %}
 {% set p2_price = (p2.base_cash_price or 0) %}
+
 {% set bundle_base = p1_price + p2_price %}
 
 {% set discount = (o.discount_amount or 0) %}
-{% set bundle_new = (bundle_base - discount) if (bundle_base - discount) > 0 else 0 %}
 
-{# third discount #}
-{% set third_base = (p3.base_cash_price or 0) if p3 else 0 %}
-{% set third_new = (third_base - discount) if (third_base - discount) > 0 else 0 %}
+{% set bundle_new = (
+  bundle_base - discount
+  if (bundle_base - discount) > 0
+  else 0
+) %}
 
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden bk-so-card {% if not o.is_running %}opacity-75{% endif %}"
-    data-end="{{ o.end_at.strftime('%Y-%m-%d %H:%M:%S') if o.end_at else '' }}">
 
-  <div class="row g-0 align-items-stretch">
-    {# 70% صور #}
-    <div class="col-12 col-lg-8">
-      <div class="bk-so-media h-100">
-        <div class="bk-so-imgs">
-          <img src="{{ p1_url }}" alt="p1">
-          <img src="{{ p2_url }}" alt="p2">
-        </div>
+{# Third product discount #}
 
-        <div class="bk-so-benefit">
-          <div class="d-flex justify-content-between align-items-center gap-2">
-            <div class="fw-bold">
-              {{ o.title }}
-              {% if o.note %}<div class="text-muted small">{{ o.note }}</div>{% endif %}
-            </div>
+{% set third_base = (
+  p3.base_cash_price or 0
+  if p3
+  else 0
+) %}
 
-            {# عداد تنازلي #}
-            {% if o.end_at %}
-              <span class="badge text-bg-dark bk-so-countdown">--:--:--</span>
-            {% endif %}
-          </div>
+{% set third_new = (
+  third_base - discount
+  if (third_base - discount) > 0
+  else 0
+) %}
 
-          <div class="mt-2 d-flex flex-wrap gap-2 align-items-center">
-            {% if o.offer_kind == 'gift' and p3 %}
-              <span class="badge text-bg-success">🎁 {{ _("هدية") }}: {{ p3.name }}</span>
-              <img src="{{ p3_url }}" alt="gift" class="bk-so-mini">
-            {% elif o.offer_kind == 'bundle_discount' %}
-              <span class="badge text-bg-primary">💸 {{ _("خصم ثابت على المنتجين") }}: {{ money(o.discount_amount) }}</span>
-            {% elif o.offer_kind == 'third_discount' and p3 %}
-              <span class="badge text-bg-warning text-dark">⭐ {{ _("خصم على المنتج الثالث") }}: {{ money(o.discount_amount) }}</span>
-              <img src="{{ p3_url }}" alt="third" class="bk-so-mini">
-            {% endif %}
 
-            {% if o.stock_remaining is not none %}
-              <span class="badge text-bg-secondary">{{ _("باقي") }} {{ o.stock_remaining }}</span>
-            {% endif %}
-          </div>
-        </div>
-      </div>
+{# =====================================================
+   CARD
+   ===================================================== #}
+
+<article
+  class="
+    bk-special-card
+    {% if not o.is_running %}
+      is-ended
+    {% endif %}
+  "
+  data-end="{{ o.end_at.strftime('%Y-%m-%d %H:%M:%S') if o.end_at else '' }}"
+>
+
+  {# ===================================================
+     MEDIA
+     =================================================== #}
+
+  <div class="bk-special-media">
+
+    <div class="bk-special-images">
+
+      {% if p1 %}
+        <a
+          href="/shop/product/{{ p1.id }}"
+          class="bk-special-image-link"
+          aria-label="{{ pick_lang(p1.name, p1.name_tr or p1.name) }}"
+        >
+          <img
+            src="{{ p1_url }}"
+            alt="{{ pick_lang(p1.name, p1.name_tr or p1.name) }}"
+            class="bk-special-image"
+            loading="lazy"
+          >
+        </a>
+      {% endif %}
+
+
+      {% if p2 %}
+        <a
+          href="/shop/product/{{ p2.id }}"
+          class="bk-special-image-link"
+          aria-label="{{ pick_lang(p2.name, p2.name_tr or p2.name) }}"
+        >
+          <img
+            src="{{ p2_url }}"
+            alt="{{ pick_lang(p2.name, p2.name_tr or p2.name) }}"
+            class="bk-special-image"
+            loading="lazy"
+          >
+        </a>
+      {% endif %}
+
     </div>
 
-    {# 30% تفاصيل #}
-    <div class="col-12 col-lg-4">
-      <div class="p-3 h-100 d-flex flex-column">
-        <div class="fw-bold mb-2">{{ _("تفاصيل العرض") }}</div>
 
-        <div class="small">
-          <div class="d-flex justify-content-between">
-            {# اسم المنتج الأول كرابط #}
-            <a class="bk-so-link" href="/shop/product/{{ o.product1_id }}">
-            {{ pick_lang(o.product1.name, o.product1.name_tr or o.product1.name) }}
-            </a>
-            {% if is_shop_logged_in %}<span>{{ money(p1_price) }}</span>{% endif %}
-          </div>
-          <div class="d-flex justify-content-between">
-            {# اسم المنتج الثاني كرابط #}
-            <a class="bk-so-link" href="/shop/product/{{ o.product2_id }}">
-            {{ pick_lang(o.product2.name, o.product2.name_tr or o.product2.name) }}
-            </a>
-            {% if is_shop_logged_in %}<span>{{ money(p2_price) }}</span>{% endif %}
-          </div>
+    {# Offer type badge #}
+
+    <div class="bk-special-type">
+
+      {% if o.offer_kind == 'gift' %}
+        <i class="bi bi-gift-fill"></i>
+        {{ _("هدية مع العرض") }}
+
+      {% elif o.offer_kind == 'bundle_discount' %}
+        <i class="bi bi-percent"></i>
+        {{ _("خصم على الباقة") }}
+
+      {% elif o.offer_kind == 'third_discount' %}
+        <i class="bi bi-stars"></i>
+        {{ _("خصم على منتج إضافي") }}
+
+      {% else %}
+        <i class="bi bi-tag-fill"></i>
+        {{ _("عرض خاص") }}
+      {% endif %}
+
+    </div>
+
+
+    {# Ended overlay #}
+
+    {% if not o.is_running %}
+      <div class="bk-special-ended-overlay">
+        <span>
+          {{ _("انتهى العرض") }}
+        </span>
+      </div>
+    {% endif %}
+
+  </div>
+
+
+  {# ===================================================
+     CONTENT
+     =================================================== #}
+
+  <div class="bk-special-content">
+
+    {# Header #}
+
+    <div class="bk-special-header">
+
+      <div class="bk-special-heading">
+
+        <div class="bk-special-eyebrow">
+          <i class="bi bi-stars"></i>
+          {{ _("عرض خاص") }}
         </div>
 
-        {% if is_shop_logged_in %}
-          <hr class="my-2">
+        <h3 class="bk-special-title">
+          {{ o.title }}
+        </h3>
 
-          {% if o.offer_kind == 'bundle_discount' %}
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted">{{ _("المجموع") }}</span>
-              <span class="text-muted text-decoration-line-through">{{ money(bundle_base) }}</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold">{{ _("بعد الخصم") }}</span>
-              <span class="fw-bold">{{ money(bundle_new) }}</span>
-            </div>
-          {% elif o.offer_kind == 'gift' and p3 %}
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted">{{ _("الهدية") }}: {{ p3.name }}</span>
-              <span class="text-muted text-decoration-line-through">{{ money(third_base) }}</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold">{{ _("السعر") }}</span>
-              <span class="fw-bold">0</span>
-            </div>
-          {% elif o.offer_kind == 'third_discount' and p3 %}
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted">{{ _("سعر المنتج الثالث") }}</span>
-              <span class="text-muted text-decoration-line-through">{{ money(third_base) }}</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold">{{ _("بعد الخصم") }}</span>
-              <span class="fw-bold">{{ money(third_new) }}</span>
-            </div>
-          {% endif %}
-        {% else %}
-          <div class="alert alert-light border rounded-3 small mt-2 mb-0">
-            <i class="bi bi-lock"></i> {{ _("سجّل دخول لرؤية الأسعار") }}
-          </div>
+        {% if o.note %}
+          <p class="bk-special-note">
+            {{ o.note }}
+          </p>
         {% endif %}
 
-        <div class="mt-auto pt-3 d-grid gap-2">
-          <!-- <a class="btn btn-outline-dark" href="/shop/product/{{ p1.id }}">{{ _("فتح المنتج الأول") }}</a>
-          <a class="btn btn-outline-dark" href="/shop/product/{{ p2.id }}">{{ _("فتح المنتج الثاني") }}</a> -->
-
-          {% if p3 %}
-            <a class="btn btn-outline-dark" href="/shop/product/{{ p3.id }}">{{ _("عرض الهدية") }}</a>
-          {% endif %}
-
-          <a class="btn btn-success" target="_blank"
-             href="{{ WHATSAPP_LINK if WHATSAPP_LINK else '#' }}">
-            <i class="bi bi-whatsapp"></i> {{ _("حجز عبر واتساب") }}
-          </a>
-        </div>
       </div>
+
+
+      {% if o.end_at %}
+        <div class="bk-special-countdown-wrap">
+
+          <div class="bk-special-countdown-label">
+            <i class="bi bi-clock"></i>
+            {{ _("ينتهي خلال") }}
+          </div>
+
+          <div class="bk-so-countdown bk-special-countdown">
+            --:--:--
+          </div>
+
+        </div>
+      {% endif %}
+
+    </div>
+
+
+    {# =================================================
+       PRODUCTS
+       ================================================= #}
+
+    <div class="bk-special-products">
+
+      {% if p1 %}
+        <a
+          href="/shop/product/{{ p1.id }}"
+          class="bk-special-product"
+        >
+
+          <span class="bk-special-product-number">
+            1
+          </span>
+
+          <span class="bk-special-product-copy">
+
+            <span class="bk-special-product-name">
+              {{ pick_lang(p1.name, p1.name_tr or p1.name) }}
+            </span>
+
+            {% if is_shop_logged_in %}
+              <span class="bk-special-product-price">
+                {{ money(p1_price) }} $
+              </span>
+            {% endif %}
+
+          </span>
+
+          <i class="bi bi-chevron-left bk-special-product-arrow"></i>
+
+        </a>
+      {% endif %}
+
+
+      {% if p2 %}
+        <a
+          href="/shop/product/{{ p2.id }}"
+          class="bk-special-product"
+        >
+
+          <span class="bk-special-product-number">
+            2
+          </span>
+
+          <span class="bk-special-product-copy">
+
+            <span class="bk-special-product-name">
+              {{ pick_lang(p2.name, p2.name_tr or p2.name) }}
+            </span>
+
+            {% if is_shop_logged_in %}
+              <span class="bk-special-product-price">
+                {{ money(p2_price) }} $
+              </span>
+            {% endif %}
+
+          </span>
+
+          <i class="bi bi-chevron-left bk-special-product-arrow"></i>
+
+        </a>
+      {% endif %}
+
+    </div>
+
+
+    {# =================================================
+       BENEFIT
+       ================================================= #}
+
+    <div class="bk-special-benefit">
+
+      {% if o.offer_kind == 'gift' and p3 %}
+
+        <div class="bk-special-benefit-main">
+
+          <div class="bk-special-benefit-icon">
+            <i class="bi bi-gift-fill"></i>
+          </div>
+
+          <div class="bk-special-benefit-copy">
+
+            <div class="bk-special-benefit-label">
+              {{ _("هدية العرض") }}
+            </div>
+
+            <a
+              href="/shop/product/{{ p3.id }}"
+              class="bk-special-benefit-title"
+            >
+              {{ pick_lang(p3.name, p3.name_tr or p3.name) }}
+            </a>
+
+            {% if is_shop_logged_in %}
+              <div class="bk-special-benefit-prices">
+
+                <span class="old">
+                  {{ money(third_base) }} $
+                </span>
+
+                <span class="new">
+                  {{ _("مجاناً") }}
+                </span>
+
+              </div>
+            {% endif %}
+
+          </div>
+
+
+          <a
+            href="/shop/product/{{ p3.id }}"
+            class="bk-special-gift-thumb"
+          >
+            <img
+              src="{{ p3_url }}"
+              alt="{{ pick_lang(p3.name, p3.name_tr or p3.name) }}"
+              loading="lazy"
+            >
+          </a>
+
+        </div>
+
+
+      {% elif o.offer_kind == 'bundle_discount' %}
+
+        <div class="bk-special-benefit-main">
+
+          <div class="bk-special-benefit-icon">
+            <i class="bi bi-percent"></i>
+          </div>
+
+          <div class="bk-special-benefit-copy">
+
+            <div class="bk-special-benefit-label">
+              {{ _("وفر مع الباقة") }}
+            </div>
+
+            <div class="bk-special-benefit-title">
+              {{ _("خصم ثابت") }}
+              {{ money(discount) }} $
+            </div>
+
+            {% if is_shop_logged_in %}
+              <div class="bk-special-benefit-prices">
+
+                <span class="old">
+                  {{ money(bundle_base) }} $
+                </span>
+
+                <span class="new">
+                  {{ money(bundle_new) }} $
+                </span>
+
+              </div>
+            {% endif %}
+
+          </div>
+
+        </div>
+
+
+      {% elif o.offer_kind == 'third_discount' and p3 %}
+
+        <div class="bk-special-benefit-main">
+
+          <div class="bk-special-benefit-icon">
+            <i class="bi bi-stars"></i>
+          </div>
+
+          <div class="bk-special-benefit-copy">
+
+            <div class="bk-special-benefit-label">
+              {{ _("منتج إضافي بسعر خاص") }}
+            </div>
+
+            <a
+              href="/shop/product/{{ p3.id }}"
+              class="bk-special-benefit-title"
+            >
+              {{ pick_lang(p3.name, p3.name_tr or p3.name) }}
+            </a>
+
+            {% if is_shop_logged_in %}
+              <div class="bk-special-benefit-prices">
+
+                <span class="old">
+                  {{ money(third_base) }} $
+                </span>
+
+                <span class="new">
+                  {{ money(third_new) }} $
+                </span>
+
+              </div>
+            {% endif %}
+
+          </div>
+
+
+          <a
+            href="/shop/product/{{ p3.id }}"
+            class="bk-special-gift-thumb"
+          >
+            <img
+              src="{{ p3_url }}"
+              alt="{{ pick_lang(p3.name, p3.name_tr or p3.name) }}"
+              loading="lazy"
+            >
+          </a>
+
+        </div>
+
+      {% endif %}
+
+
+      {% if o.stock_remaining is not none %}
+
+        <div class="bk-special-stock">
+
+          <i class="bi bi-box-seam"></i>
+
+          <span>
+            {{ _("المتبقي من العرض") }}
+          </span>
+
+          <strong>
+            {{ o.stock_remaining }}
+          </strong>
+
+        </div>
+
+      {% endif %}
+
+    </div>
+
+
+    {# =================================================
+       LOGIN NOTE
+       ================================================= #}
+
+    {% if not is_shop_logged_in %}
+
+      <div class="bk-special-login-note">
+
+        <i class="bi bi-lock"></i>
+
+        <span>
+          {{ _("سجّل دخول لرؤية أسعار وتفاصيل العرض") }}
+        </span>
+
+        <a href="/shop/login">
+          {{ _("تسجيل الدخول") }}
+        </a>
+
+      </div>
+
+    {% endif %}
+
+
+    {# =================================================
+       ACTIONS
+       ================================================= #}
+
+    <div class="bk-special-actions">
+
+      <a
+        class="
+          btn
+          btn-dark
+          bk-special-main-action
+          {% if not o.is_running %}disabled{% endif %}
+        "
+        target="_blank"
+        rel="noopener"
+        href="{{ WHATSAPP_LINK if WHATSAPP_LINK else '#' }}"
+      >
+
+        <i class="bi bi-whatsapp"></i>
+
+        {% if o.is_running %}
+          {{ _("احجز العرض عبر واتساب") }}
+        {% else %}
+          {{ _("العرض منتهي") }}
+        {% endif %}
+
+      </a>
+
+
+      {% if p3 %}
+        <a
+          class="btn btn-outline-dark bk-special-secondary-action"
+          href="/shop/product/{{ p3.id }}"
+        >
+          <i class="bi bi-eye"></i>
+
+          {% if o.offer_kind == 'gift' %}
+            {{ _("عرض الهدية") }}
+          {% else %}
+            {{ _("عرض المنتج الإضافي") }}
+          {% endif %}
+        </a>
+      {% endif %}
+
     </div>
 
   </div>
-</div>
+
+</article>

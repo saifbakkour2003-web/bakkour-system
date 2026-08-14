@@ -1,175 +1,690 @@
-<!-- templates/shop/layout.html -->
 <!doctype html>
-<html lang="{{ get_locale() }}" dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}">
+<html
+  lang="{{ get_locale() }}"
+  dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}"
+>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% block title %}{{ _('المعرض') }}{% endblock %}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='shop/css/store.css') }}">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>
+    {% block title %}
+      {{ _('المعرض') }}
+    {% endblock %}
+  </title>
+
+  <!-- Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  >
+
+  <!-- Bakkour Store -->
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='shop/css/store.css') }}"
+  >
+
   {% block head %}{% endblock %}
 </head>
 
 <body class="storefront">
 
-  {# ========= TOP HEADER (Karaca-ish) ========= #}
-  <header class="bk-header bg-white border-bottom sticky-top">
-    <div class="container py-2">
 
-      <div class="d-flex align-items-center justify-content-between gap-2">
+  <!-- =====================================================
+       TOP ANNOUNCEMENT
+       ===================================================== -->
+  <div class="bk-topbar">
 
-        <!-- Hamburger -->
-        <button class="btn bk-icon-btn" type="button"
-                data-bs-toggle="offcanvas" data-bs-target="#bkSidebar"
-                aria-controls="bkSidebar" aria-label="{{ _('القائمة') }}">
+    <div class="container">
+
+      <div class="bk-topbar-inner">
+
+        <div class="bk-topbar-text">
+          <i class="bi bi-stars"></i>
+          <span>
+            {{ _('معرض بكور — مختارات للبيت والحياة اليومية') }}
+          </span>
+        </div>
+
+        <div class="bk-topbar-links d-none d-md-flex">
+
+          <a href="/shop/about">
+            {{ _('من نحن') }}
+          </a>
+
+          <span class="bk-topbar-dot"></span>
+
+          <a href="/shop/contact">
+            {{ _('تواصل معنا') }}
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+  <header class="bk-header sticky-top">
+
+    <div class="container">
+
+      <div class="bk-header-main">
+
+        <!-- Menu -->
+        <button
+          class="bk-header-icon"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#bkSidebar"
+          aria-controls="bkSidebar"
+          aria-label="{{ _('القائمة') }}"
+        >
           <i class="bi bi-list"></i>
         </button>
 
+
         <!-- Brand -->
-        <a href="/shop/" class="bk-brand text-decoration-none d-flex align-items-center gap-2">
-          <img src="{{ url_for('static', filename='shop/img/logo.jpg') }}" alt="{{ _('معرض بكّور') }}" height="26">
-          <span class="bk-brand-name">{{ _('معرض بكّور') }}</span>
+        <a
+          href="/shop/"
+          class="bk-brand"
+        >
+
+          <span class="bk-brand-logo-wrap">
+            <img
+              src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+              alt="{{ _('معرض بكور') }}"
+              class="bk-brand-logo"
+            >
+          </span>
+
+          <span class="bk-brand-copy">
+
+            <span class="bk-brand-name">
+              {{ _('معرض بكور') }}
+            </span>
+
+            <span class="bk-brand-subtitle">
+              BAKKOUR TRADING COMPANY
+            </span>
+
+          </span>
+
         </a>
 
-        <!-- Right Icons -->
-        <div class="d-flex align-items-center gap-1">
+
+        <!-- Actions -->
+        <div class="bk-header-actions">
 
           <!-- Language -->
           <div class="dropdown">
-            <button class="btn bk-icon-btn" data-bs-toggle="dropdown" aria-label="{{ _('اللغة') }}">
+
+            <button
+              class="bk-header-icon"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              title="{{ _('اللغة') }}"
+            >
               <i class="bi bi-translate"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="/set-lang/ar">{{ _('العربية') }}</a></li>
-              <li><a class="dropdown-item" href="/set-lang/tr">{{ _('التركية') }}</a></li>
+
+            <ul class="dropdown-menu dropdown-menu-end bk-dropdown">
+
+              <li>
+                <a
+                  class="dropdown-item {% if get_locale() == 'ar' %}active{% endif %}"
+                  href="/set-lang/ar"
+                >
+                  العربية
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class="dropdown-item {% if get_locale() == 'tr' %}active{% endif %}"
+                  href="/set-lang/tr"
+                >
+                  Türkçe
+                </a>
+              </li>
+
             </ul>
+
           </div>
 
+
           <!-- Account -->
-          <a class="btn bk-icon-btn bk-account-btn {% if is_shop_logged_in %}is-auth{% endif %}"
-             href="{% if is_shop_logged_in %}/shop/my{% else %}/shop/login{% endif %}"
-             aria-label="{% if is_shop_logged_in %}{{ _('حسابي') }}{% else %}{{ _('تسجيل الدخول') }}{% endif %}">
+          <a
+            class="bk-header-icon bk-account-icon {% if is_shop_logged_in %}is-auth{% endif %}"
+            href="{% if is_shop_logged_in %}/shop/my{% else %}/shop/login{% endif %}"
+            title="{% if is_shop_logged_in %}{{ _('حسابي') }}{% else %}{{ _('تسجيل الدخول') }}{% endif %}"
+          >
             <i class="bi bi-person"></i>
           </a>
 
         </div>
+
       </div>
+
 
       <!-- Search -->
-      <form class="bk-search mt-2" action="/shop/products" method="get">
-        <div class="input-group">
-          <input type="text" class="form-control bk-search-input"
-                 name="q" placeholder="{{ _('ابحث عن أي شيء…') }}" aria-label="{{ _('بحث') }}">
-          <button class="btn bk-search-btn" type="submit" aria-label="{{ _('بحث') }}">
-            <i class="bi bi-search"></i>
+      <form
+        class="bk-search"
+        action="/shop/products"
+        method="get"
+      >
+
+        <div class="bk-search-inner">
+
+          <i class="bi bi-search bk-search-leading"></i>
+
+          <input
+            type="text"
+            name="q"
+            class="bk-search-input"
+            placeholder="{{ _('ابحث باسم المنتج أو الكود...') }}"
+            aria-label="{{ _('بحث') }}"
+          >
+
+          <button
+            class="bk-search-submit"
+            type="submit"
+          >
+            {{ _('بحث') }}
           </button>
+
         </div>
+
       </form>
 
-    </div>
-  </header>
 
-  {# ========= OFFCANVAS SIDEBAR ========= #}
-  <div class="offcanvas offcanvas-start bk-offcanvas" tabindex="-1" id="bkSidebar" aria-labelledby="bkSidebarLabel">
-    <div class="offcanvas-header border-bottom">
-      <h5 class="offcanvas-title" id="bkSidebarLabel">{{ _('القائمة') }}</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{{ _('إغلاق') }}"></button>
-    </div>
+      <!-- Desktop navigation -->
+      <nav class="bk-desktop-nav d-none d-lg-flex">
 
-    <div class="offcanvas-body p-0">
-
-      <!-- Auth buttons -->
-      <div class="p-3 border-bottom">
-        {% if is_shop_logged_in %}
-          <a href="/shop/my" class="btn btn-dark w-100">{{ _('حسابي') }}</a>
-          <a href="/shop/logout" class="btn btn-outline-secondary w-100 mt-2">{{ _('تسجيل الخروج') }}</a>
-        {% else %}
-          <div class="d-flex gap-2">
-            <a href="/shop/login" class="btn btn-outline-dark flex-fill">{{ _('تسجيل الدخول') }}</a>
-            <a href="/shop/register" class="btn btn-dark flex-fill">{{ _('إنشاء حساب') }}</a>
-          </div>
-        {% endif %}
-      </div>
-
-      <!-- Language inside menu -->
-      <div class="p-3 border-bottom">
-        <div class="small text-muted mb-2">{{ _('اللغة') }}</div>
-        <div class="d-flex gap-2">
-          <a class="btn btn-outline-secondary flex-fill" href="/set-lang/ar">{{ _('العربية') }}</a>
-          <a class="btn btn-outline-secondary flex-fill" href="/set-lang/tr">{{ _('التركية') }}</a>
-        </div>
-      </div>
-
-      <!-- Menu -->
-      <nav class="list-group list-group-flush bk-menu">
-        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/">
-          <span class="d-flex align-items-center gap-2"><i class="bi bi-house"></i><span>{{ _('الرئيسية') }}</span></span>
-          <i class="bi bi-chevron-left"></i>
+        <a href="/shop/">
+          {{ _('الرئيسية') }}
         </a>
 
-        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/products">
-          <span class="d-flex align-items-center gap-2"><i class="bi bi-grid"></i><span>{{ _('المنتجات') }}</span></span>
-          <i class="bi bi-chevron-left"></i>
+        <a href="/shop/products">
+          {{ _('كل المنتجات') }}
         </a>
 
-        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/offers">
-          <span class="d-flex align-items-center gap-2"><i class="bi bi-tag"></i><span>{{ _('العروض') }}</span></span>
-          <i class="bi bi-chevron-left"></i>
+        <a href="/shop/products?dept=electrical">
+          {{ pick_lang('كهربائيات', 'Elektrik') }}
         </a>
 
-        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/about">
-          <span class="d-flex align-items-center gap-2"><i class="bi bi-info-circle"></i><span>{{ _('من نحن') }}</span></span>
-          <i class="bi bi-chevron-left"></i>
+        <a href="/shop/products?dept=linens">
+          {{ pick_lang('بياضات', 'Tekstil') }}
         </a>
 
-        <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/contact">
-          <span class="d-flex align-items-center gap-2"><i class="bi bi-telephone"></i><span>{{ _('تواصل معنا') }}</span></span>
-          <i class="bi bi-chevron-left"></i>
+        <a href="/shop/products?dept=crystal">
+          {{ pick_lang('بلوريات', 'Kristal') }}
         </a>
 
-        {% if is_shop_logged_in %}
-          <a class="list-group-item d-flex align-items-center justify-content-between" href="/shop/my">
-            <span class="d-flex align-items-center gap-2"><i class="bi bi-person"></i><span>{{ _('حسابي') }}</span></span>
-            <i class="bi bi-chevron-left"></i>
-          </a>
-        {% endif %}
+        <a href="/shop/offers" class="bk-nav-highlight">
+          <i class="bi bi-stars"></i>
+          {{ _('العروض') }}
+        </a>
+
       </nav>
 
     </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MOBILE / SIDE MENU
+       ===================================================== -->
+  <div
+    class="offcanvas offcanvas-start bk-offcanvas"
+    tabindex="-1"
+    id="bkSidebar"
+    aria-labelledby="bkSidebarLabel"
+  >
+
+    <div class="offcanvas-header bk-offcanvas-header">
+
+      <div>
+
+        <div class="bk-offcanvas-title">
+          {{ _('معرض بكور') }}
+        </div>
+
+        <div class="bk-offcanvas-note">
+          BAKKOUR TRADING COMPANY
+        </div>
+
+      </div>
+
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="offcanvas"
+        aria-label="{{ _('إغلاق') }}"
+      ></button>
+
+    </div>
+
+
+    <div class="offcanvas-body p-0">
+
+      <!-- Account -->
+      <div class="bk-side-account">
+
+        {% if is_shop_logged_in %}
+
+          <div class="bk-side-account-state">
+            <span class="bk-side-account-icon">
+              <i class="bi bi-person-check"></i>
+            </span>
+
+            <div>
+              <div class="fw-bold">
+                {{ _('مرحباً بك') }}
+              </div>
+
+              <div class="small text-muted">
+                {{ _('حسابك مسجل حالياً') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 mt-3">
+
+            <a
+              href="/shop/my"
+              class="btn bk-btn-primary"
+            >
+              <i class="bi bi-person"></i>
+              {{ _('حسابي') }}
+            </a>
+
+            <a
+              href="/shop/logout"
+              class="btn btn-outline-secondary"
+            >
+              {{ _('تسجيل الخروج') }}
+            </a>
+
+          </div>
+
+        {% else %}
+
+          <div class="bk-side-account-state">
+
+            <span class="bk-side-account-icon">
+              <i class="bi bi-person"></i>
+            </span>
+
+            <div>
+
+              <div class="fw-bold">
+                {{ _('أهلاً بك') }}
+              </div>
+
+              <div class="small text-muted">
+                {{ _('سجّل الدخول لرؤية الأسعار وحسابك') }}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="d-flex gap-2 mt-3">
+
+            <a
+              href="/shop/login"
+              class="btn btn-outline-dark flex-fill"
+            >
+              {{ _('تسجيل الدخول') }}
+            </a>
+
+            <a
+              href="/shop/register"
+              class="btn bk-btn-primary flex-fill"
+            >
+              {{ _('إنشاء حساب') }}
+            </a>
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+
+      <!-- Navigation -->
+      <nav class="bk-side-menu">
+
+        <a href="/shop/">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-house"></i>
+            {{ _('الرئيسية') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/products">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-grid"></i>
+            {{ _('المنتجات') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/products?dept=electrical">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-lightning-charge"></i>
+            {{ _('كهربائيات') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/products?dept=linens">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-bag"></i>
+            {{ _('بياضات') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/products?dept=crystal">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-cup-straw"></i>
+            {{ _('بلوريات') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/offers">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-stars"></i>
+            {{ _('العروض') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/about">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-info-circle"></i>
+            {{ _('من نحن') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        <a href="/shop/contact">
+          <span class="bk-side-menu-start">
+            <i class="bi bi-telephone"></i>
+            {{ _('تواصل معنا') }}
+          </span>
+
+          <i class="bi bi-chevron-left"></i>
+        </a>
+
+
+        {% if is_shop_logged_in %}
+
+          <a href="/shop/my">
+
+            <span class="bk-side-menu-start">
+              <i class="bi bi-person"></i>
+              {{ _('حسابي') }}
+            </span>
+
+            <i class="bi bi-chevron-left"></i>
+
+          </a>
+
+        {% endif %}
+
+      </nav>
+
+
+      <!-- Language -->
+      <div class="bk-side-language">
+
+        <div class="small text-muted mb-2">
+          {{ _('اللغة') }}
+        </div>
+
+        <div class="d-flex gap-2">
+
+          <a
+            class="btn btn-sm flex-fill {% if get_locale() == 'ar' %}bk-btn-primary{% else %}btn-outline-secondary{% endif %}"
+            href="/set-lang/ar"
+          >
+            العربية
+          </a>
+
+          <a
+            class="btn btn-sm flex-fill {% if get_locale() == 'tr' %}bk-btn-primary{% else %}btn-outline-secondary{% endif %}"
+            href="/set-lang/tr"
+          >
+            Türkçe
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <main class="py-4">
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+  <main class="bk-main">
+
     <div class="container">
 
-      {# ✅ Flash messages (Shop) #}
+      <!-- Flash -->
       {% with messages = get_flashed_messages(with_categories=true) %}
+
         {% if messages %}
-          <div class="mt-2">
+
+          <div class="bk-flashes">
+
             {% for category, message in messages %}
-              <div class="alert alert-{{ category }} alert-dismissible fade show mb-2" role="alert">
+
+              {% set bs = category %}
+
+              {% if category == 'error' %}
+                {% set bs = 'danger' %}
+              {% endif %}
+
+              {% if category == 'message' %}
+                {% set bs = 'info' %}
+              {% endif %}
+
+              <div
+                class="alert alert-{{ bs }} alert-dismissible fade show bk-flash"
+                role="alert"
+              >
+
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ _('إغلاق') }}"></button>
+
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="{{ _('إغلاق') }}"
+                ></button>
+
               </div>
+
             {% endfor %}
+
           </div>
+
         {% endif %}
+
       {% endwith %}
 
+
       {% block content %}{% endblock %}
+
     </div>
+
   </main>
 
-  <footer class="border-top py-4">
-    <div class="container small d-flex flex-column flex-md-row justify-content-between gap-2">
-      <div>© {{ _('جميع الحقوق محفوظة') }}</div>
-      <div class="d-flex gap-3"></div>
+
+  <!-- =====================================================
+       FOOTER
+       ===================================================== -->
+  <footer class="bk-footer">
+
+    <div class="container">
+
+      <div class="row g-4">
+
+        <div class="col-12 col-lg-5">
+
+          <div class="bk-footer-brand">
+
+            <img
+              src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+              alt="Bakkour"
+            >
+
+            <div>
+
+              <div class="bk-footer-brand-name">
+                {{ _('معرض بكور') }}
+              </div>
+
+              <div class="bk-footer-brand-sub">
+                BAKKOUR TRADING COMPANY
+              </div>
+
+            </div>
+
+          </div>
+
+          <p class="bk-footer-description">
+            {{ _('منتجات مختارة للمنزل والحياة اليومية مع خيارات متعددة وأسعار خاصة لعملائنا.') }}
+          </p>
+
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+
+          <div class="bk-footer-title">
+            {{ _('روابط سريعة') }}
+          </div>
+
+          <div class="bk-footer-links">
+
+            <a href="/shop/products">
+              {{ _('المنتجات') }}
+            </a>
+
+            <a href="/shop/offers">
+              {{ _('العروض') }}
+            </a>
+
+            <a href="/shop/about">
+              {{ _('من نحن') }}
+            </a>
+
+            <a href="/shop/contact">
+              {{ _('تواصل معنا') }}
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-lg-4">
+
+          <div class="bk-footer-title">
+            {{ _('خدمة العملاء') }}
+          </div>
+
+          <div class="bk-footer-links">
+
+            {% if is_shop_logged_in %}
+              <a href="/shop/my">
+                {{ _('حسابي') }}
+              </a>
+            {% else %}
+              <a href="/shop/login">
+                {{ _('تسجيل الدخول') }}
+              </a>
+            {% endif %}
+
+            <a href="/shop/contact">
+              {{ _('الدعم والتواصل') }}
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="bk-footer-bottom">
+
+        <div>
+          © {{ _('جميع الحقوق محفوظة') }}
+        </div>
+
+        <div>
+          Bakkour Trading Company
+        </div>
+
+      </div>
+
     </div>
+
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ url_for('static', filename='shop/js/store.js') }}"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <script
+    src="{{ url_for('static', filename='shop/js/store.js') }}"
+  ></script>
+
   {% block scripts %}{% endblock %}
+
 </body>
 </html>

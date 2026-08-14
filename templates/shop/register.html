@@ -1,65 +1,389 @@
+{# templates/shop/register.html #}
 {% extends "shop/layout.html" %}
+
 {% block title %}{{ _('إنشاء حساب') }}{% endblock %}
 
 {% block content %}
 <div class="bk-auth-page">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-7 col-lg-5">
 
-      <div class="card bk-auth-card shadow-sm border-0">
-        <div class="card-body p-4 p-md-5">
+  <div class="bk-auth-shell bk-auth-shell-register">
 
-          <h1 class="h5 fw-bold mb-3 text-center">{{ _('إنشاء حساب') }}</h1>
+    <div class="bk-auth-side d-none d-lg-flex">
 
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for cat, msg in messages %}
-                <div class="alert alert-{{ cat }} rounded-4 py-2">{{ msg }}</div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
+      <div class="bk-auth-side-overlay"></div>
 
-          <div class="alert alert-light border rounded-4 small">
-            ⏳ {{ _('بعد التسجيل، حسابك سيكون قيد المراجعة ولن تظهر الأسعار حتى يتم تفعيله.') }}
+      <div class="bk-auth-side-content">
+
+        <div class="bk-auth-side-badge">
+          <i class="bi bi-person-plus"></i>
+          {{ _('انضم إلينا') }}
+        </div>
+
+        <h2>
+          {{ _('أنشئ حسابك وخلي تجربة الشراء أسهل') }}
+        </h2>
+
+        <p>
+          {{ _('بعد تفعيل حسابك، بتقدر تشوف الأسعار والعروض وتربط حسابك بدفترك.') }}
+        </p>
+
+        <div class="bk-auth-features">
+
+          <div class="bk-auth-feature">
+            <i class="bi bi-eye"></i>
+            <span>{{ _('عرض الأسعار بعد التفعيل') }}</span>
           </div>
 
-          <form method="post" action="/shop/register" class="d-grid gap-3">
+          <div class="bk-auth-feature">
+            <i class="bi bi-ticket-perforated"></i>
+            <span>{{ _('استلام واستخدام الكوبونات') }}</span>
+          </div>
 
-            <input class="form-control bk-input" name="first_name" 
-                   placeholder="{{ _('الاسم') }}" required>
-
-            <input class="form-control bk-input" name="last_name" 
-                   placeholder="{{ _('النسبة') }}" required>
-
-            <input class="form-control bk-input" name="phone" 
-                   placeholder="{{ _('رقم الهاتف') }}" required>
-
-            <input class="form-control bk-input" name="email" type="email" 
-                   placeholder="{{ _('البريد الإلكتروني') }}" required>
-
-            <input class="form-control bk-input" name="address" 
-                   placeholder="{{ _('العنوان') }}">
-
-            <input class="form-control bk-input" name="password" type="password" 
-                   placeholder="{{ _('كلمة المرور') }}" required>
-
-            <input class="form-control bk-input" name="password2" type="password" 
-                   placeholder="{{ _('تأكيد كلمة المرور') }}" required>
-
-            <button class="btn btn-dark py-2 rounded-3">
-              {{ _('إنشاء الحساب') }}
-            </button>
-
-          </form>
-
-          <div class="small mt-3 text-center">
-            <a href="/shop/login">{{ _('رجوع لتسجيل الدخول') }}</a>
+          <div class="bk-auth-feature">
+            <i class="bi bi-journal-check"></i>
+            <span>{{ _('متابعة دفتر حسابك') }}</span>
           </div>
 
         </div>
+
       </div>
 
     </div>
+
+
+    <div class="bk-auth-main">
+
+      <div class="bk-auth-box bk-auth-box-register">
+
+        <div class="bk-auth-brand">
+          <a href="/shop/" class="bk-auth-brand-logo">
+            <img
+              src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+              alt="{{ _('معرض بكّور') }}"
+            >
+          </a>
+
+          <div>
+            <div class="bk-auth-brand-title">
+              {{ _('معرض بكّور') }}
+            </div>
+
+            <div class="bk-auth-brand-subtitle">
+              BAKKOUR TRADING COMPANY
+            </div>
+          </div>
+        </div>
+
+
+        <div class="bk-auth-heading">
+
+          <div class="bk-auth-kicker">
+            {{ _('حساب جديد') }}
+          </div>
+
+          <h1>
+            {{ _('إنشاء حساب') }}
+          </h1>
+
+          <p>
+            {{ _('عبّي معلوماتك الأساسية وأرسل طلب إنشاء الحساب.') }}
+          </p>
+
+        </div>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="bk-auth-alerts">
+              {% for category, msg in messages %}
+                {% set alert_class = 'danger' if category in ['error', 'danger'] else category %}
+
+                <div class="alert alert-{{ alert_class }} rounded-4 mb-2">
+                  {{ msg }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+
+        <div class="bk-auth-review-note">
+
+          <div class="bk-auth-review-icon">
+            <i class="bi bi-hourglass-split"></i>
+          </div>
+
+          <div>
+            <div class="fw-bold">
+              {{ _('الحساب يحتاج موافقة الإدارة') }}
+            </div>
+
+            <div class="small">
+              {{ _('بعد التسجيل سيكون حسابك قيد المراجعة، ولن تظهر الأسعار حتى يتم تفعيله.') }}
+            </div>
+          </div>
+
+        </div>
+
+
+        <form
+          method="post"
+          action="/shop/register"
+          class="bk-auth-form"
+        >
+
+          <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('الاسم') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-person"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="first_name"
+                    placeholder="{{ _('الاسم') }}"
+                    autocomplete="given-name"
+                    required
+                  >
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('النسبة') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-person"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="last_name"
+                    placeholder="{{ _('النسبة') }}"
+                    autocomplete="family-name"
+                    required
+                  >
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('رقم الهاتف') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-telephone"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="phone"
+                    placeholder="{{ _('رقم الهاتف') }}"
+                    autocomplete="tel"
+                    required
+                  >
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('البريد الإلكتروني') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-envelope"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="email"
+                    type="email"
+                    placeholder="{{ _('البريد الإلكتروني') }}"
+                    autocomplete="email"
+                    required
+                  >
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-12">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('العنوان') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-geo-alt"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="address"
+                    placeholder="{{ _('العنوان') }}"
+                    autocomplete="street-address"
+                  >
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('كلمة المرور') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-lock"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="password"
+                    type="password"
+                    id="bkRegisterPassword"
+                    autocomplete="new-password"
+                    required
+                  >
+
+                  <button
+                    type="button"
+                    class="bk-auth-pass-toggle"
+                    data-password-target="bkRegisterPassword"
+                    aria-label="{{ _('إظهار/إخفاء') }}"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+
+                </div>
+              </div>
+
+            </div>
+
+
+            <div class="col-12 col-md-6">
+
+              <div class="bk-auth-field">
+                <label class="form-label">
+                  {{ _('تأكيد كلمة المرور') }}
+                </label>
+
+                <div class="bk-auth-input-wrap">
+                  <i class="bi bi-shield-lock"></i>
+
+                  <input
+                    class="form-control bk-auth-input"
+                    name="password2"
+                    type="password"
+                    id="bkRegisterPassword2"
+                    autocomplete="new-password"
+                    required
+                  >
+
+                  <button
+                    type="button"
+                    class="bk-auth-pass-toggle"
+                    data-password-target="bkRegisterPassword2"
+                    aria-label="{{ _('إظهار/إخفاء') }}"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="btn bk-auth-submit mt-4"
+          >
+            <span>{{ _('إنشاء الحساب') }}</span>
+            <i class="bi bi-person-check"></i>
+          </button>
+
+
+          <div class="bk-auth-divider">
+            <span>{{ _('عندك حساب؟') }}</span>
+          </div>
+
+
+          <a
+            href="/shop/login"
+            class="btn bk-auth-secondary"
+          >
+            <i class="bi bi-box-arrow-in-right"></i>
+            {{ _('تسجيل الدخول') }}
+          </a>
+
+        </form>
+
+
+        <div class="bk-auth-footer-note">
+          <i class="bi bi-shield-check"></i>
+          {{ _('طلب التسجيل لا يفعّل الحساب مباشرة، ويحتاج موافقة الإدارة.') }}
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+(function () {
+  document
+    .querySelectorAll("[data-password-target]")
+    .forEach((btn) => {
+
+      btn.addEventListener("click", function () {
+
+        const id = btn.getAttribute("data-password-target");
+        const input = document.getElementById(id);
+
+        if (!input) return;
+
+        const hidden = input.type === "password";
+
+        input.type = hidden ? "text" : "password";
+
+        btn.innerHTML = hidden
+          ? '<i class="bi bi-eye-slash"></i>'
+          : '<i class="bi bi-eye"></i>';
+
+      });
+
+    });
+})();
+</script>
 {% endblock %}

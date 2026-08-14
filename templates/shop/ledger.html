@@ -1,274 +1,659 @@
-<!-- templates/shop/ledger.html -->
+{# templates/shop/ledger.html #}
 {% extends "shop/layout.html" %}
+
 {% block title %}{{ _("دفتري") }}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="bk-ledger-page">
 
-  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <h2 class="h4 fw-bold m-0">📒 {{ _("دفتري") }}</h2>
-    <span class="badge text-bg-secondary">{{ _("عرض فقط") }}</span>
+  {# =========================
+     Header
+     ========================= #}
+  <div class="bk-ledger-head">
+
+    <div>
+
+      <div class="bk-ledger-kicker">
+        {{ _("الحساب المالي") }}
+      </div>
+
+      <h1>
+        {{ _("دفتري") }}
+      </h1>
+
+      <p>
+        {{ _("عرض تفصيلي للحركات المالية المرتبطة بحسابك.") }}
+      </p>
+
+    </div>
+
+
+    <div class="bk-ledger-head-actions">
+
+      <span class="bk-ledger-readonly">
+        <i class="bi bi-eye"></i>
+        {{ _("عرض فقط") }}
+      </span>
+
+      <a
+        href="/shop/my"
+        class="btn bk-ledger-back"
+      >
+        <i class="bi bi-arrow-right"></i>
+        {{ _("حسابي") }}
+      </a>
+
+    </div>
+
   </div>
 
+
   {% if not customer %}
-    <div class="alert alert-light border rounded-4">
+
+    <div class="bk-ledger-empty">
+
+      <div class="bk-ledger-empty-icon">
+        <i class="bi bi-journal-x"></i>
+      </div>
+
       {% if not user.customer_ref_code %}
-        🔗 {{ _("لم يتم ربط حسابك بالدفتر بعد. تواصل معنا لربطه.") }}
+
+        <h2>
+          {{ _("لم يتم ربط حسابك بالدفتر بعد") }}
+        </h2>
+
+        <p>
+          {{ _("تواصل معنا ليتم ربط حسابك بصفحة الزبون الخاصة بك.") }}
+        </p>
+
       {% elif user.status != "active" and user.role != "admin" %}
-        ⏳ {{ _("حسابك قيد المراجعة. ستظهر صفحتك بعد التفعيل.") }}
+
+        <h2>
+          {{ _("الحساب قيد المراجعة") }}
+        </h2>
+
+        <p>
+          {{ _("ستظهر بيانات الدفتر بعد تفعيل حسابك.") }}
+        </p>
+
       {% else %}
-        ⚠️ {{ _("تعذر العثور على الدفتر المرتبط. تواصل معنا.") }}
+
+        <h2>
+          {{ _("تعذر العثور على الدفتر") }}
+        </h2>
+
+        <p>
+          {{ _("تواصل معنا للتحقق من الربط المرتبط بحسابك.") }}
+        </p>
+
       {% endif %}
+
     </div>
+
   {% else %}
 
-    <div class="card rounded-4 p-3 mb-3">
-      <div class="fw-bold">{{ pick_lang(customer.name, customer.name_tr) }}</div>
-      <div class="text-muted small">(ID: {{ customer.custom_id }})</div>
-      {% if customer.phone %}
-        <div class="text-muted small">{{ _("الهاتف") }}: {{ customer.phone }}</div>
-      {% endif %}
-      {% if customer.notes %}
-        <div class="text-muted small">{{ _("ملاحظات") }}: {{ customer.notes }}</div>
-      {% endif %}
-    </div>
 
-    {# ================== Sham Cash Payment Section ================== #}
-    <div class="card rounded-4 p-3 mb-3">
-      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <h3 class="h5 fw-bold m-0">💳 {{ _("الدفع عبر شام كاش") }}</h3>
-        <span class="badge text-bg-light">{{ _("عرض فقط") }}</span>
+    {# =========================
+       Customer Summary
+       ========================= #}
+    <section class="bk-ledger-customer">
+
+      <div class="bk-ledger-customer-avatar">
+        <i class="bi bi-person"></i>
       </div>
 
-      <div class="text-muted small mt-2">
-        {{ _("حوّل القسط على حساب شام كاش الظاهر بالصورة، ثم اضغط زر (ادفع لهذا العقد) لإرسال إشعار عبر واتساب.") }}
-      </div>
 
-      <div class="row g-3 mt-2 align-items-center">
-        <div class="col-12 col-md-4 text-center">
-          <img src="{{ url_for('static', filename='shop/img/sham_cash.jpeg') }}"
-               class="img-fluid rounded-4 shadow-sm bk-sham-img"
-               alt="Sham Cash">
+      <div class="bk-ledger-customer-info">
 
-          <a class="btn btn-outline-primary btn-sm mt-2"
-            href="{{ url_for('static', filename='shop/img/sham_cash.jpeg') }}"
-            target="_blank" rel="noopener">
-            🖼️ {{ _("فتح الصورة") }}
-          </a>
+        <div class="bk-ledger-customer-name">
+          {{ pick_lang(customer.name, customer.name_tr) }}
         </div>
 
-        <div class="col-12 col-md-8">
+        <div class="bk-ledger-meta">
+
+          <span>
+            <i class="bi bi-hash"></i>
+            {{ customer.custom_id }}
+          </span>
+
+          {% if customer.phone %}
+            <span>
+              <i class="bi bi-telephone"></i>
+              {{ customer.phone }}
+            </span>
+          {% endif %}
+
+        </div>
+
+
+        {% if customer.notes %}
+          <div class="bk-ledger-customer-note">
+            <i class="bi bi-sticky"></i>
+            {{ customer.notes }}
+          </div>
+        {% endif %}
+
+      </div>
+
+    </section>
+
+
+    {# =========================
+       Sham Cash
+       ========================= #}
+    <section class="bk-ledger-card">
+
+      <div class="bk-ledger-card-head">
+
+        <div>
+
+          <div class="bk-ledger-card-kicker">
+            {{ _("الدفع الإلكتروني") }}
+          </div>
+
+          <h2>
+            {{ _("الدفع عبر شام كاش") }}
+          </h2>
+
+        </div>
+
+
+        <div class="bk-ledger-card-icon is-gold">
+          <i class="bi bi-wallet2"></i>
+        </div>
+
+      </div>
+
+
+      <p class="bk-ledger-card-desc">
+        {{ _("حوّل القسط على حساب شام كاش الظاهر أدناه، ثم أرسل إشعار الدفع عبر واتساب للعقد المطلوب.") }}
+      </p>
+
+
+      <div class="row g-4 align-items-center">
+
+        <div class="col-12 col-lg-4">
+
+          <div class="bk-ledger-sham-image">
+
+            <img
+              src="{{ url_for('static', filename='shop/img/sham_cash.jpeg') }}"
+              alt="Sham Cash"
+            >
+
+            <a
+              class="btn bk-ledger-image-btn"
+              href="{{ url_for('static', filename='shop/img/sham_cash.jpeg') }}"
+              target="_blank"
+              rel="noopener"
+            >
+              <i class="bi bi-arrows-fullscreen"></i>
+              {{ _("فتح الصورة") }}
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-8">
+
           {% set wallet = (config.SHAM_CASH_WALLET if config.SHAM_CASH_WALLET else '') %}
-          <div class="mt-2">
-            <div class="fw-semibold">{{ _("عنوان/رقم المحفظة") }}</div>
+
+          <div class="bk-ledger-wallet">
+
+            <div class="bk-ledger-wallet-label">
+              {{ _("عنوان/رقم المحفظة") }}
+            </div>
+
 
             {% if wallet %}
-              <div class="d-flex align-items-center gap-2 flex-wrap">
-                <code id="bkShamWallet" class="px-2 py-1 bg-light border rounded-3">{{ wallet }}</code>
-                <button type="button" class="btn btn-outline-dark btn-sm" onclick="bkCopyWallet()">
-                  📋 {{ _("نسخ") }}
+
+              <div class="bk-ledger-wallet-row">
+
+                <code id="bkShamWallet">
+                  {{ wallet }}
+                </code>
+
+                <button
+                  type="button"
+                  class="btn bk-ledger-copy-btn"
+                  onclick="bkCopyWallet()"
+                >
+                  <i class="bi bi-copy"></i>
+                  {{ _("نسخ") }}
                 </button>
-                <span id="bkCopyHint" class="text-muted small"></span>
+
               </div>
+
+              <div
+                id="bkCopyHint"
+                class="bk-ledger-copy-hint"
+              ></div>
+
             {% else %}
-              <div class="text-muted small">{{ _("غير متوفر حالياً") }}</div>
+
+              <div class="bk-ledger-unavailable">
+                {{ _("غير متوفر حالياً") }}
+              </div>
+
             {% endif %}
+
           </div>
 
-          <div class="text-muted small">
-            ✅ {{ _("يفضل كتابة (ID الزبون) ضمن سبب التحويل.") }}
+
+          <div class="bk-ledger-info-list">
+
+            <div>
+              <i class="bi bi-info-circle"></i>
+              {{ _("يفضل كتابة ID الزبون ضمن سبب التحويل.") }}
+            </div>
+
+            <div>
+              <i class="bi bi-clock-history"></i>
+              {{ _("يتم تحديث الدفتر بعد تأكيد الإدارة للتحويل.") }}
+            </div>
+
           </div>
 
-          <div class="text-muted small mt-1">
-            ⚠️ {{ _("ملاحظة: يتم تحديث الدفتر بعد تأكيد الإدارة.") }}
-          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Installments -->
+      </div>
+
+    </section>
+
+
+    {# =========================
+       Installments
+       ========================= #}
     {% if customer.ledger != "ديون نقدية" %}
-      <div class="card rounded-4 p-3 mb-3">
-        <h3 class="h5 fw-bold mb-3">{{ _("منتجات التقسيط") }}</h3>
+
+      <section class="bk-ledger-card">
+
+        <div class="bk-ledger-card-head">
+
+          <div>
+
+            <div class="bk-ledger-card-kicker">
+              {{ _("الأقساط") }}
+            </div>
+
+            <h2>
+              {{ _("منتجات التقسيط") }}
+            </h2>
+
+          </div>
+
+
+          <div class="bk-ledger-card-icon">
+            <i class="bi bi-calendar2-check"></i>
+          </div>
+
+        </div>
+
 
         {% if installment_details %}
+
+          <div class="bk-ledger-contracts">
+
+            {% for item in installment_details %}
+
+              {% set contract = item.product %}
+
+              {% set remaining = (
+                item.payments[-1].remaining
+                if item.payments and (item.payments|length > 0)
+                else ((contract.total_price or 0) - (contract.initial_payment or 0))
+              ) %}
+
+
+              <article class="bk-ledger-contract">
+
+                <div class="bk-ledger-contract-top">
+
+                  <div>
+
+                    <div class="bk-ledger-contract-name">
+                      {{ pick_lang(contract.name, contract.name_tr or contract.name) }}
+                    </div>
+
+                    <div class="bk-ledger-contract-date">
+                      <i class="bi bi-calendar3"></i>
+                      {{ contract.date_added.strftime('%Y-%m-%d') if contract.date_added else '' }}
+                    </div>
+
+                  </div>
+
+
+                  {% if item.paid_off %}
+                    <span class="bk-ledger-state is-paid">
+                      <i class="bi bi-check-circle-fill"></i>
+                      {{ _("مسدد") }}
+                    </span>
+
+                  {% else %}
+                    <span class="bk-ledger-state is-unpaid">
+                      <i class="bi bi-clock-fill"></i>
+                      {{ _("غير مسدد") }}
+                    </span>
+                  {% endif %}
+
+                </div>
+
+
+                <div class="bk-ledger-stats">
+
+                  <div class="bk-ledger-stat">
+                    <span>{{ _("السعر الكلي") }}</span>
+                    <strong>{{ "%.2f"|format(contract.total_price or 0) }}</strong>
+                  </div>
+
+                  <div class="bk-ledger-stat">
+                    <span>{{ _("السلفة") }}</span>
+                    <strong>{{ "%.2f"|format(contract.initial_payment or 0) }}</strong>
+                  </div>
+
+                  <div class="bk-ledger-stat">
+                    <span>{{ _("القسط الشهري") }}</span>
+                    <strong>{{ "%.2f"|format(contract.monthly_installment or 0) }}</strong>
+                  </div>
+
+                  <div class="bk-ledger-stat is-highlight">
+                    <span>{{ _("المتبقي") }}</span>
+                    <strong>{{ "%.2f"|format(remaining or 0) }}</strong>
+                  </div>
+
+                </div>
+
+
+                {% if not item.paid_off and config.WHATSAPP_PHONE_E164 %}
+
+                  {% set wa_msg = (
+                    "مرحباً 👋\n"
+                    ~ "أنا: " ~ pick_lang(customer.name, customer.name_tr) ~ "\n"
+                    ~ "ID: " ~ customer.custom_id ~ "\n\n"
+                    ~ "أود دفع قسط لهذا العقد عبر شام كاش:\n"
+                    ~ "اسم العقد: " ~ pick_lang(contract.name, contract.name_tr or contract.name) ~ "\n"
+                    ~ "المتبقي الحالي: " ~ (remaining|string) ~ "\n\n"
+                    ~ "المبلغ المحول: ____\n"
+                    ~ "تاريخ التحويل: ____\n"
+                    ~ "رقم العملية/المرجع: ____\n"
+                    ~ "سأرسل صورة الإيصال هنا."
+                  ) %}
+
+                  <div class="bk-ledger-contract-action">
+
+                    <a
+                      class="btn bk-ledger-pay-btn"
+                      target="_blank"
+                      href="https://wa.me/{{ config.WHATSAPP_PHONE_E164 }}?text={{ wa_msg|urlencode }}"
+                    >
+                      <i class="bi bi-whatsapp"></i>
+                      {{ _("ادفع لهذا العقد") }}
+                    </a>
+
+                  </div>
+
+                {% endif %}
+
+
+                <div class="bk-ledger-payments">
+
+                  <div class="bk-ledger-payments-title">
+                    <i class="bi bi-clock-history"></i>
+                    {{ _("سجل الدفعات") }}
+                  </div>
+
+
+                  <div class="table-responsive">
+
+                    <table class="table bk-ledger-table align-middle mb-0">
+
+                      <thead>
+                        <tr>
+                          <th>{{ _("المبلغ") }}</th>
+                          <th>{{ _("التاريخ") }}</th>
+                          <th>{{ _("المتبقي") }}</th>
+                        </tr>
+                      </thead>
+
+
+                      <tbody>
+
+                        {% for p in item.payments %}
+                          <tr>
+                            <td>
+                              {{ "%.2f"|format(p.amount or 0) }}
+                            </td>
+
+                            <td class="text-nowrap">
+                              {{ p.date.strftime('%Y-%m-%d') if p.date else '' }}
+                            </td>
+
+                            <td>
+                              {{ "%.2f"|format(p.remaining or 0) }}
+                            </td>
+                          </tr>
+
+                        {% else %}
+
+                          <tr>
+                            <td colspan="3">
+                              <div class="bk-ledger-table-empty">
+                                {{ _("لا يوجد دفعات مسجلة بعد") }}
+                              </div>
+                            </td>
+                          </tr>
+
+                        {% endfor %}
+
+                      </tbody>
+
+                    </table>
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            {% endfor %}
+
+          </div>
+
+        {% else %}
+
+          <div class="bk-ledger-empty-inline">
+            <i class="bi bi-calendar-x"></i>
+
+            <div>
+              <div class="fw-bold">
+                {{ _("لا يوجد منتجات تقسيط") }}
+              </div>
+
+              <div class="small">
+                {{ _("لا توجد عقود تقسيط مرتبطة بهذا الحساب حالياً.") }}
+              </div>
+            </div>
+          </div>
+
+        {% endif %}
+
+      </section>
+
+    {% endif %}
+
+
+    {# =========================
+       Cash debts
+       ========================= #}
+    <section class="bk-ledger-card">
+
+      <div class="bk-ledger-card-head">
+
+        <div>
+          <div class="bk-ledger-card-kicker">
+            {{ _("الحساب النقدي") }}
+          </div>
+
+          <h2>
+            {{ _("الديون النقدية") }}
+          </h2>
+        </div>
+
+
+        <div class="bk-ledger-card-icon">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+
+      </div>
+
+
+      {% if cash_debts %}
+
+        <div class="bk-ledger-summary-grid">
+
+          <div class="bk-ledger-summary">
+            <span>{{ _("مجموع الديون") }}</span>
+            <strong>{{ "%.2f"|format(total_cash_debt or 0) }}</strong>
+          </div>
+
+          <div class="bk-ledger-summary">
+            <span>{{ _("المدفوع") }}</span>
+            <strong>{{ "%.2f"|format(total_general_paid or 0) }}</strong>
+          </div>
+
+          <div class="bk-ledger-summary is-main">
+            <span>{{ _("المتبقي") }}</span>
+            <strong>{{ "%.2f"|format(remaining_cash or 0) }}</strong>
+          </div>
+
+        </div>
+
+
+        <div class="bk-account-table-wrap mt-4">
+
           <div class="table-responsive">
-            <table class="table align-middle">
+
+            <table class="table bk-ledger-table align-middle mb-0">
+
               <thead>
                 <tr>
-                  <th>{{ _("المنتج") }}</th>
-                  <th>{{ _("السعر الكلي") }}</th>
-                  <th>{{ _("السلفة") }}</th>
-                  <th>{{ _("القسط الشهري") }}</th>
+                  <th>{{ _("اسم الدين") }}</th>
+                  <th>{{ _("السعر") }}</th>
                   <th>{{ _("تاريخ الإضافة") }}</th>
-                  <th style="width:220px;">{{ _("الحالة") }}</th>
                 </tr>
               </thead>
-              <tbody>
-                {% for item in installment_details %}
-                  {% set contract = item.product %}
 
-                  {# ✅ remaining: آخر remaining إذا في دفعات، وإلا (total - initial) #}
-                  {% set remaining = (item.payments[-1].remaining if item.payments and (item.payments|length > 0) else ((contract.total_price or 0) - (contract.initial_payment or 0))) %}
+
+              <tbody>
+
+                {% for debt in cash_debts %}
 
                   <tr>
-                    <td>{{ pick_lang(contract.name, contract.name_tr or contract.name) }}</td>
-                    <td>{{ contract.total_price or 0 }}</td>
-                    <td>{{ contract.initial_payment or 0 }}</td>
-                    <td>{{ contract.monthly_installment or 0 }}</td>
-                    <td class="text-nowrap">
-                      {{ contract.date_added.strftime('%Y-%m-%d') if contract.date_added else '' }}
+                    <td>
+                      <div class="fw-semibold">
+                        {{ debt.name }}
+                      </div>
                     </td>
 
                     <td>
-                      {% if item.paid_off %}
-                        <span class="badge text-bg-success">{{ _("مسدد") }}</span>
-                      {% else %}
-                        <span class="badge text-bg-danger">{{ _("غير مسدد") }}</span>
+                      {{ "%.2f"|format(debt.price or 0) }}
+                    </td>
 
-                        {% if config.WHATSAPP_PHONE_E164 %}
-                          {% set wa_msg = (
-                            "مرحباً 👋\n"
-                            ~ "أنا: " ~ pick_lang(customer.name, customer.name_tr) ~ "\n"
-                            ~ "ID: " ~ customer.custom_id ~ "\n\n"
-                            ~ "أود دفع قسط لهذا العقد عبر شام كاش:\n"
-                            ~ "اسم العقد: " ~ pick_lang(contract.name, contract.name_tr or contract.name) ~ "\n"
-                            ~ "المتبقي الحالي: " ~ (remaining|string) ~ "\n\n"
-                            ~ "المبلغ المحول: ____\n"
-                            ~ "تاريخ التحويل: ____\n"
-                            ~ "رقم العملية/المرجع: ____\n"
-                            ~ "سأرسل صورة الإيصال هنا."
-                          ) %}
-
-                          <div class="mt-2">
-                            <a class="btn btn-success btn-sm w-100"
-                               target="_blank"
-                               href="https://wa.me/{{ config.WHATSAPP_PHONE_E164 }}?text={{ wa_msg|urlencode }}">
-                              💬 {{ _("ادفع لهذا العقد") }}
-                            </a>
-                          </div>
-                        {% endif %}
-
-                      {% endif %}
+                    <td class="text-nowrap">
+                      {{ debt.date_added.strftime('%Y-%m-%d') if debt.date_added else '' }}
                     </td>
                   </tr>
 
-                  <tr>
-                    <td colspan="6">
-                      <div class="fw-bold mb-2">{{ _("الدفعات") }}:</div>
-                      <div class="table-responsive">
-                        <table class="table table-sm">
-                          <thead>
-                            <tr>
-                              <th>{{ _("المبلغ") }}</th>
-                              <th>{{ _("التاريخ") }}</th>
-                              <th>{{ _("المتبقي") }}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {% for p in item.payments %}
-                              <tr>
-                                <td>{{ p.amount or 0 }}</td>
-                                <td class="text-nowrap">{{ p.date.strftime('%Y-%m-%d') if p.date else '' }}</td>
-                                <td>{{ p.remaining or 0 }}</td>
-                              </tr>
-                            {% else %}
-                              <tr>
-                                <td colspan="3" class="text-muted small">{{ _("لا يوجد دفعات") }}</td>
-                              </tr>
-                            {% endfor %}
-                          </tbody>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
                 {% endfor %}
+
               </tbody>
+
             </table>
+
           </div>
-        {% else %}
-          <div class="text-muted small">{{ _("لا يوجد منتجات تقسيط") }}</div>
-        {% endif %}
-      </div>
-    {% endif %}
 
-    <!-- Cash debts -->
-    <div class="card rounded-4 p-3">
-      <h3 class="h5 fw-bold mb-3">{{ _("الديون النقدية") }}</h3>
-
-      {% if cash_debts %}
-        <div class="table-responsive mb-3">
-          <table class="table align-middle">
-            <thead>
-              <tr>
-                <th>{{ _("اسم الدين") }}</th>
-                <th>{{ _("السعر") }}</th>
-                <th>{{ _("تاريخ الإضافة") }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for debt in cash_debts %}
-                <tr>
-                  <td>{{ debt.name }}</td>
-                  <td>{{ debt.price }}</td>
-                  <td class="text-nowrap">
-                    {{ debt.date_added.strftime('%Y-%m-%d') if debt.date_added else '' }}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
         </div>
 
-        <div class="card rounded-4 p-3 bg-light">
-          <div class="d-flex justify-content-between">
-            <div>{{ _("مجموع الديون") }}</div>
-            <div class="fw-bold">{{ total_cash_debt }}</div>
-          </div>
-          <div class="d-flex justify-content-between">
-            <div>{{ _("المدفوع") }}</div>
-            <div class="fw-bold">{{ total_general_paid }}</div>
-          </div>
-          <div class="d-flex justify-content-between">
-            <div>{{ _("المتبقي") }}</div>
-            <div class="fw-bold">{{ remaining_cash }}</div>
-          </div>
-        </div>
       {% else %}
-        <div class="text-muted small">{{ _("لا يوجد ديون نقدية") }}</div>
+
+        <div class="bk-ledger-empty-inline">
+          <i class="bi bi-wallet"></i>
+
+          <div>
+            <div class="fw-bold">
+              {{ _("لا يوجد ديون نقدية") }}
+            </div>
+
+            <div class="small">
+              {{ _("لا توجد حركات ديون نقدية مرتبطة بهذا الحساب حالياً.") }}
+            </div>
+          </div>
+        </div>
+
       {% endif %}
-    </div>
+
+    </section>
 
   {% endif %}
+
 </div>
+{% endblock %}
 
+
+{% block scripts %}
 <script>
-  function bkCopyWallet() {
-    const el = document.getElementById("bkShamWallet");
-    const hint = document.getElementById("bkCopyHint");
-    if (!el) return;
+function bkCopyWallet() {
+  const el = document.getElementById("bkShamWallet");
+  const hint = document.getElementById("bkCopyHint");
 
-    const text = (el.innerText || "").trim();
-    if (!text) return;
+  if (!el) return;
 
-    navigator.clipboard.writeText(text).then(() => {
-      if (hint) {
-        hint.textContent = "✅ تم النسخ";
-        setTimeout(() => hint.textContent = "", 1500);
-      }
-    }).catch(() => {
-      // fallback قديم
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      if (hint) {
-        hint.textContent = "✅ تم النسخ";
-        setTimeout(() => hint.textContent = "", 1500);
-      }
-    });
+  const text = (el.innerText || "").trim();
+
+  if (!text) return;
+
+  function success() {
+    if (!hint) return;
+
+    hint.innerHTML =
+      '<i class="bi bi-check-circle"></i> {{ _("تم النسخ") }}';
+
+    setTimeout(() => {
+      hint.textContent = "";
+    }, 1600);
   }
+
+  if (navigator.clipboard && window.isSecureContext) {
+
+    navigator.clipboard
+      .writeText(text)
+      .then(success)
+      .catch(fallback);
+
+  } else {
+    fallback();
+  }
+
+  function fallback() {
+    const ta = document.createElement("textarea");
+
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+
+    document.body.appendChild(ta);
+
+    ta.focus();
+    ta.select();
+
+    document.execCommand("copy");
+
+    document.body.removeChild(ta);
+
+    success();
+  }
+}
 </script>
 {% endblock %}

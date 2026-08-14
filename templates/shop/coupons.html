@@ -1,97 +1,452 @@
 {% extends "shop/layout.html" %}
+
 {% block title %}{{ _("الكوبونات") }}{% endblock %}
 
 {% block content %}
-<div class="container py-4">
 
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="h4 fw-bold m-0">🎟️ {{ _("الكوبونات") }}</h2>
-    <a class="btn btn-outline-dark btn-sm" href="/shop/my">{{ _("حسابي") }}</a>
-  </div>
+<div class="bk-coupons-page">
 
-  <div class="row g-3">
+  {# =====================================================
+     HEADER
+     ===================================================== #}
+  <div class="bk-shop-page-header">
 
-    <div class="col-12 col-lg-6">
-      <div class="card rounded-4 p-3">
-        <div class="fw-bold mb-2">{{ _("كوبوناتي") }}</div>
+    <div>
 
-        {% for uc in my %}
-          {% set c = uc.coupon %}
-          <div class="border rounded-4 p-3 mb-2">
-            <div class="d-flex justify-content-between align-items-start gap-2">
-              <div>
-                <div class="fw-bold">{{ c.code }}</div>
-                {% if c.title %}<div class="text-muted small">{{ c.title }}</div>{% endif %}
-                <div class="small text-muted mt-1">{{ _("خصم ثابت") }}: {{ "%.2f"|format(c.discount_amount or 0) }}</div>
-              </div>
-
-              <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm" type="button"
-                        data-copy="{{ c.code }}">{{ _("نسخ") }}</button>
-
-                <a class="btn btn-success btn-sm" target="_blank"
-                   href="https://wa.me/{{ WHATSAPP_PHONE_E164|replace('+','') if WHATSAPP_PHONE_E164 else '' }}?text={{ ('مرحباً، أريد استخدام كود كوبون: ' ~ c.code)|urlencode }}">
-                  <i class="bi bi-whatsapp"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        {% else %}
-          <div class="text-muted small">{{ _("لا يوجد كوبونات لديك بعد.") }}</div>
-        {% endfor %}
+      <div class="bk-page-eyebrow">
+        <i class="bi bi-ticket-perforated"></i>
+        {{ _("عروض خاصة بالحساب") }}
       </div>
+
+      <h1 class="bk-shop-page-title">
+        {{ _("الكوبونات") }}
+      </h1>
+
+      <p class="bk-shop-page-subtitle">
+        {{ _("احتفظ بكوبوناتك واستخدمها عند الحجز والتواصل معنا.") }}
+      </p>
+
     </div>
 
-    <div class="col-12 col-lg-6">
-      <div class="card rounded-4 p-3">
-        <div class="fw-bold mb-2">{{ _("كوبونات متاحة حالياً") }}</div>
 
-        {% for c in active %}
-          <div class="border rounded-4 p-3 mb-2">
-            <div class="d-flex justify-content-between align-items-start gap-2">
-              <div>
-                <div class="fw-bold">{{ c.code }}</div>
-                {% if c.title %}<div class="text-muted small">{{ c.title }}</div>{% endif %}
-                <div class="small text-muted mt-1">{{ _("خصم ثابت") }}: {{ "%.2f"|format(c.discount_amount or 0) }}</div>
+    <a
+      class="btn btn-outline-dark"
+      href="/shop/my"
+    >
+      <i class="bi bi-person"></i>
+      {{ _("حسابي") }}
+    </a>
 
-                {% if c.usage_limit is not none %}
-                  <div class="small text-muted">{{ _("باقي") }}: {{ c.remaining }}</div>
+  </div>
+
+
+  <div class="row g-4">
+
+    {# =================================================
+       MY COUPONS
+       ================================================= #}
+    <div class="col-12 col-xl-6">
+
+      <section class="bk-coupon-section">
+
+        <div class="bk-coupon-section-header">
+
+          <div>
+
+            <span class="bk-coupon-section-icon">
+              <i class="bi bi-wallet2"></i>
+            </span>
+
+            <div>
+
+              <h2>
+                {{ _("كوبوناتي") }}
+              </h2>
+
+              <p>
+                {{ _("الكوبونات المرتبطة بحسابك.") }}
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <span class="bk-coupon-count">
+            {{ my|length if my else 0 }}
+          </span>
+
+        </div>
+
+
+        <div class="bk-coupon-list">
+
+          {% for uc in my %}
+
+            {% set c = uc.coupon %}
+
+            <article class="bk-coupon-card is-owned">
+
+              <div class="bk-coupon-edge top"></div>
+              <div class="bk-coupon-edge bottom"></div>
+
+
+              <div class="bk-coupon-main">
+
+                <div class="bk-coupon-brand-row">
+
+                  <span class="bk-coupon-brand">
+                    BAKKOUR
+                  </span>
+
+                  <span class="bk-coupon-owned-badge">
+                    <i class="bi bi-check-circle"></i>
+                    {{ _("لديك") }}
+                  </span>
+
+                </div>
+
+
+                <div class="bk-coupon-code">
+                  {{ c.code }}
+                </div>
+
+
+                {% if c.title %}
+
+                  <div class="bk-coupon-title">
+                    {{ c.title }}
+                  </div>
+
                 {% endif %}
+
+
+                <div class="bk-coupon-discount">
+
+                  <span>
+                    {{ _("خصم ثابت") }}
+                  </span>
+
+                  <strong>
+                    {{ "%.2f"|format(c.discount_amount or 0) }}
+                  </strong>
+
+                </div>
+
               </div>
 
-              <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm" type="button"
-                        data-copy="{{ c.code }}">{{ _("نسخ") }}</button>
-                <a class="btn btn-success btn-sm" target="_blank"
-                   href="https://wa.me/{{ WHATSAPP_PHONE_E164|replace('+','') if WHATSAPP_PHONE_E164 else '' }}?text={{ ('مرحباً، أريد استخدام كود كوبون: ' ~ c.code)|urlencode }}">
+
+              <div class="bk-coupon-actions">
+
+                <button
+                  class="btn btn-outline-dark btn-sm bk-copy-btn"
+                  type="button"
+                  data-copy="{{ c.code }}"
+                  data-default-label="{{ _('نسخ') }}"
+                >
+                  <i class="bi bi-copy"></i>
+                  <span>{{ _("نسخ") }}</span>
+                </button>
+
+
+                <a
+                  class="btn btn-success btn-sm"
+                  target="_blank"
+                  rel="noopener"
+                  href="https://wa.me/{{ WHATSAPP_PHONE_E164|replace('+','') if WHATSAPP_PHONE_E164 else '' }}?text={{ ('مرحباً، أريد استخدام كود كوبون: ' ~ c.code)|urlencode }}"
+                >
                   <i class="bi bi-whatsapp"></i>
+                  <span>{{ _("استخدام") }}</span>
                 </a>
+
               </div>
+
+            </article>
+
+          {% else %}
+
+            <div class="bk-empty-state bk-coupon-empty">
+
+              <div class="bk-empty-icon">
+                <i class="bi bi-ticket"></i>
+              </div>
+
+              <div class="fw-semibold">
+                {{ _("لا يوجد كوبونات لديك بعد.") }}
+              </div>
+
+              <div class="text-muted small mt-1">
+                {{ _("الكوبونات التي تحصل عليها ستظهر هنا تلقائياً.") }}
+              </div>
+
             </div>
+
+          {% endfor %}
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    {# =================================================
+       ACTIVE COUPONS
+       ================================================= #}
+    <div class="col-12 col-xl-6">
+
+      <section class="bk-coupon-section">
+
+        <div class="bk-coupon-section-header">
+
+          <div>
+
+            <span class="bk-coupon-section-icon">
+              <i class="bi bi-stars"></i>
+            </span>
+
+            <div>
+
+              <h2>
+                {{ _("كوبونات متاحة حالياً") }}
+              </h2>
+
+              <p>
+                {{ _("الكوبونات النشطة التي يمكن استخدامها.") }}
+              </p>
+
+            </div>
+
           </div>
-        {% else %}
-          <div class="text-muted small">{{ _("لا يوجد كوبونات حالياً.") }}</div>
-        {% endfor %}
-      </div>
+
+
+          <span class="bk-coupon-count">
+            {{ active|length if active else 0 }}
+          </span>
+
+        </div>
+
+
+        <div class="bk-coupon-list">
+
+          {% for c in active %}
+
+            <article class="bk-coupon-card">
+
+              <div class="bk-coupon-edge top"></div>
+              <div class="bk-coupon-edge bottom"></div>
+
+
+              <div class="bk-coupon-main">
+
+                <div class="bk-coupon-brand-row">
+
+                  <span class="bk-coupon-brand">
+                    BAKKOUR
+                  </span>
+
+                  {% if c.usage_limit is not none %}
+
+                    <span class="bk-coupon-remaining">
+                      <i class="bi bi-hourglass-split"></i>
+                      {{ _("باقي") }} {{ c.remaining }}
+                    </span>
+
+                  {% else %}
+
+                    <span class="bk-coupon-remaining">
+                      <i class="bi bi-infinity"></i>
+                    </span>
+
+                  {% endif %}
+
+                </div>
+
+
+                <div class="bk-coupon-code">
+                  {{ c.code }}
+                </div>
+
+
+                {% if c.title %}
+
+                  <div class="bk-coupon-title">
+                    {{ c.title }}
+                  </div>
+
+                {% endif %}
+
+
+                <div class="bk-coupon-discount">
+
+                  <span>
+                    {{ _("خصم ثابت") }}
+                  </span>
+
+                  <strong>
+                    {{ "%.2f"|format(c.discount_amount or 0) }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div class="bk-coupon-actions">
+
+                <button
+                  class="btn btn-outline-dark btn-sm bk-copy-btn"
+                  type="button"
+                  data-copy="{{ c.code }}"
+                  data-default-label="{{ _('نسخ') }}"
+                >
+                  <i class="bi bi-copy"></i>
+                  <span>{{ _("نسخ") }}</span>
+                </button>
+
+
+                <a
+                  class="btn btn-success btn-sm"
+                  target="_blank"
+                  rel="noopener"
+                  href="https://wa.me/{{ WHATSAPP_PHONE_E164|replace('+','') if WHATSAPP_PHONE_E164 else '' }}?text={{ ('مرحباً، أريد استخدام كود كوبون: ' ~ c.code)|urlencode }}"
+                >
+                  <i class="bi bi-whatsapp"></i>
+                  <span>{{ _("استخدام") }}</span>
+                </a>
+
+              </div>
+
+            </article>
+
+          {% else %}
+
+            <div class="bk-empty-state bk-coupon-empty">
+
+              <div class="bk-empty-icon">
+                <i class="bi bi-ticket-perforated"></i>
+              </div>
+
+              <div class="fw-semibold">
+                {{ _("لا يوجد كوبونات حالياً.") }}
+              </div>
+
+              <div class="text-muted small mt-1">
+                {{ _("ارجع لاحقاً لمشاهدة الكوبونات الجديدة.") }}
+              </div>
+
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </section>
+
     </div>
 
   </div>
+
 </div>
+
 {% endblock %}
 
+
 {% block scripts %}
+
 <script>
-  document.querySelectorAll("[data-copy]").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const code = btn.getAttribute("data-copy");
-      try{
-        await navigator.clipboard.writeText(code);
-        btn.textContent = "✅";
-        setTimeout(()=> btn.textContent="نسخ", 900);
-      }catch(e){
-        alert("ما قدرت أنسخ 😅 انسخه يدوي: " + code);
+(function () {
+
+  const buttons =
+    document.querySelectorAll(
+      "[data-copy]"
+    );
+
+
+  buttons.forEach(btn => {
+
+    btn.addEventListener(
+      "click",
+      async () => {
+
+        const code =
+          btn.getAttribute(
+            "data-copy"
+          );
+
+        const defaultLabel =
+          btn.getAttribute(
+            "data-default-label"
+          ) || "";
+
+
+        const label =
+          btn.querySelector("span");
+
+        const icon =
+          btn.querySelector("i");
+
+
+        try {
+
+          await navigator.clipboard.writeText(
+            code
+          );
+
+
+          if (icon) {
+            icon.className =
+              "bi bi-check-lg";
+          }
+
+
+          if (label) {
+            label.textContent =
+              "{{ _('تم النسخ') }}";
+          }
+
+
+          btn.classList.add(
+            "is-copied"
+          );
+
+
+          setTimeout(() => {
+
+            if (icon) {
+              icon.className =
+                "bi bi-copy";
+            }
+
+
+            if (label) {
+              label.textContent =
+                defaultLabel;
+            }
+
+
+            btn.classList.remove(
+              "is-copied"
+            );
+
+          }, 1200);
+
+
+        } catch (e) {
+
+          window.prompt(
+            "{{ _('انسخ الكود:') }}",
+            code
+          );
+
+        }
+
       }
-    });
+    );
+
   });
+
+})();
 </script>
+
 {% endblock %}
