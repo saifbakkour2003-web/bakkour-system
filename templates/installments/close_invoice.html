@@ -1,73 +1,301 @@
-
-<!-- templates/installments/close_invoice.html -->
 <!DOCTYPE html>
-<html lang="{{ _('ar') }}" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ _('فاتورة إغلاق القسط -') }} {{ product.name }}</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='invoice_a5.css') }}">
+<html
+  lang="{{ get_locale() }}"
+  dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}"
+>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    {{ _('فاتورة إغلاق القسط -') }}
+    {{ pick_lang(product.name, product.name_tr) }}
+  </title>
+
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='invoice.css') }}"
+  >
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='invoice_a5.css') }}"
+  >
+
 </head>
 
+
 <body>
-  <div class="invoice invoice-a5">
 
-    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
 
-    <h2>{{ _('معرض بكّور') }}</h2>
-    <h3>{{ _('فاتورة إغلاق القسط') }}</h3>
+<div class="invoice invoice-a5">
 
-    <p><strong>{{ _('الزبون:') }}</strong> {{ pick_lang(customer.name, customer.name_tr) }}</p>
-    <p><strong>{{ _('الهاتف:') }}</strong> {{ customer.phone }}</p>
 
-    <p><strong>{{ _('المنتج:') }}</strong>{{ pick_lang(product.name, product.name_tr) }}</p>
-    <p><strong>{{ _('السعر الكلي:') }}</strong> {{ product.total_price }} $</p>
-    <p><strong>{{ _('تاريخ الشراء:') }}</strong> {{ product.date_added.strftime('%Y-%m-%d') }}</p>
+  <img
+    src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+    class="watermark"
+    alt=""
+  >
 
-    <hr style="margin: 6px 0;">
 
-    <h3 style="margin:4px 0;">{{ _('تفاصيل الدفعات') }}</h3>
+  <header class="invoice-header">
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ _('المبلغ') }}</th>
-          <th>{{ _('التاريخ') }}</th>
-          <th>{{ _('المتبقي') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for p in payments %}
-        <tr>
-        <td>
-          {{ p.amount }} $
-          {% if p.is_initial %}
-            <span class="text-primary">({{ _('سلفة') }})</span>
-          {% endif %}
-        </td>
-          <td>{{ p.date.strftime('%Y-%m-%d') }}</td>
-          <td>{{ p.remaining }} $</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="invoice-brand">
 
-    <h3 style="text-align:center; color:green; margin-top:8px; font-size:13px;">
-      ✓ {{ _('تم سداد كامل الأقساط') }}
-    </h3>
+      <img
+        src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+        class="invoice-logo"
+        alt="Bakkour"
+      >
 
-    <div class="invoice-footer">
-      <div class="invoice-box">
-        {{ _('توقيع الزبون') }}<br><br>
+      <div class="invoice-brand-copy">
+
+        <h1 class="invoice-brand-name">
+          {{ _('معرض بكور') }}
+        </h1>
+
+        <div class="invoice-brand-en">
+          BAKKOUR TRADING COMPANY
+        </div>
+
       </div>
-      <div class="invoice-box">
-        {{ _('ختم المعرض') }}<br><br>
+
+    </div>
+
+
+    <div class="invoice-type-block">
+
+      <h2 class="invoice-type">
+        {{ _('فاتورة إغلاق القسط') }}
+      </h2>
+
+      <div class="invoice-gold-line"></div>
+
+    </div>
+
+  </header>
+
+
+
+  <section class="invoice-meta">
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('الزبون') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ pick_lang(customer.name, customer.name_tr) }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('الهاتف') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ customer.phone or '—' }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('تاريخ الشراء') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ product.date_added.strftime('%Y-%m-%d') }}
+      </span>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="invoice-section">
+
+    <div class="product-box">
+
+      <h3 class="product-title">
+        {{ pick_lang(product.name, product.name_tr) }}
+      </h3>
+
+
+      <div class="product-meta-grid">
+
+        <div class="product-meta">
+
+          <strong>
+            {{ _('السعر الكلي') }}
+          </strong>
+
+          {{ "%.2f"|format(product.total_price) }} $
+
+        </div>
+
+
+        <div class="product-meta">
+
+          <strong>
+            {{ _('القسط الشهري') }}
+          </strong>
+
+          {{ "%.2f"|format(product.monthly_installment or 0) }} $
+
+        </div>
+
+
+        <div class="product-meta">
+
+          <strong>
+            {{ _('الحالة') }}
+          </strong>
+
+          {{ _('مسدد بالكامل') }}
+
+        </div>
+
       </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="invoice-section">
+
+    <div class="invoice-section-header">
+
+      <h3 class="invoice-section-title">
+        {{ _('تفاصيل الدفعات') }}
+      </h3>
+
+    </div>
+
+
+    <div class="invoice-table-wrap">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+
+            <th>{{ _('المبلغ') }}</th>
+
+            <th>{{ _('التاريخ') }}</th>
+
+            <th>{{ _('المتبقي') }}</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          {% for p in payments %}
+
+          <tr>
+
+            <td class="amount-negative text-nowrap">
+
+              {{ "%.2f"|format(p.amount) }} $
+
+              {% if p.is_initial %}
+
+                <span class="text-primary">
+                  ({{ _('سلفة') }})
+                </span>
+
+              {% endif %}
+
+            </td>
+
+
+            <td class="text-nowrap">
+
+              {{ p.date.strftime('%Y-%m-%d') }}
+
+            </td>
+
+
+            <td class="amount-balance text-nowrap">
+
+              {{ "%.2f"|format(p.remaining) }} $
+
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+
+  <div class="invoice-paid-status">
+
+    ✓ {{ _('تم سداد كامل الأقساط') }}
+
+  </div>
+
+
+
+  <div class="invoice-footer">
+
+    <div class="invoice-box">
+
+      {{ _('توقيع الزبون') }}
+
+    </div>
+
+
+    <div class="invoice-box">
+
+      {{ _('ختم المعرض') }}
+
     </div>
 
   </div>
 
-  <script>window.print();</script>
+
+</div>
+
+
+<script>
+
+window.addEventListener(
+  "load",
+  () => window.print()
+);
+
+</script>
+
+
 </body>
 </html>

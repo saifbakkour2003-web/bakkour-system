@@ -1,34 +1,224 @@
 /* static/invoice_a5.css */
-@media print{
-  @page{
-    size: A5 portrait;
-    margin: 4mm;
-  }
-}
 
-.invoice-a5{
+
+.invoice.invoice-a5{
   width: 148mm;
   min-height: 210mm;
-  padding: 6mm;
-  margin: auto;
-  box-sizing: border-box;
-  background: #fff;
-  position: relative;
+
+  padding: 9mm 10mm;
+
+  margin: 0 auto;
 }
 
-.invoice-a5.compact{
-  font-size: 11px;
-  line-height: 1.2;
-  padding: 6mm;
+
+.invoice-a5 .invoice-header{
+  gap: 12px;
+
+  padding-bottom: 10px;
 }
 
-.invoice-a5 .table th,
-.invoice-a5 .table td{
-  padding: 3px;
+
+.invoice-a5 .invoice-logo{
+  width: 58px;
+  height: 58px;
+
+  border-radius: 13px;
+}
+
+
+.invoice-a5 .invoice-brand-name{
+  font-size: 18px;
+}
+
+
+.invoice-a5 .invoice-brand-en{
+  font-size: 7px;
+
+  letter-spacing: 1px;
+}
+
+
+.invoice-a5 .invoice-type{
+  font-size: 15px;
+}
+
+
+.invoice-a5 .invoice-type-note{
+  font-size: 8px;
+}
+
+
+.invoice-a5 .invoice-meta{
+  gap: 6px;
+
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+
+.invoice-a5 .invoice-meta-item{
+  padding: 6px 8px;
+
+  border-radius: 8px;
+}
+
+
+.invoice-a5 .invoice-meta-label{
+  font-size: 8px;
+}
+
+
+.invoice-a5 .invoice-meta-value{
   font-size: 10px;
 }
 
+
+.invoice-a5 .invoice-section{
+  margin-top: 10px;
+}
+
+
+.invoice-a5 .invoice-section-title{
+  font-size: 11px;
+}
+
+
+.invoice-a5 .invoice-table-wrap{
+  border-radius: 8px;
+}
+
+
+.invoice-a5 .table{
+  font-size: 8px;
+}
+
+
+.invoice-a5 .table thead th{
+  padding: 5px 4px;
+
+  font-size: 8px;
+}
+
+
+.invoice-a5 .table tbody td{
+  padding: 5px 4px;
+}
+
+
+.invoice-a5 .summary{
+  margin-top: 8px;
+
+  padding: 8px 9px;
+
+  border-radius: 8px;
+}
+
+
+.invoice-a5 .summary-row{
+  padding: 3px 0;
+
+  font-size: 9px;
+}
+
+
+.invoice-a5 .summary-row.big{
+  margin-top: 5px;
+
+  padding: 6px 8px;
+
+  border-radius: 7px;
+
+  font-size: 10px;
+}
+
+
+.invoice-a5 .invoice-footer{
+  margin-top: 12px;
+
+  gap: 8px;
+}
+
+
+.invoice-a5 .invoice-box{
+  min-height: 46px;
+
+  padding: 6px;
+
+  border-radius: 7px;
+
+  font-size: 8px;
+}
+
+
 .invoice-a5 .watermark{
-  width: 140px;
-  opacity: 0.08; /* أخف بالطباعة */
+  width: 150px;
+
+  opacity: .025;
+}
+
+
+.invoice-a5 .product-box{
+  margin-bottom: 8px;
+
+  padding: 8px;
+
+  border-radius: 8px;
+}
+
+
+.invoice-a5 .product-title{
+  font-size: 10px;
+}
+
+
+.invoice-a5 .product-meta-grid{
+  gap: 5px;
+
+  margin-bottom: 7px;
+}
+
+
+.invoice-a5 .product-meta{
+  padding: 5px;
+
+  font-size: 8px;
+}
+
+
+.invoice-a5.compact{
+  font-size: 9px;
+
+  line-height: 1.25;
+}
+
+
+/* =========================================================
+   A5 PRINT
+   ========================================================= */
+
+@media print{
+
+  @page{
+    size: A5 portrait;
+
+    margin: 0;
+  }
+
+
+  html,
+  body{
+    width: 148mm;
+
+    min-height: 210mm;
+  }
+
+
+  .invoice.invoice-a5{
+    width: 148mm;
+
+    min-height: 210mm;
+
+    padding: 7mm 8mm;
+  }
+
 }

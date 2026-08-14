@@ -1,73 +1,298 @@
-<!-- templates/installments/invoice_list.html -->
 <!DOCTYPE html>
-<html lang="{{ _('ar') }}" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ _('فاتورة التقسيط -') }} {{ customer.name }}</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='invoice_a5.css') }}">
+<html
+  lang="{{ get_locale() }}"
+  dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}"
+>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    {{ _('فاتورة التقسيط -') }}
+    {{ pick_lang(customer.name, customer.name_tr) }}
+  </title>
+
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='invoice.css') }}"
+  >
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='invoice_a5.css') }}"
+  >
+
 </head>
 
+
 <body>
-  <div class="invoice invoice-a5 compact">
 
-    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
 
-    <h2>{{ _('معرض بكّور') }}</h2>
-    <h3>{{ _('فاتورة تقسيط') }}</h3>
+<div class="invoice invoice-a5 compact">
 
-    <p><strong>{{ _('الزبون:') }}</strong> {{ customer.name }}</p>
-    <p><strong>{{ _('ID:') }}</strong> {{ customer.custom_id }}</p>
 
-    <hr>
+  <img
+    src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+    class="watermark"
+    alt=""
+  >
 
-    {% for product in products %}
-      <div class="product-box">
 
-        <h3>{{ _('المنتج:') }} {{ product.name }}</h3>
-        <p><strong>{{ _('السعر الكلي:') }}</strong> {{ product.total_price }} $</p>
-        <p><strong>{{ _('السلفة:') }}</strong> {{ product.initial_payment }} $</p>
-        <p><strong>{{ _('تاريخ الإضافة:') }}</strong> {{ product.date_added.strftime('%Y-%m-%d') }}</p>
+  <header class="invoice-header">
 
-        <h4>{{ _('الدفعات') }}</h4>
+    <div class="invoice-brand">
+
+      <img
+        src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+        class="invoice-logo"
+        alt="Bakkour"
+      >
+
+      <div class="invoice-brand-copy">
+
+        <h1 class="invoice-brand-name">
+          {{ _('معرض بكور') }}
+        </h1>
+
+        <div class="invoice-brand-en">
+          BAKKOUR TRADING COMPANY
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="invoice-type-block">
+
+      <h2 class="invoice-type">
+        {{ _('فاتورة تقسيط') }}
+      </h2>
+
+      <div class="invoice-gold-line"></div>
+
+    </div>
+
+  </header>
+
+
+
+  <section class="invoice-meta">
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('الزبون') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ pick_lang(customer.name, customer.name_tr) }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('رقم الحساب') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ customer.custom_id }}
+      </span>
+
+    </div>
+
+  </section>
+
+
+
+  {% for product in products %}
+
+    <section class="product-box">
+
+      <h3 class="product-title">
+        {{ pick_lang(product.name, product.name_tr) }}
+      </h3>
+
+
+      <div class="product-meta-grid">
+
+        <div class="product-meta">
+
+          <strong>
+            {{ _('السعر الكلي') }}
+          </strong>
+
+          {{ "%.2f"|format(product.total_price) }} $
+
+        </div>
+
+
+        <div class="product-meta">
+
+          <strong>
+            {{ _('السلفة') }}
+          </strong>
+
+          {{ "%.2f"|format(product.initial_payment or 0) }} $
+
+        </div>
+
+
+        <div class="product-meta">
+
+          <strong>
+            {{ _('تاريخ الإضافة') }}
+          </strong>
+
+          {{ product.date_added.strftime('%Y-%m-%d') }}
+
+        </div>
+
+      </div>
+
+
+
+      <div class="invoice-table-wrap">
 
         <table class="table">
+
           <thead>
+
             <tr>
               <th>{{ _('المبلغ') }}</th>
               <th>{{ _('التاريخ') }}</th>
               <th>{{ _('المتبقي') }}</th>
             </tr>
-          </thead>
-          <tbody>
-            {% set remaining = product.total_price - product.initial_payment %}
 
-            {% if product.initial_payment > 0 %}
-              <tr>
-                <td>{{ product.initial_payment }} $ <small class="text-primary">({{ _('سلفة') }})</small></td>
-                <td>{{ product.date_added.strftime('%Y-%m-%d') }}</td>
-                <td>{{ remaining }} $</td>
-              </tr>
+          </thead>
+
+
+          <tbody>
+
+            {% set ns = namespace(
+              remaining=(product.total_price or 0) - (product.initial_payment or 0)
+            ) %}
+
+
+            {% if product.initial_payment and product.initial_payment > 0 %}
+
+            <tr>
+
+              <td class="amount-negative">
+
+                {{ "%.2f"|format(product.initial_payment) }} $
+
+                <span class="text-primary">
+                  ({{ _('سلفة') }})
+                </span>
+
+              </td>
+
+
+              <td>
+
+                {{ product.date_added.strftime('%Y-%m-%d') }}
+
+              </td>
+
+
+              <td class="amount-balance">
+
+                {{ "%.2f"|format(ns.remaining if ns.remaining > 0 else 0) }} $
+
+              </td>
+
+            </tr>
+
             {% endif %}
 
+
+
             {% for p in product.payments|sort(attribute='date_paid') %}
-              {% set remaining = remaining - p.amount %}
+
+              {% set ns.remaining = ns.remaining - (p.amount or 0) %}
+
+
               <tr>
-                <td>{{ p.amount }} $</td>
-                <td>{{ p.date_paid.strftime('%Y-%m-%d') }}</td>
-                <td>{{ remaining if remaining > 0 else 0 }} $</td>
+
+                <td class="amount-negative">
+
+                  {{ "%.2f"|format(p.amount) }} $
+
+                </td>
+
+
+                <td>
+
+                  {{ p.date_paid.strftime('%Y-%m-%d') }}
+
+                </td>
+
+
+                <td class="amount-balance">
+
+                  {{ "%.2f"|format(ns.remaining if ns.remaining > 0 else 0) }} $
+
+                </td>
+
               </tr>
+
             {% endfor %}
+
           </tbody>
+
         </table>
 
-        <p><strong>{{ _('المتبقي النهائي:') }}</strong> {{ remaining if remaining > 0 else 0 }} $</p>
       </div>
-    {% endfor %}
 
-  </div>
 
-  <script>window.print();</script>
+
+      <div class="summary">
+
+        <div class="summary-row big">
+
+          <span class="summary-label">
+            {{ _('المتبقي النهائي') }}
+          </span>
+
+          <span class="summary-value">
+
+            {{ "%.2f"|format(ns.remaining if ns.remaining > 0 else 0) }} $
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  {% endfor %}
+
+
+</div>
+
+
+<script>
+
+window.addEventListener(
+  "load",
+  () => window.print()
+);
+
+</script>
+
+
 </body>
 </html>

@@ -1,110 +1,389 @@
-<!-- templates/invoices/cash_invoice.html -->
 <!DOCTYPE html>
-<html lang="{{ _('ar') }}" dir="rtl">
+
+<html
+  lang="{{ get_locale() }}"
+  dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}"
+>
+
 <head>
+
   <meta charset="UTF-8">
-  <title>{{ _('فاتورة ديون نقدية -') }} {{ customer.name }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    {{ _('فاتورة ديون نقدية -') }}
+    {{ pick_lang(customer.name, customer.name_tr) }}
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='invoice.css') }}"
+  >
+
 </head>
 
+
 <body>
-  <div class="invoice invoice-a4">
 
-    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
 
-    <h2>{{ _('معرض بكّور') }}</h2>
-    <h3>{{ _('فاتورة ديون نقدية') }}</h3>
+{% if not print_mode %}
 
-    <p><strong>{{ _('الاسم:') }}</strong> {{ pick_lang(customer.name, customer.name_tr) }}</p>
-    <p><strong>{{ _('الهاتف:') }}</strong> {{ customer.phone }}</p>
-    <p><strong>{{ _('ID:') }}</strong> {{ customer.custom_id }}</p>
+  <div class="invoice-screen-actions">
 
-    <hr>
+    <a
+      href="{{ url_for('customers.customer_page', id=customer.id) }}"
+      class="invoice-action"
+    >
+      ↩ {{ _('رجوع') }}
+    </a>
 
-    <h3>{{ _('حركات الديون النقدية') }}</h3>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ _('التاريخ') }}</th>
-          <th>{{ _('النوع') }}</th>
-          <th>{{ _('الوصف') }}</th>
-          <th>{{ _('المبلغ') }}</th>
-          <th>{{ _('المتبقي بعد الحركة') }}</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {# ✅ FIX: namespace حتى يحافظ على القيمة داخل اللوب #}
-        {% set ns = namespace(rem=0) %}
-
-        {% for e in events %}
-          {% if e.sign == '+' %}
-            {% set ns.rem = ns.rem + (e.amount or 0) %}
-          {% else %}
-            {% set ns.rem = ns.rem - (e.amount or 0) %}
-          {% endif %}
-
-          {% if ns.rem < 0 %}
-            {% set ns.rem = 0 %}
-          {% endif %}
-
-          <tr>
-            <td>{{ e.date.strftime('%Y-%m-%d') if e.date else '' }}</td>
-            <td>
-              {% if e.type == 'cash_debt' %}{{ _('دين نقدي') }}
-              {% elif e.type == 'general_payment' %}{{ _('دفعة') }}
-              {% else %}—{% endif %}
-            </td>
-            <td>{{ e.name if e.name else '—' }}</td>
-            <td class="text-nowrap">
-              {% if e.sign == '+' %}+{% else %}-{% endif %}
-              {{ "%.2f"|format(e.amount) }} $
-            </td>
-            <td class="text-nowrap">{{ "%.2f"|format(ns.rem) }} $</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <div class="summary">
-      <div class="summary-row">
-        <span><strong>{{ _('إجمالي الديون النقدية:') }}</strong></span>
-        <span>{{ "%.2f"|format(total_cash_debts) }} $</span>
-      </div>
-
-      <div class="summary-row">
-        <span><strong>{{ _('إجمالي الدفعات:') }}</strong></span>
-        <span>{{ "%.2f"|format(total_general_paid) }} $</span>
-      </div>
-
-      <hr>
-
-      <div class="summary-row big">
-        <span>{{ _('المتبقي الحالي:') }}</span>
-        <span>{{ "%.2f"|format(remaining) }} $</span>
-      </div>
-    </div>
-
-    {% if not print_mode %}
-      <hr>
-      <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
-        <a href="{{ url_for('invoices.print_cash_invoice', id=customer.id) }}" target="_blank" rel="noopener"
-           style="padding:10px 14px; border:1px solid #ccc; border-radius:8px; text-decoration:none;">
-          🖨️ {{ _('طباعة') }}
-        </a>
-
-        <a href="{{ url_for('customers.customer_page', id=customer.id) }}"
-           style="padding:10px 14px; border:1px solid #ccc; border-radius:8px; text-decoration:none;">
-          ↩️ {{ _('رجوع') }}
-        </a>
-      </div>
-    {% endif %}
+    <a
+      href="{{ url_for('invoices.print_cash_invoice', id=customer.id) }}"
+      target="_blank"
+      rel="noopener"
+      class="invoice-action invoice-action-primary"
+    >
+      🖨 {{ _('طباعة') }}
+    </a>
 
   </div>
 
-  {% if print_mode %}
-    <script>window.print();</script>
-  {% endif %}
+{% endif %}
+
+
+
+<div class="invoice invoice-a4">
+
+
+  <img
+    src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+    class="watermark"
+    alt=""
+  >
+
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="invoice-header">
+
+    <div class="invoice-brand">
+
+      <img
+        src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+        class="invoice-logo"
+        alt="Bakkour"
+      >
+
+      <div class="invoice-brand-copy">
+
+        <h1 class="invoice-brand-name">
+          {{ _('معرض بكور') }}
+        </h1>
+
+        <div class="invoice-brand-en">
+          BAKKOUR TRADING COMPANY
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="invoice-type-block">
+
+      <h2 class="invoice-type">
+        {{ _('فاتورة ديون نقدية') }}
+      </h2>
+
+      <div class="invoice-type-note">
+        {{ _('كشف حركات الحساب النقدي') }}
+      </div>
+
+      <div class="invoice-gold-line"></div>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- ================= CUSTOMER ================= -->
+
+  <section class="invoice-meta">
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('اسم الزبون') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ pick_lang(customer.name, customer.name_tr) }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('رقم الحساب') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ customer.custom_id or '—' }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('الهاتف') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ customer.phone or '—' }}
+      </span>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= EVENTS ================= -->
+
+  <section class="invoice-section">
+
+    <div class="invoice-section-header">
+
+      <h3 class="invoice-section-title">
+        {{ _('حركات الديون النقدية') }}
+      </h3>
+
+      <div class="invoice-section-note">
+        {{ _('مرتبة حسب التاريخ') }}
+      </div>
+
+    </div>
+
+
+    <div class="invoice-table-wrap">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+
+            <th>{{ _('التاريخ') }}</th>
+
+            <th>{{ _('النوع') }}</th>
+
+            <th>{{ _('الوصف') }}</th>
+
+            <th>{{ _('المبلغ') }}</th>
+
+            <th>{{ _('المتبقي') }}</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          {% set ns = namespace(rem=0) %}
+
+
+          {% for e in events %}
+
+            {% if e.sign == '+' %}
+
+              {% set ns.rem = ns.rem + (e.amount or 0) %}
+
+            {% else %}
+
+              {% set ns.rem = ns.rem - (e.amount or 0) %}
+
+            {% endif %}
+
+
+            {% if ns.rem < 0 %}
+
+              {% set ns.rem = 0 %}
+
+            {% endif %}
+
+
+            <tr>
+
+              <td class="text-nowrap">
+
+                {{ e.date.strftime('%Y-%m-%d') if e.date else '—' }}
+
+              </td>
+
+
+              <td>
+
+                {% if e.type == 'cash_debt' %}
+
+                  <span class="invoice-badge invoice-badge-debt">
+                    {{ _('دين نقدي') }}
+                  </span>
+
+                {% elif e.type == 'general_payment' %}
+
+                  <span class="invoice-badge invoice-badge-payment">
+                    {{ _('دفعة') }}
+                  </span>
+
+                {% else %}
+
+                  —
+
+                {% endif %}
+
+              </td>
+
+
+              <td>
+
+                {{ e.name if e.name else '—' }}
+
+              </td>
+
+
+              <td
+                class="
+                  text-nowrap
+                  {% if e.sign == '+' %}
+                    amount-positive
+                  {% else %}
+                    amount-negative
+                  {% endif %}
+                "
+              >
+
+                {% if e.sign == '+' %}
+                  +
+                {% else %}
+                  -
+                {% endif %}
+
+                {{ "%.2f"|format(e.amount) }} $
+
+              </td>
+
+
+              <td class="text-nowrap amount-balance">
+
+                {{ "%.2f"|format(ns.rem) }} $
+
+              </td>
+
+            </tr>
+
+
+          {% else %}
+
+            <tr>
+
+              <td colspan="5">
+                {{ _('لا يوجد حركات مالية') }}
+              </td>
+
+            </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ================= SUMMARY ================= -->
+
+  <section class="summary">
+
+    <div class="summary-row">
+
+      <span class="summary-label">
+        {{ _('إجمالي الديون النقدية') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(total_cash_debts) }} $
+      </span>
+
+    </div>
+
+
+    <div class="summary-row">
+
+      <span class="summary-label">
+        {{ _('إجمالي الدفعات') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(total_general_paid) }} $
+      </span>
+
+    </div>
+
+
+    <div class="summary-row big">
+
+      <span class="summary-label">
+        {{ _('المتبقي الحالي') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(remaining) }} $
+      </span>
+
+    </div>
+
+  </section>
+
+
+  <div class="invoice-bottom-note">
+
+    {{ _('تم إنشاء هذا الكشف بواسطة نظام إدارة معرض بكور') }}
+
+  </div>
+
+
+</div>
+
+
+
+{% if print_mode %}
+
+<script>
+
+  window.addEventListener(
+    "load",
+    () => window.print()
+  );
+
+</script>
+
+{% endif %}
+
+
 </body>
 </html>

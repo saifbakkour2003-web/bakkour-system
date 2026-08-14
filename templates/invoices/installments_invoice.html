@@ -1,77 +1,365 @@
-<!-- templates/invoices/installments_invoice.html -->
 <!DOCTYPE html>
-<html lang="{{ _('ar') }}" dir="rtl">
+
+<html
+  lang="{{ get_locale() }}"
+  dir="{{ 'rtl' if get_locale() == 'ar' else 'ltr' }}"
+>
+
 <head>
+
   <meta charset="UTF-8">
-  <title>{{ _('فاتورة تقسيط -') }} {{ customer.name }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='invoice.css') }}">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    {{ _('فاتورة تقسيط -') }}
+    {{ pick_lang(customer.name, customer.name_tr) }}
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='invoice.css') }}"
+  >
+
 </head>
 
+
 <body>
-  <div class="invoice invoice-a4">
 
-    <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="watermark" alt="">
 
-    <h2>{{ _('معرض بكّور') }}</h2>
-    <h3>{{ _('فاتورة تقسيط') }}</h3>
+{% if not print_mode %}
 
-    <p><strong>{{ _('الاسم:') }}</strong> {{ pick_lang(customer.name, customer.name_tr) }}</p>
-    <p><strong>{{ _('ID:') }}</strong> {{ customer.custom_id }}</p>
+<div class="invoice-screen-actions">
 
-    <hr>
+  <a
+    href="{{ url_for('customers.customer_page', id=customer.id) }}"
+    class="invoice-action"
+  >
+    ↩ {{ _('رجوع') }}
+  </a>
 
-    <h3>{{ _('حركات التقسيط') }}</h3>
+  <a
+    href="{{ url_for('invoices.print_installments_invoice', id=customer.id) }}"
+    target="_blank"
+    rel="noopener"
+    class="invoice-action invoice-action-primary"
+  >
+    🖨 {{ _('طباعة') }}
+  </a>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>{{ _('التاريخ') }}</th>
-          <th>{{ _('النوع') }}</th>
-          <th>{{ _('الوصف') }}</th>
-          <th>{{ _('المبلغ') }}</th>
-          <th>{{ _('الرصيد بعد الحركة') }}</th>
-        </tr>
-      </thead>
+</div>
 
-      <tbody>
-        {% for e in events %}
-        <tr>
-          <td>{{ e.date.strftime('%Y-%m-%d') if e.date else '' }}</td>
-          <td>
-            {% if e.type == 'installment_product' %}{{ _('منتج تقسيط') }}
-            {% elif e.type == 'installment_initial_payment' %}{{ _('دفعة أولى') }}
-            {% elif e.type == 'installment_payment' %}{{ _('دفعة تقسيط') }}
-            {% else %}—{% endif %}
-          </td>
-          <td>{{ e.name if e.name else '—' }}</td>
-          <td>{% if e.sign == '+' %}+{% else %}-{% endif %} {{ "%.2f"|format(e.amount) }}</td>
-          <td>{{ "%.2f"|format(e.balance) }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{% endif %}
 
-    <div class="summary">
-      <div class="summary-row"><span><strong>{{ _('إجمالي التقسيط:') }}</strong></span><span>{{ "%.2f"|format(total_installments) }} $</span></div>
 
-      <hr>
 
-      <div class="summary-row"><span><strong>{{ _('إجمالي الدفعة الأولى:') }}</strong></span><span>{{ "%.2f"|format(total_initial_paid) }} $</span></div>
-      <div class="summary-row"><span><strong>{{ _('إجمالي دفعات التقسيط:') }}</strong></span><span>{{ "%.2f"|format(total_installment_paid) }} $</span></div>
-      <div class="summary-row"><span><strong>{{ _('إجمالي المدفوع:') }}</strong></span><span>{{ "%.2f"|format(total_paid) }} $</span></div>
+<div class="invoice invoice-a4">
 
-      <hr>
 
-      <div class="summary-row big">
-        <span>{{ _('الصافي النهائي (المتبقي):') }}</span>
-        <span>{{ "%.2f"|format(remaining) }} $</span>
+  <img
+    src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+    class="watermark"
+    alt=""
+  >
+
+
+  <header class="invoice-header">
+
+    <div class="invoice-brand">
+
+      <img
+        src="{{ url_for('static', filename='shop/img/logo.jpg') }}"
+        class="invoice-logo"
+        alt="Bakkour"
+      >
+
+      <div class="invoice-brand-copy">
+
+        <h1 class="invoice-brand-name">
+          {{ _('معرض بكور') }}
+        </h1>
+
+        <div class="invoice-brand-en">
+          BAKKOUR TRADING COMPANY
+        </div>
+
       </div>
+
     </div>
 
+
+    <div class="invoice-type-block">
+
+      <h2 class="invoice-type">
+        {{ _('فاتورة تقسيط') }}
+      </h2>
+
+      <div class="invoice-type-note">
+        {{ _('كشف حساب التقسيط والمدفوعات') }}
+      </div>
+
+      <div class="invoice-gold-line"></div>
+
+    </div>
+
+  </header>
+
+
+
+  <section class="invoice-meta">
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('اسم الزبون') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ pick_lang(customer.name, customer.name_tr) }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('رقم الحساب') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ customer.custom_id or '—' }}
+      </span>
+
+    </div>
+
+
+    <div class="invoice-meta-item">
+
+      <span class="invoice-meta-label">
+        {{ _('الهاتف') }}
+      </span>
+
+      <span class="invoice-meta-value">
+        {{ customer.phone or '—' }}
+      </span>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="invoice-section">
+
+    <div class="invoice-section-header">
+
+      <h3 class="invoice-section-title">
+        {{ _('حركات التقسيط') }}
+      </h3>
+
+    </div>
+
+
+    <div class="invoice-table-wrap">
+
+      <table class="table">
+
+        <thead>
+
+          <tr>
+            <th>{{ _('التاريخ') }}</th>
+            <th>{{ _('النوع') }}</th>
+            <th>{{ _('الوصف') }}</th>
+            <th>{{ _('المبلغ') }}</th>
+            <th>{{ _('المتبقي') }}</th>
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          {% for e in events %}
+
+          <tr>
+
+            <td class="text-nowrap">
+
+              {{ e.date.strftime('%Y-%m-%d') if e.date else '—' }}
+
+            </td>
+
+
+            <td>
+
+              {% if e.type == 'installment_product' %}
+
+                <span class="invoice-badge invoice-badge-installment">
+                  {{ _('منتج تقسيط') }}
+                </span>
+
+              {% elif e.type == 'installment_initial_payment' %}
+
+                <span class="invoice-badge invoice-badge-payment">
+                  {{ _('دفعة أولى') }}
+                </span>
+
+              {% elif e.type == 'installment_payment' %}
+
+                <span class="invoice-badge invoice-badge-payment">
+                  {{ _('دفعة تقسيط') }}
+                </span>
+
+              {% endif %}
+
+            </td>
+
+
+            <td>
+              {{ e.name or '—' }}
+            </td>
+
+
+            <td
+              class="
+                text-nowrap
+                {% if e.sign == '+' %}
+                  amount-positive
+                {% else %}
+                  amount-negative
+                {% endif %}
+              "
+            >
+
+              {{ e.sign }}
+
+              {{ "%.2f"|format(e.amount) }} $
+
+            </td>
+
+
+            <td class="amount-balance text-nowrap">
+
+              {{ "%.2f"|format(e.balance if e.balance > 0 else 0) }} $
+
+            </td>
+
+          </tr>
+
+
+          {% else %}
+
+          <tr>
+
+            <td colspan="5">
+              {{ _('لا يوجد حركات تقسيط') }}
+            </td>
+
+          </tr>
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="summary">
+
+    <div class="summary-row">
+
+      <span class="summary-label">
+        {{ _('إجمالي التقسيط') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(total_installments) }} $
+      </span>
+
+    </div>
+
+
+    <div class="summary-row">
+
+      <span class="summary-label">
+        {{ _('إجمالي الدفعة الأولى') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(total_initial_paid) }} $
+      </span>
+
+    </div>
+
+
+    <div class="summary-row">
+
+      <span class="summary-label">
+        {{ _('إجمالي دفعات التقسيط') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(total_installment_paid) }} $
+      </span>
+
+    </div>
+
+
+    <div class="summary-row">
+
+      <span class="summary-label">
+        {{ _('إجمالي المدفوع') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(total_paid) }} $
+      </span>
+
+    </div>
+
+
+    <div class="summary-row big">
+
+      <span class="summary-label">
+        {{ _('المتبقي النهائي') }}
+      </span>
+
+      <span class="summary-value">
+        {{ "%.2f"|format(remaining) }} $
+      </span>
+
+    </div>
+
+  </section>
+
+
+
+  <div class="invoice-bottom-note">
+    {{ _('تم إنشاء هذا الكشف بواسطة نظام إدارة معرض بكور') }}
   </div>
 
-  {% if print_mode %}
-    <script>window.print();</script>
-  {% endif %}
+
+</div>
+
+
+
+{% if print_mode %}
+
+<script>
+  window.addEventListener("load", () => window.print());
+</script>
+
+{% endif %}
+
+
 </body>
 </html>
